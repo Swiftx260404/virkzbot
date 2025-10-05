@@ -4,6 +4,7 @@ import {
   EmbedBuilder,
 } from 'discord.js';
 import { prisma } from '../../lib/db.js';
+import { extractBuffState } from '../../services/buffs.js';
 
 function progressBar(fraction: number, size = 12) {
   const full = '█';
@@ -76,13 +77,11 @@ export default {
     }
 
     // Buffs activos (si existen)
-    const meta: any = u.metadata ?? {};
-    const buffs = Object.entries(meta?.buffs ?? {})
-      .filter(([_, val]: any) => typeof val === 'object' ? (val.until ?? 0) > now : false)
-      .map(([k, val]: any) => {
-        const left = msToHMS((val.until ?? 0) - now);
-        const label = val.label ?? k;
-        return `• **${label}** → ${left}`;
+    const buffState = extractBuffState(u.metadata);
+    const buffs = buffState.active
+      .map(buff => {
+        const left = msToHMS(buff.until - now);
+        return `• **${buff.label}** → ${left}`;
       })
       .slice(0, 6);
 

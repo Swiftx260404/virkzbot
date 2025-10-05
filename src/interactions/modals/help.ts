@@ -31,5 +31,11 @@ export async function handleHelpSearchModal(interaction: ModalSubmitInteraction)
   const embed = buildHelpEmbed(updated);
   const components = buildHelpComponents(updated);
 
-  await interaction.update({ embeds: [embed], components });
+  await interaction.deferReply({ ephemeral: true });
+  if (interaction.message) {
+    await interaction.message.edit({ embeds: [embed], components });
+    await interaction.deleteReply();
+  } else {
+    await interaction.editReply({ embeds: [embed], components });
+  }
 }
