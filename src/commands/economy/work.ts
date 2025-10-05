@@ -1,7 +1,7 @@
 import { SlashCommandBuilder, ChatInputCommandInteraction, ButtonBuilder, ButtonStyle, ActionRowBuilder } from 'discord.js';
 import { onCooldown } from '../../services/cooldowns.js';
 import { prisma } from '../../lib/db.js';
-import { isHumanClickSequence } from '../../services/antiCheat.js';
+import { registerSequenceSample, resetSequence } from '../../services/antiCheat.js';
 
 export default {
   data: new SlashCommandBuilder().setName('work').setDescription('Trabaja en un minijuego corto para ganar V Coins.'),
@@ -28,6 +28,7 @@ export default {
     const now = Date.now();
     const elapsed = now - start;
     if (elapsed > 10_000) {
+      resetSequence(`work:${interaction.user.id}:${start}`);
       return interaction.update({ content: '⏱️ Tiempo agotado.', components: [] });
     }
 
@@ -35,16 +36,24 @@ export default {
     const remain = target - nextCount;
 
     if (nextCount >= target) {
-      // simple anti-cheat: reconstruct timestamps assuming uniform presses every update (approx via stored count)
-      // In real impl we'd store per-user click timestamps. Here we infer based on elapsed and clicks.
-      const avg = elapsed / nextCount;
-      const fakeTimestamps = Array.from({length: nextCount}, (_,i)=> start + avg*(i+1));
-      const human = isHumanClickSequence(fakeTimestamps);
-      if (!human) return interaction.update({ content: '🚫 Detección anti-macro: clicks demasiado uniformes/rápidos.', components: [] });
+      const sequenceKey = `work:${interaction.user.id}:${start}`;
+      const check = registerSequenceSample({ key: sequenceKey, start, windowMs: 10_000, timestamp: now });
+      if (!check.ok) {
+        resetSequence(sequenceKey);
+        return interaction.update({ content: `🚫 ${check.reason ?? 'Detección anti-macro.'}`, components: [] });
+      }
 
       const reward = 25 + Math.floor(Math.random()*20);
       await prisma.user.update({ where: { id: interaction.user.id }, data: { vcoins: { increment: reward } } });
+      resetSequence(sequenceKey);
       return interaction.update({ content: `💼 ¡Buen trabajo! Ganaste **${reward} V Coins**.`, components: [] });
+    }
+
+    const sequenceKey = `work:${interaction.user.id}:${start}`;
+    const check = registerSequenceSample({ key: sequenceKey, start, windowMs: 10_000, timestamp: now });
+    if (!check.ok) {
+      resetSequence(sequenceKey);
+      return interaction.update({ content: `🚫 ${check.reason ?? 'Detección anti-macro.'}`, components: [] });
     }
 
     const btn = new (ButtonBuilder as any)().setCustomId(`work:click:${nextCount}:${start}:${target}`).setLabel(`Clicks restantes: ${Math.max(0, remain)}`).setStyle(3);
