@@ -27,37 +27,159 @@ enum ToolKind {
 enum LocationKind {
   MINE
   FISHING
+  DUNGEON
+}
+
+enum Rarity {
+  COMMON
+  UNCOMMON
+  RARE
+  EPIC
+  LEGENDARY
+  MYTHIC
+}
+
+enum EffectType {
+  HEAL
+  ENERGY
+  BUFF_ATTACK
+  BUFF_DEFENSE
+  BUFF_DROP_RATE
+  BUFF_CRIT
+  DAMAGE
+  SHIELD
+  CLEANSE
+}
+
+enum EffectTarget {
+  SELF
+  ENEMY
+  WEAPON
+  ARMOR
+  TOOL
 }
 
 model User {
-  id           String   @id @db.VarChar(32)  // Discord user id
-  createdAt    DateTime @default(now())
-  vcoins       Int      @default(100)
-  xp           Int      @default(0)
-  level        Int      @default(1)
-  lastDailyAt  DateTime?
+  id          String    @id @db.VarChar(32)
+  createdAt   DateTime  @default(now())
+  vcoins      Int       @default(100)
+  xp          Int       @default(0)
+  level       Int       @default(1)
+  lastDailyAt DateTime?
+
+  healthMax  Int       @default(100)
+  health     Int       @default(100)
+  attack     Int       @default(5)
+  defense    Int       @default(2)
+  energy     Int       @default(100)
+  lastHealAt DateTime?
+  deaths     Int       @default(0)
+
   equippedPickaxeId Int?
   equippedRodId     Int?
   equippedWeaponId  Int?
   equippedArmorId   Int?
 
-  items        UserItem[]
+  metadata Json?
+
+  items UserItem[]
 }
 
 model Item {
-  id        Int       @id @default(autoincrement())
-  key       String    @unique
-  name      String
-  type      ItemType
-  price     Int       @default(0)
-  toolKind  ToolKind  @default(NONE)
-  tier      Int?      // 1..N para herramientas
-  power     Int?      // para armas/picos/cañas
-  durability Int?     // durabilidad base (opcional)
-  metadata  Json?
+  id         Int      @id @default(autoincrement())
+  key        String   @unique
+  name       String
+  type       ItemType
+  rarity     Rarity   @default(COMMON)
+  price      Int      @default(0)
+  buyable    Boolean  @default(true)
+  sellable   Boolean  @default(true)
+  usable     Boolean  @default(false)
+  toolKind   ToolKind @default(NONE)
+  tier       Int?
+  power      Int?
+  durability Int?
+  metadata   Json?
 
-  // reverse
-  users     UserItem[]
+  users   UserItem[]
+  effects ItemEffect[]
+
+  // Upgrades (ya estaban bien con nombres)
+  upgradesFrom ItemUpgrade[] @relation("UpgradesFrom")
+  upgradesTo   ItemUpgrade[] @relation("UpgradesTo")
+
+  // 🔧 Relaciones agregadas para evitar el error:
+  // Costes de upgrade -> ItemUpgradeCost.item
+  upgradeCostItems ItemUpgradeCost[] @relation("CostItem")
+
+  // Ingredientes de crafteo -> CraftIngredient.item
+  ingredientOf CraftIngredient[] @relation("IngredientItem")
+
+  // Entradas de drop -> DropEntry.item
+  dropEntries DropEntry[]  @relation("DropEntryItem")
+  CraftRecipe CraftRecipe?
+}
+
+model ItemEffect {
+  id          Int          @id @default(autoincrement())
+  itemId      Int
+  type        EffectType
+  target      EffectTarget @default(SELF)
+  magnitude   Float
+  durationSec Int?
+  chance      Float?
+  stacks      Boolean?     @default(false)
+  metadata    Json?
+
+  item Item @relation(fields: [itemId], references: [id], onDelete: Cascade)
+}
+
+model ItemUpgrade {
+  id           Int @id @default(autoincrement())
+  baseItemId   Int
+  resultItemId Int
+  costVcoins   Int @default(0)
+
+  baseItem   Item @relation("UpgradesFrom", fields: [baseItemId], references: [id], onDelete: Cascade)
+  resultItem Item @relation("UpgradesTo", fields: [resultItemId], references: [id], onDelete: Cascade)
+
+  materials ItemUpgradeCost[]
+
+  @@unique([baseItemId, resultItemId])
+}
+
+model ItemUpgradeCost {
+  id        Int @id @default(autoincrement())
+  upgradeId Int
+  itemId    Int
+  quantity  Int
+
+  upgrade ItemUpgrade @relation(fields: [upgradeId], references: [id], onDelete: Cascade)
+  // 🔧 Nombra la relación y enlaza el lado opuesto en Item.upgradeCostItems
+  item    Item        @relation("CostItem", fields: [itemId], references: [id], onDelete: Restrict)
+}
+
+model CraftRecipe {
+  id           Int     @id @default(autoincrement())
+  resultItemId Int
+  station      String?
+  metadata     Json?
+
+  resultItem  Item              @relation(fields: [resultItemId], references: [id], onDelete: Cascade)
+  ingredients CraftIngredient[]
+
+  @@unique([resultItemId])
+}
+
+model CraftIngredient {
+  id       Int @id @default(autoincrement())
+  recipeId Int
+  itemId   Int
+  quantity Int
+
+  recipe CraftRecipe @relation(fields: [recipeId], references: [id], onDelete: Cascade)
+  // 🔧 Nombra la relación y enlaza el lado opuesto en Item.ingredientOf
+  item   Item        @relation("IngredientItem", fields: [itemId], references: [id], onDelete: Restrict)
 }
 
 model UserItem {
@@ -66,17 +188,77 @@ model UserItem {
   itemId   Int
   quantity Int    @default(1)
 
-  user     User   @relation(fields: [userId], references: [id], onDelete: Cascade)
-  item     Item   @relation(fields: [itemId], references: [id], onDelete: Cascade)
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+  item Item @relation(fields: [itemId], references: [id], onDelete: Cascade)
 
   @@unique([userId, itemId])
 }
 
 model Location {
   id           Int          @id @default(autoincrement())
+  slug         String       @unique
   name         String
   kind         LocationKind
   requiredKind ToolKind
   requiredTier Int          @default(1)
+  dangerLevel  Int          @default(0)
   metadata     Json?
+
+  encounters LocationEncounter[]
+}
+
+model Monster {
+  id         Int    @id @default(autoincrement())
+  key        String @unique
+  name       String
+  level      Int    @default(1)
+  hp         Int
+  attack     Int
+  defense    Int
+  critChance Float  @default(0.05)
+  xpReward   Int    @default(5)
+  vcoinsMin  Int    @default(0)
+  vcoinsMax  Int    @default(0)
+
+  dropTableId Int?
+  // 🔧 Nombra la relación y crea el opuesto en DropTable.monsters
+  dropTable   DropTable? @relation("MonsterDropTable", fields: [dropTableId], references: [id], onDelete: SetNull)
+
+  metadata   Json?
+  encounters LocationEncounter[]
+}
+
+model DropTable {
+  id      Int         @id @default(autoincrement())
+  key     String      @unique
+  name    String
+  entries DropEntry[]
+
+  // 🔧 lado opuesto para Monster.dropTable
+  monsters Monster[] @relation("MonsterDropTable")
+}
+
+model DropEntry {
+  id      Int @id @default(autoincrement())
+  tableId Int
+  itemId  Int
+  weight  Int @default(1)
+  minQty  Int @default(1)
+  maxQty  Int @default(1)
+
+  table DropTable @relation(fields: [tableId], references: [id], onDelete: Cascade)
+  // 🔧 Nombra la relación y enlaza el lado opuesto en Item.dropEntries
+  item  Item      @relation("DropEntryItem", fields: [itemId], references: [id], onDelete: Restrict)
+}
+
+model LocationEncounter {
+  id         Int @id @default(autoincrement())
+  locationId Int
+  monsterId  Int
+  weight     Int @default(1)
+
+  location Location @relation(fields: [locationId], references: [id], onDelete: Cascade)
+  monster  Monster  @relation(fields: [monsterId], references: [id], onDelete: Cascade)
+
+  @@unique([locationId, monsterId])
 }
