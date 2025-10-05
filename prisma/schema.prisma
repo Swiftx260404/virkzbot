@@ -68,6 +68,7 @@ model User {
   vcoins      Int       @default(100)
   xp          Int       @default(0)
   level       Int       @default(1)
+  skillPoints Int       @default(0)
   lastDailyAt DateTime?
 
   healthMax  Int       @default(100)
@@ -78,6 +79,11 @@ model User {
   lastHealAt DateTime?
   deaths     Int       @default(0)
 
+  strength  Int @default(1)
+  agility   Int @default(1)
+  intellect Int @default(1)
+  luck      Int @default(1)
+
   equippedPickaxeId Int?
   equippedRodId     Int?
   equippedWeaponId  Int?
@@ -86,6 +92,8 @@ model User {
   metadata Json?
 
   items UserItem[]
+  bossDamages BossDamage[]
+  raidMembers RaidMember[]
 }
 
 model Item {
@@ -264,4 +272,56 @@ model LocationEncounter {
   monster  Monster  @relation(fields: [monsterId], references: [id], onDelete: Cascade)
 
   @@unique([locationId, monsterId])
+}
+
+model Boss {
+  id            Int      @id @default(autoincrement())
+  name          String
+  rotationWeek  Int      @unique
+  hp            Int
+  maxHp         Int
+  createdAt     DateTime @default(now())
+  updatedAt     DateTime @updatedAt
+  metadata      Json?
+
+  damages BossDamage[]
+}
+
+model BossDamage {
+  id           Int      @id @default(autoincrement())
+  bossId       Int
+  userId       String
+  damage       Int      @default(0)
+  lastAttackAt DateTime @default(now())
+
+  boss Boss @relation(fields: [bossId], references: [id], onDelete: Cascade)
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@unique([bossId, userId])
+}
+
+model Raid {
+  id        Int      @id @default(autoincrement())
+  threadId  String   @unique
+  state     String   @default("FORMING")
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  metadata  Json?
+
+  members RaidMember[]
+}
+
+model RaidMember {
+  id          Int      @id @default(autoincrement())
+  raidId      Int
+  userId      String
+  role        String
+  joinedAt    DateTime @default(now())
+  contribution Int     @default(0)
+  metadata    Json?
+
+  raid Raid @relation(fields: [raidId], references: [id], onDelete: Cascade)
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@unique([raidId, userId])
 }

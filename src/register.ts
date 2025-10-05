@@ -6,7 +6,8 @@ const CMD_DIRS = [
   'commands/core',
   'commands/shop',
   'commands/inventory',
-  'commands/economy'
+  'commands/economy',
+  'commands/rpg'
 ];
 
 export async function registerAllCommands(collection: Collection<string, any>) {

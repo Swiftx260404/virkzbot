@@ -5,6 +5,7 @@ import {
 } from 'discord.js';
 import { prisma } from '../../lib/db.js';
 import { extractBuffState } from '../../services/buffs.js';
+import { buildAttributeSummary, xpToNext } from '../../services/progression.js';
 
 function progressBar(fraction: number, size = 12) {
   const full = '█';
@@ -15,10 +16,6 @@ function progressBar(fraction: number, size = 12) {
 
 function formatV(n: number) {
   return n.toLocaleString('es-ES');
-}
-
-function xpToNext(level: number) {
-  return Math.max(50, level * level * 100);
 }
 
 function msToHMS(ms: number) {
@@ -105,6 +102,11 @@ export default {
           name: '🎯 Progreso',
           value: `**Nivel:** ${u.level}\n**XP:** ${formatV(u.xp)} / ${formatV(xpTarget)}\n\`${xpBar}\``,
           inline: true,
+        },
+        {
+          name: '🛠️ Atributos',
+          value: buildAttributeSummary(u),
+          inline: false,
         },
         {
           name: '📦 Inventario',
