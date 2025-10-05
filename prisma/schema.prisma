@@ -1,0 +1,82 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+enum ItemType {
+  TOOL
+  CONSUMABLE
+  MATERIAL
+  WEAPON
+  ARMOR
+  MISC
+}
+
+enum ToolKind {
+  NONE
+  PICKAXE
+  ROD
+  WEAPON
+  ARMOR
+}
+
+enum LocationKind {
+  MINE
+  FISHING
+}
+
+model User {
+  id           String   @id @db.VarChar(32)  // Discord user id
+  createdAt    DateTime @default(now())
+  vcoins       Int      @default(100)
+  xp           Int      @default(0)
+  level        Int      @default(1)
+  lastDailyAt  DateTime?
+  equippedPickaxeId Int?
+  equippedRodId     Int?
+  equippedWeaponId  Int?
+  equippedArmorId   Int?
+
+  items        UserItem[]
+}
+
+model Item {
+  id        Int       @id @default(autoincrement())
+  key       String    @unique
+  name      String
+  type      ItemType
+  price     Int       @default(0)
+  toolKind  ToolKind  @default(NONE)
+  tier      Int?      // 1..N para herramientas
+  power     Int?      // para armas/picos/cañas
+  durability Int?     // durabilidad base (opcional)
+  metadata  Json?
+
+  // reverse
+  users     UserItem[]
+}
+
+model UserItem {
+  id       Int    @id @default(autoincrement())
+  userId   String
+  itemId   Int
+  quantity Int    @default(1)
+
+  user     User   @relation(fields: [userId], references: [id], onDelete: Cascade)
+  item     Item   @relation(fields: [itemId], references: [id], onDelete: Cascade)
+
+  @@unique([userId, itemId])
+}
+
+model Location {
+  id           Int          @id @default(autoincrement())
+  name         String
+  kind         LocationKind
+  requiredKind ToolKind
+  requiredTier Int          @default(1)
+  metadata     Json?
+}

@@ -1,0 +1,9 @@
+[
+  {"name":"Mina Pedregosa","kind":"MINE","requiredKind":"PICKAXE","requiredTier":1,"metadata":{"drop":["ore_copper"],"multi":1}},
+  {"name":"Mina Profunda","kind":"MINE","requiredKind":"PICKAXE","requiredTier":3,"metadata":{"drop":["ore_iron","ore_gold"],"multi":1.2}},
+  {"name":"Abismo Cristalino","kind":"MINE","requiredKind":"PICKAXE","requiredTier":5,"metadata":{"drop":["ore_gold"],"multi":1.5}},
+
+  {"name":"Lago Tranquilo","kind":"FISHING","requiredKind":"ROD","requiredTier":1,"metadata":{"drop":["fish_common"],"multi":1}},
+  {"name":"Costa Ventosa","kind":"FISHING","requiredKind":"ROD","requiredTier":2,"metadata":{"drop":["fish_common","fish_rare"],"multi":1.2}},
+  {"name":"Mar de Estrellas","kind":"FISHING","requiredKind":"ROD","requiredTier":4,"metadata":{"drop":["fish_rare"],"multi":1.5}}
+]
