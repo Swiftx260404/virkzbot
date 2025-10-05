@@ -1,6 +1,7 @@
 import { SlashCommandBuilder, ChatInputCommandInteraction, StringSelectMenuBuilder, ActionRowBuilder, ButtonBuilder, ButtonStyle } from 'discord.js';
 import { prisma } from '../../lib/db.js';
 import { onCooldown } from '../../services/cooldowns.js';
+import { registerSequenceSample, resetSequence } from '../../services/antiCheat.js';
 
 export default {
   data: new SlashCommandBuilder().setName('fish').setDescription('Ir a pescar (requiere caña).'),
@@ -44,10 +45,17 @@ export default {
       const start = Number(startStr);
       const now = Date.now();
       if (now - start > 12_000) {
+        resetSequence(`fish:${interaction.user.id}:${start}`);
         return interaction.update({ content: '🐟 Se escapó el pez...', components: [] });
       }
 
       const next = count + 1;
+      const sequenceKey = `fish:${interaction.user.id}:${start}`;
+      const check = registerSequenceSample({ key: sequenceKey, start, windowMs: 12_000, timestamp: now });
+      if (!check.ok) {
+        resetSequence(sequenceKey);
+        return interaction.update({ content: `🚫 ${check.reason ?? 'Detección anti-macro.'}`, components: [] });
+      }
       if (next >= pulls) {
         const locId = Number(locStr);
         const loc = await prisma.location.findUnique({ where: { id: locId } });
@@ -63,8 +71,10 @@ export default {
             update: { quantity: { increment: qty } },
             create: { userId: interaction.user.id, itemId: item.id, quantity: qty }
           });
+          resetSequence(sequenceKey);
           return interaction.update({ content: `🐠 ¡Pescaste **${qty} × ${item.name}**!`, components: [] });
         } else {
+          resetSequence(sequenceKey);
           return interaction.update({ content: 'Nada mordió el anzuelo...', components: [] });
         }
       }

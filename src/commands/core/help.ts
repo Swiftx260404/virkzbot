@@ -1,32 +1,74 @@
-import { SlashCommandBuilder, ChatInputCommandInteraction, StringSelectMenuBuilder, ActionRowBuilder, EmbedBuilder } from 'discord.js';
-
-const categories = {
-  'Economía': ['daily','work','shop','buy','inventory'],
-  'RPG': ['mine','fish','equip','profile'],
-  'Info': ['start','help','profile']
-};
+import {
+  ChatInputCommandInteraction,
+  SlashCommandBuilder
+} from 'discord.js';
+import {
+  HELP_CATEGORIES,
+  HelpSessionState,
+  buildHelpComponents,
+  buildHelpEmbed,
+  setHelpSession
+} from '../../services/helpHub.js';
+import { handleHelpButton } from '../../interactions/buttons/help.js';
+import { handleHelpCategorySelect } from '../../interactions/select-menus/help.js';
+import { handleHelpSearchModal } from '../../interactions/modals/help.js';
 
 export default {
   data: new SlashCommandBuilder()
     .setName('help')
-    .setDescription('Ayuda interactiva por categorías.'),
+    .setDescription('Abre el HUB interactivo de ayuda.'),
   ns: 'help',
   async execute(interaction: ChatInputCommandInteraction) {
-    const options = Object.keys(categories).map((c, i) => ({ label: c, value: `cat_${i}` }));
-    const select = new StringSelectMenuBuilder()
-      .setCustomId('help:cat')
-      .setPlaceholder('Elige una categoría')
-      .addOptions(options);
-    const row = new ActionRowBuilder<StringSelectMenuBuilder>().addComponents(select);
-    const embed = new EmbedBuilder().setTitle('Ayuda de Virkz').setDescription('Selecciona una categoría para ver comandos.');
-    await interaction.reply({ embeds: [embed], components: [row], ephemeral: true });
+    const firstCategory = HELP_CATEGORIES[0]?.key ?? 'core';
+    const baseState: Omit<HelpSessionState, 'messageId' | 'ephemeral'> = {
+      userId: interaction.user.id,
+      category: firstCategory,
+      page: 0,
+      mode: 'category',
+      query: undefined,
+      results: undefined,
+      createdAt: Date.now()
+    };
+
+    const payload = {
+      embeds: [buildHelpEmbed({ ...baseState, messageId: 'pending', ephemeral: false })],
+      components: buildHelpComponents({ ...baseState, messageId: 'pending', ephemeral: false })
+    };
+
+    let ephemeral = false;
+    try {
+      await interaction.reply(payload);
+    } catch (error) {
+      ephemeral = true;
+      console.warn('[help] No se pudo enviar mensaje público, usando ephemeral.', error);
+      await interaction.reply({ ...payload, ephemeral: true });
+    }
+
+    const message = await interaction.fetchReply();
+    const state: HelpSessionState = {
+      ...baseState,
+      messageId: message.id,
+      ephemeral,
+      createdAt: Date.now()
+    };
+    setHelpSession(state);
+
+    await interaction.editReply({
+      embeds: [buildHelpEmbed(state)],
+      components: buildHelpComponents(state)
+    });
   },
   async handleInteraction(interaction: any) {
-    if (!interaction.isStringSelectMenu() || interaction.customId !== 'help:cat') return;
-    const val = interaction.values[0];
-    const idx = Number(val.split('_')[1]);
-    const key = Object.keys(categories)[idx];
-    const cmds = categories[key as keyof typeof categories];
-    await interaction.update({ content: `**${key}**\n• ` + cmds.map(c => `\`/${c}\``).join(' • '), components: [] });
+    if (interaction.isStringSelectMenu()) {
+      await handleHelpCategorySelect(interaction);
+      return;
+    }
+    if (interaction.isButton()) {
+      await handleHelpButton(interaction);
+      return;
+    }
+    if (interaction.isModalSubmit()) {
+      await handleHelpSearchModal(interaction);
+    }
   }
-}
+};

@@ -1,6 +1,7 @@
 import { SlashCommandBuilder, ChatInputCommandInteraction, StringSelectMenuBuilder, ActionRowBuilder, ButtonBuilder, ButtonStyle } from 'discord.js';
 import { prisma } from '../../lib/db.js';
 import { onCooldown } from '../../services/cooldowns.js';
+import { registerSequenceSample, resetSequence } from '../../services/antiCheat.js';
 
 export default {
   data: new SlashCommandBuilder().setName('mine').setDescription('Entrar a una mina y minar (requiere pico).'),
@@ -46,10 +47,17 @@ export default {
       const start = Number(startStr);
       const now = Date.now();
       if (now - start > 12_000) {
+        resetSequence(`mine:${interaction.user.id}:${start}`);
         return interaction.update({ content: '⏱️ La veta colapsó. Vuelve a intentarlo más tarde.', components: [] });
       }
 
       const next = count + 1;
+      const sequenceKey = `mine:${interaction.user.id}:${start}`;
+      const check = registerSequenceSample({ key: sequenceKey, start, windowMs: 12_000, timestamp: now });
+      if (!check.ok) {
+        resetSequence(sequenceKey);
+        return interaction.update({ content: `🚫 ${check.reason ?? 'Detección anti-macro.'}`, components: [] });
+      }
       if (next >= targetHits) {
         // compute reward based on location drops and pick tier
         const locId = Number(locStr);
@@ -79,6 +87,7 @@ export default {
           lines.push(`+${qty} × ${item.name}`);
         }
         await prisma.$transaction(ops);
+        resetSequence(sequenceKey);
         return interaction.update({ content: `🪨 Recolectaste:\n` + lines.join('\n'), components: [] });
       }
 
