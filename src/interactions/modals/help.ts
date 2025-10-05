@@ -5,11 +5,15 @@ import {
   computeSearchResults,
   ensureSessionOwner,
   getHelpSessionSafe,
-  updateSession
+  updateSession,
+  refreshHelpCategories, // ⬅️ NUEVO
 } from '../../services/helpHub.js';
 
 export async function handleHelpSearchModal(interaction: ModalSubmitInteraction) {
   if (interaction.customId !== 'help:search-modal') return;
+
+  // Actualiza catálogo antes de buscar
+  await refreshHelpCategories(interaction.client);
 
   const state = getHelpSessionSafe(interaction);
   const ownership = ensureSessionOwner(state, interaction.user.id);
@@ -25,15 +29,16 @@ export async function handleHelpSearchModal(interaction: ModalSubmitInteraction)
     mode: 'search',
     query: rawQuery,
     page: 0,
-    results
+    results,
   });
 
   const embed = buildHelpEmbed(updated);
   const components = buildHelpComponents(updated);
 
+  // Mantén la UX actual: actualizas el mismo mensaje y usas ephemeral solo como tránsito
   await interaction.deferReply({ ephemeral: true });
   if (interaction.message) {
-    await interaction.message.edit({ embeds: [embed], components });
+    await (interaction.message as any).edit({ embeds: [embed], components });
     await interaction.deleteReply();
   } else {
     await interaction.editReply({ embeds: [embed], components });

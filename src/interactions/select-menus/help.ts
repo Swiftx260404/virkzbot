@@ -4,11 +4,15 @@ import {
   buildHelpEmbed,
   ensureSessionOwner,
   getHelpSessionSafe,
-  updateSession
+  updateSession,
+  refreshHelpCategories, // ⬅️ NUEVO
 } from '../../services/helpHub.js';
 
 export async function handleHelpCategorySelect(interaction: StringSelectMenuInteraction) {
   if (interaction.customId !== 'help:cat') return;
+
+  // Refresca catálogo dinámico antes de usarlo
+  await refreshHelpCategories(interaction.client);
 
   const state = getHelpSessionSafe(interaction);
   const ownership = ensureSessionOwner(state, interaction.user.id);
@@ -23,11 +27,11 @@ export async function handleHelpCategorySelect(interaction: StringSelectMenuInte
     page: 0,
     mode: 'category',
     query: undefined,
-    results: undefined
+    results: undefined,
   });
 
   await interaction.update({
     embeds: [buildHelpEmbed(updated)],
-    components: buildHelpComponents(updated)
+    components: buildHelpComponents(updated),
   });
 }

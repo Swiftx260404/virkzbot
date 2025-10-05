@@ -1,17 +1,30 @@
-import { ActionRowBuilder, APIEmbedField, ButtonBuilder, ButtonStyle, EmbedBuilder, ModalBuilder, StringSelectMenuBuilder, TextInputBuilder, TextInputStyle } from 'discord.js';
+// src/services/helpHub.ts
+import {
+  ActionRowBuilder,
+  APIEmbedField,
+  ButtonBuilder,
+  ButtonStyle,
+  Client,
+  EmbedBuilder,
+  ModalBuilder,
+  StringSelectMenuBuilder,
+  TextInputBuilder,
+  TextInputStyle,
+} from 'discord.js';
 
-type HelpCommandInfo = {
+export type HelpCommandInfo = {
   name: string;
   description: string;
   usage?: string;
 };
 
-type HelpCategory = {
+export type HelpCategory = {
   key: string;
   label: string;
   emoji: string;
   color: number;
   blurb: string;
+  match?: RegExp;         // Regla para clasificar por nombre de comando
   commands: HelpCommandInfo[];
 };
 
@@ -31,18 +44,17 @@ export interface HelpSessionState {
 
 const PAGE_SIZE = 5;
 
-export const HELP_CATEGORIES: HelpCategory[] = [
+// ========================= DINÁMICO =========================
+
+// Reglas de clasificación (ajústalas si cambias tu set de comandos)
+const CATEGORY_RULES: Omit<HelpCategory, 'commands'>[] = [
   {
     key: 'core',
     label: 'Core',
     emoji: '🧭',
     color: 0x5865f2,
     blurb: 'Comandos esenciales para comenzar y conocer tu progreso en Virkz.',
-    commands: [
-      { name: 'start', description: 'Crea tu perfil y comienza tu aventura.' },
-      { name: 'help', description: 'Abre este hub interactivo de ayuda.' },
-      { name: 'profile', description: 'Consulta tu perfil, stats básicos y equipamiento.' }
-    ]
+    match: /^(start|profile|help|settings|daily|streak)$/i,
   },
   {
     key: 'economy',
@@ -50,26 +62,15 @@ export const HELP_CATEGORIES: HelpCategory[] = [
     emoji: '💼',
     color: 0x43b581,
     blurb: 'Genera V Coins y recursos realizando actividades diarias y oficios.',
-    commands: [
-      { name: 'daily', description: 'Reclama tu recompensa diaria de V Coins.' },
-      { name: 'work', description: 'Completa un minijuego rápido para ganar monedas.' },
-      { name: 'mine', description: 'Extrae recursos en minas desbloqueadas.' },
-      { name: 'fish', description: 'Pesca distintos peces según tu caña y zona.' }
-    ]
+    match: /^(work|mine|fish|deliveries|cook)$/i,
   },
   {
     key: 'shop',
     label: 'Tienda/Inventario/Crafteo',
     emoji: '🛒',
     color: 0xf47b67,
-    blurb: 'Administra tu inventario, compra, equipa y vende objetos.',
-    commands: [
-      { name: 'shop', description: 'Explora el catálogo disponible en la tienda.' },
-      { name: 'buy', description: 'Compra objetos utilizando tus V Coins.' },
-      { name: 'inventory', description: 'Revisa los ítems de tu inventario.' },
-      { name: 'equip', description: 'Equipa herramientas, armas o armaduras.' },
-      { name: 'sell', description: 'Vende ítems vendibles de tu inventario.' }
-    ]
+    blurb: 'Administra tu inventario, compra, equipa, vende y fabrica objetos.',
+    match: /^(shop|buy|inventory|equip|sell|use|disassemble|craft)$/i,
   },
   {
     key: 'rpg',
@@ -77,38 +78,31 @@ export const HELP_CATEGORIES: HelpCategory[] = [
     emoji: '⚔️',
     color: 0x9b59b6,
     blurb: 'Actividades de progresión y combate. ¡Más características en camino!',
-    commands: [
-      { name: 'mine', description: 'Obtén minerales y materiales raros.' },
-      { name: 'fish', description: 'Consigue peces y recompensas temáticas.' }
-    ]
+    match: /^(adventure|battle|skills|boss|raid|bounty)$/i,
   },
   {
     key: 'social',
     label: 'Social/Gremios',
     emoji: '🤝',
     color: 0xf9a62b,
-    blurb: 'Funciones cooperativas y de comunidad. Próximamente más opciones.',
-    commands: [
-      { name: 'trade', description: 'Intercambia ítems de forma segura con otros jugadores.' }
-    ]
+    blurb: 'Funciones cooperativas y de comunidad.',
+    match: /^(guild-|donate)/i,
   },
   {
     key: 'casino',
     label: 'Casino/Minijuegos',
     emoji: '🎲',
     color: 0xfaa61a,
-    blurb: 'Juegos rápidos para poner a prueba tu suerte. ¡Mantente al tanto!',
-    commands: []
+    blurb: 'Juegos rápidos para poner a prueba tu suerte.',
+    match: /^(blackjack|roulette|slots|rps|quickdraw|typing|rhythm|race)$/i,
   },
   {
     key: 'stats',
     label: 'Estadísticas/Logros',
     emoji: '📊',
     color: 0x57f287,
-    blurb: 'Consulta logros, hitos y estadísticas de la cuenta.',
-    commands: [
-      { name: 'profile', description: 'Mira tu progreso, nivel y equipamiento actual.' }
-    ]
+    blurb: 'Consulta logros y estadísticas de la cuenta.',
+    match: /^(leaderboard|achievements|stats)$/i,
   },
   {
     key: 'market',
@@ -116,19 +110,68 @@ export const HELP_CATEGORIES: HelpCategory[] = [
     emoji: '📦',
     color: 0x00b0f4,
     blurb: 'Compra y vende con otros jugadores mediante herramientas seguras.',
-    commands: [
-      { name: 'trade', description: 'Inicia un intercambio P2P con confirmación doble.' }
-    ]
+    match: /^(market-|trade)/i,
   },
   {
     key: 'utility',
     label: 'Utilidad/Admin',
     emoji: '🛠️',
     color: 0x99aab5,
-    blurb: 'Configuraciones y utilidades adicionales para staff y jugadores.',
-    commands: []
-  }
+    blurb: 'Configuraciones y utilidades adicionales.',
+    match: /^(admin-)/i,
+  },
 ];
+
+const OTHER_CATEGORY: Omit<HelpCategory, 'commands'> = {
+  key: 'other',
+  label: 'Otros',
+  emoji: '✨',
+  color: 0x7289da,
+  blurb: 'Comandos sin categoría específica.',
+};
+
+let lastRefresh = 0;
+const REFRESH_TTL_MS = 60_000;
+
+// Exportamos como variable para mantener compatibilidad con tu import existente
+export let HELP_CATEGORIES: HelpCategory[] = [];
+
+/**
+ * Reconstruye HELP_CATEGORIES desde los slash commands registrados en Discord.
+ * Cachea 60s para evitar fetches constantes.
+ */
+export async function refreshHelpCategories(client: Client) {
+  const now = Date.now();
+  if (now - lastRefresh < REFRESH_TTL_MS && HELP_CATEGORIES.length) return;
+
+  const coll = await client.application!.commands.fetch(); // globales
+  const all: HelpCommandInfo[] = [...coll.values()].map((c) => ({
+    name: c.name,
+    description: c.description || '—',
+  }));
+
+  // Construir buckets
+  const buckets: HelpCategory[] = CATEGORY_RULES.map((r) => ({ ...r, commands: [] }));
+  const other: HelpCategory = { ...OTHER_CATEGORY, commands: [] };
+
+  for (const cmd of all) {
+    const target =
+      buckets.find((b) => (b.match ? b.match.test(cmd.name) : false)) || other;
+    target.commands.push(cmd);
+  }
+
+  // Filtrar categorías vacías; incluir "Otros" si aporta
+  const visible = buckets.filter((b) => b.commands.length > 0);
+  if (other.commands.length) visible.push(other);
+
+  // Ordenar comandos alfabéticamente
+  for (const b of visible) b.commands.sort((a, z) => a.name.localeCompare(z.name));
+
+  HELP_CATEGORIES = visible;
+  lastRefresh = now;
+}
+
+// ========================= SESIONES =========================
 
 const helpSessions = new Map<string, HelpSessionState>();
 
@@ -150,12 +193,16 @@ export function deleteHelpSession(messageId: string) {
   helpSessions.delete(messageId);
 }
 
+// ========================= UI =========================
+
 export function buildHelpEmbed(state: HelpSessionState) {
   if (state.mode === 'search') {
     const embed = new EmbedBuilder()
       .setTitle('🔍 Resultados de búsqueda')
       .setColor(0xfee75c)
-      .setDescription(state.query ? `Coincidencias para **${state.query}**` : 'Escribe algo para buscar comandos.');
+      .setDescription(
+        state.query ? `Coincidencias para **${state.query}**` : 'Escribe algo para buscar comandos.',
+      );
 
     const results = state.results ?? [];
     if (!results.length) {
@@ -166,29 +213,35 @@ export function buildHelpEmbed(state: HelpSessionState) {
         embed.addFields({
           name: `/${cmd.name}`,
           value: cmd.description + (cmd.usage ? `\nUso: \`${cmd.usage}\`` : ''),
-          inline: false
+          inline: false,
         });
       }
-      embed.setFooter({ text: `Página ${pageResults.page + 1}/${Math.max(1, pageResults.totalPages)} · ${results.length} resultados` });
+      embed.setFooter({
+        text: `Página ${pageResults.page + 1}/${Math.max(1, pageResults.totalPages)} · ${results.length} resultados`,
+      });
     }
 
     return embed;
   }
 
-  const category = HELP_CATEGORIES.find((c) => c.key === state.category) ?? HELP_CATEGORIES[0];
-  const embed = new EmbedBuilder()
-    .setTitle(`${category.emoji} ${category.label}`)
-    .setColor(category.color)
-    .setDescription(category.blurb);
+  const category =
+    HELP_CATEGORIES.find((c) => c.key === state.category) ?? HELP_CATEGORIES[0];
 
-  const { items, totalPages, page } = paginate(category.commands, state.page);
+  const embed = new EmbedBuilder()
+    .setTitle(`${category?.emoji ?? '📚'} ${category?.label ?? 'Categoría'}`)
+    .setColor(category?.color ?? 0x5865f2)
+    .setDescription(category?.blurb ?? '');
+
+  const list = category?.commands ?? [];
+  const { items, totalPages, page } = paginate(list, state.page);
+
   if (!items.length) {
     embed.addFields({ name: 'Próximamente', value: 'Aún no hay comandos disponibles en esta categoría.' });
   } else {
     const fields: APIEmbedField[] = items.map((cmd) => ({
       name: `/${cmd.name}`,
       value: cmd.description + (cmd.usage ? `\nUso: \`${cmd.usage}\`` : ''),
-      inline: false
+      inline: false,
     }));
     embed.addFields(fields);
   }
@@ -205,8 +258,8 @@ export function buildHelpComponents(state: HelpSessionState) {
         label: `${category.emoji} ${category.label}`,
         value: category.key,
         description: category.blurb.substring(0, 95),
-        default: category.key === state.category
-      }))
+        default: category.key === state.category,
+      })),
     );
 
   const row1 = new ActionRowBuilder<StringSelectMenuBuilder>().addComponents(select);
@@ -243,6 +296,8 @@ export function buildHelpComponents(state: HelpSessionState) {
   return [row1, controls];
 }
 
+// ========================= UTIL =========================
+
 function paginate<T>(list: T[], page: number) {
   const totalPages = Math.max(1, Math.ceil(list.length / PAGE_SIZE));
   const safePage = Math.min(Math.max(0, page), totalPages - 1);
@@ -258,19 +313,21 @@ function calculatePagination(state: HelpSessionState) {
     const current = Math.min(Math.max(0, state.page), totalPages - 1);
     return {
       hasPrev: current > 0,
-      hasNext: current < totalPages - 1 && total > 0
+      hasNext: current < totalPages - 1 && total > 0,
     };
   }
-  const category = HELP_CATEGORIES.find((c) => c.key === state.category) ?? HELP_CATEGORIES[0];
-  const total = category.commands.length;
+  const category =
+    HELP_CATEGORIES.find((c) => c.key === state.category) ?? HELP_CATEGORIES[0];
+  const total = category?.commands.length ?? 0;
   const totalPages = Math.max(1, Math.ceil(total / PAGE_SIZE));
   const current = Math.min(Math.max(0, state.page), totalPages - 1);
   return {
     hasPrev: current > 0,
-    hasNext: current < totalPages - 1 && total > 0
+    hasNext: current < totalPages - 1 && total > 0,
   };
 }
 
+// Modal de búsqueda (igual que tenías)
 export function createSearchModal() {
   const input = new TextInputBuilder()
     .setCustomId('help:search-query')
@@ -282,19 +339,15 @@ export function createSearchModal() {
 
   const row = new ActionRowBuilder<TextInputBuilder>().addComponents(input);
 
-  return new ModalBuilder()
-    .setCustomId('help:search-modal')
-    .setTitle('Buscar comandos')
-    .addComponents(row);
+  return new ModalBuilder().setCustomId('help:search-modal').setTitle('Buscar comandos').addComponents(row);
 }
 
+// Devuelve todos los comandos del catálogo dinámico
 export function getAllHelpCommands() {
   const map = new Map<string, HelpCommandInfo>();
   for (const category of HELP_CATEGORIES) {
     for (const cmd of category.commands) {
-      if (!map.has(cmd.name)) {
-        map.set(cmd.name, cmd);
-      }
+      if (!map.has(cmd.name)) map.set(cmd.name, cmd);
     }
   }
   return Array.from(map.values());
@@ -341,8 +394,9 @@ export function getTotalPages(state: HelpSessionState) {
     const total = state.results?.length ?? 0;
     return Math.max(1, Math.ceil(total / PAGE_SIZE));
   }
-  const category = HELP_CATEGORIES.find((c) => c.key === state.category) ?? HELP_CATEGORIES[0];
-  const total = category.commands.length;
+  const category =
+    HELP_CATEGORIES.find((c) => c.key === state.category) ?? HELP_CATEGORIES[0];
+  const total = category?.commands.length ?? 0;
   return Math.max(1, Math.ceil(total / PAGE_SIZE));
 }
 
@@ -351,7 +405,7 @@ export function resetToCategory(state: HelpSessionState) {
     mode: 'category',
     page: 0,
     query: undefined,
-    results: undefined
+    results: undefined,
   });
   return updated;
 }

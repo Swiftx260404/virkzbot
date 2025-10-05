@@ -7,7 +7,8 @@ import {
   HelpSessionState,
   buildHelpComponents,
   buildHelpEmbed,
-  setHelpSession
+  setHelpSession,
+  refreshHelpCategories, // 🔁
 } from '../../services/helpHub.js';
 import { handleHelpButton } from '../../interactions/buttons/help.js';
 import { handleHelpCategorySelect } from '../../interactions/select-menus/help.js';
@@ -19,6 +20,8 @@ export default {
     .setDescription('Abre el HUB interactivo de ayuda.'),
   ns: 'help',
   async execute(interaction: ChatInputCommandInteraction) {
+    await refreshHelpCategories(interaction.client); // 🔁 reconstruye dinámicamente
+
     const firstCategory = HELP_CATEGORIES[0]?.key ?? 'core';
     const baseState: Omit<HelpSessionState, 'messageId' | 'ephemeral'> = {
       userId: interaction.user.id,
@@ -38,9 +41,8 @@ export default {
     let ephemeral = false;
     try {
       await interaction.reply(payload);
-    } catch (error) {
+    } catch {
       ephemeral = true;
-      console.warn('[help] No se pudo enviar mensaje público, usando ephemeral.', error);
       await interaction.reply({ ...payload, ephemeral: true });
     }
 
@@ -59,16 +61,11 @@ export default {
     });
   },
   async handleInteraction(interaction: any) {
-    if (interaction.isStringSelectMenu()) {
-      await handleHelpCategorySelect(interaction);
-      return;
-    }
-    if (interaction.isButton()) {
-      await handleHelpButton(interaction);
-      return;
-    }
-    if (interaction.isModalSubmit()) {
-      await handleHelpSearchModal(interaction);
-    }
+    // 🔁 refresca también en las interacciones del hub
+    await refreshHelpCategories(interaction.client);
+
+    if (interaction.isStringSelectMenu()) return handleHelpCategorySelect(interaction);
+    if (interaction.isButton())           return handleHelpButton(interaction);
+    if (interaction.isModalSubmit())      return handleHelpSearchModal(interaction);
   }
 };

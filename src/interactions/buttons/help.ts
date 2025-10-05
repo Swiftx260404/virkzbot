@@ -7,11 +7,15 @@ import {
   getHelpSessionSafe,
   getTotalPages,
   resetToCategory,
-  updateSession
+  updateSession,
+  refreshHelpCategories, // ⬅️ NUEVO
 } from '../../services/helpHub.js';
 
 export async function handleHelpButton(interaction: ButtonInteraction) {
   if (!interaction.customId.startsWith('help:')) return;
+
+  // Asegura que las categorías/comandos estén al día
+  await refreshHelpCategories(interaction.client);
 
   const state = getHelpSessionSafe(interaction);
   const ownership = ensureSessionOwner(state, interaction.user.id);
@@ -32,7 +36,7 @@ export async function handleHelpButton(interaction: ButtonInteraction) {
     const updated = resetToCategory(state!);
     await interaction.update({
       embeds: [buildHelpEmbed(updated)],
-      components: buildHelpComponents(updated)
+      components: buildHelpComponents(updated),
     });
     return;
   }
@@ -44,7 +48,7 @@ export async function handleHelpButton(interaction: ButtonInteraction) {
     const updated = updateSession(state!, { page: nextPage });
     await interaction.update({
       embeds: [buildHelpEmbed(updated)],
-      components: buildHelpComponents(updated)
+      components: buildHelpComponents(updated),
     });
     return;
   }
