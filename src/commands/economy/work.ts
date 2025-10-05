@@ -2,6 +2,9 @@ import { SlashCommandBuilder, ChatInputCommandInteraction, ButtonBuilder, Button
 import { onCooldown } from '../../services/cooldowns.js';
 import { prisma } from '../../lib/db.js';
 import { registerSequenceSample, resetSequence } from '../../services/antiCheat.js';
+import { extractBuffState, sumBuffs, buffAppliesTo } from '../../services/buffs.js';
+import type { ActiveBuff } from '../../services/buffs.js';
+import { EffectType } from '@prisma/client';
 
 export default {
   data: new SlashCommandBuilder().setName('work').setDescription('Trabaja en un minijuego corto para ganar V Coins.'),
@@ -43,10 +46,37 @@ export default {
         return interaction.update({ content: `🚫 ${check.reason ?? 'Detección anti-macro.'}`, components: [] });
       }
 
-      const reward = 25 + Math.floor(Math.random()*20);
-      await prisma.user.update({ where: { id: interaction.user.id }, data: { vcoins: { increment: reward } } });
+      const user = await prisma.user.findUnique({ where: { id: interaction.user.id } });
+      if (!user) {
+        resetSequence(sequenceKey);
+        return interaction.update({ content: 'Necesitas usar `/start` antes de trabajar.', components: [] });
+      }
+
+      let buffs: ActiveBuff[] = [];
+      const state = extractBuffState(user.metadata);
+      buffs = state.active;
+      if (state.changed) {
+        await prisma.user.update({ where: { id: user.id }, data: { metadata: state.root } });
+      }
+      const appliesWork = (buff: ActiveBuff) => buffAppliesTo(buff, 'WORK') || buffAppliesTo(buff, 'SELF');
+      const payoutBonus = sumBuffs(buffs, EffectType.BUFF_WORK_PAYOUT, appliesWork);
+      const luckBonus = sumBuffs(buffs, EffectType.BUFF_LUCK, appliesWork);
+
+      let reward = 25 + Math.floor(Math.random()*20);
+      if (payoutBonus > 0) {
+        reward = Math.max(1, Math.round(reward * (1 + payoutBonus)));
+      }
+      if (luckBonus > 0 && Math.random() < luckBonus) {
+        reward += 10;
+      }
+
+      await prisma.user.update({ where: { id: user.id }, data: { vcoins: { increment: reward } } });
       resetSequence(sequenceKey);
-      return interaction.update({ content: `💼 ¡Buen trabajo! Ganaste **${reward} V Coins**.`, components: [] });
+      const extras: string[] = [];
+      if (payoutBonus > 0) extras.push(`+${Math.round(payoutBonus*100)}% pago`);
+      if (luckBonus > 0) extras.push(`suerte ${(luckBonus*100).toFixed(0)}%`);
+      const suffix = extras.length ? `\n🔸 Buffs: ${extras.join(' · ')}` : '';
+      return interaction.update({ content: `💼 ¡Buen trabajo! Ganaste **${reward} V Coins**.${suffix}`, components: [] });
     }
 
     const sequenceKey = `work:${interaction.user.id}:${start}`;

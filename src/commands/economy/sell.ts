@@ -150,8 +150,7 @@ export default {
       }
 
       try {
-        let summary: { itemName: string; unitPrice: number; total: number; remaining: number } | null = null;
-        await prisma.$transaction(async (tx) => {
+        const summary = await prisma.$transaction(async (tx) => {
           const inventory = await tx.userItem.findUnique({
             where: { userId_itemId: { userId: targetUserId, itemId } },
             include: { item: true }
@@ -184,15 +183,13 @@ export default {
             data: { vcoins: { increment: total } }
           });
 
-          summary = {
+          return {
             itemName: inventory.item.name,
             unitPrice,
             total,
             remaining
           };
         });
-
-        if (!summary) throw new Error('NO_SUMMARY');
 
         const resultEmbed = new EmbedBuilder()
           .setColor(0x43b581)

@@ -329,7 +329,13 @@ async function handleTradeModal(interaction: ModalSubmitInteraction) {
 
   if (isSessionExpired(session)) {
     clearTradeSession(session.id);
-    await interaction.update({ content: '⏱️ Intercambio expirado por inactividad.', embeds: [], components: [] });
+    if (interaction.message) {
+      await interaction.deferReply({ ephemeral: true });
+      await interaction.message.edit({ content: '⏱️ Intercambio expirado por inactividad.', embeds: [], components: [] });
+      await interaction.editReply({ content: '⏱️ Intercambio expirado por inactividad.' });
+    } else {
+      await interaction.reply({ content: '⏱️ Intercambio expirado por inactividad.', ephemeral: true });
+    }
     return;
   }
 
@@ -344,9 +350,19 @@ async function handleTradeModal(interaction: ModalSubmitInteraction) {
     const offers = await parseOfferInput(interaction.user.id, raw);
     const updated = setTradeOffer(session.id, interaction.user.id, offers);
     if (!updated) throw new Error('SESSION_MISSING');
-    await interaction.update({ embeds: [buildTradeEmbed(updated)], components: buildTradeComponents(updated) });
+    if (interaction.message) {
+      await interaction.deferReply({ ephemeral: true });
+      await interaction.message.edit({ embeds: [buildTradeEmbed(updated)], components: buildTradeComponents(updated) });
+      await interaction.deleteReply();
+    } else {
+      await interaction.reply({ embeds: [buildTradeEmbed(updated)], components: buildTradeComponents(updated), ephemeral: true });
+    }
   } catch (error: any) {
-    await interaction.reply({ content: `❌ ${error.message ?? 'No se pudo guardar tu oferta.'}`, ephemeral: true });
+    if (interaction.deferred || interaction.replied) {
+      await interaction.followUp({ content: `❌ ${error.message ?? 'No se pudo guardar tu oferta.'}`, ephemeral: true });
+    } else {
+      await interaction.reply({ content: `❌ ${error.message ?? 'No se pudo guardar tu oferta.'}`, ephemeral: true });
+    }
   }
 }
 

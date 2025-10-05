@@ -304,8 +304,8 @@ export function normalizeSearchQuery(query: string) {
   return query.trim().toLowerCase();
 }
 
-export function getHelpSessionSafe(interaction: { message?: { id: string } }) {
-  const messageId = interaction.message?.id;
+export function getHelpSessionSafe(interaction: { message?: { id: string } | null }) {
+  const messageId = interaction.message?.id ?? undefined;
   if (!messageId) return null;
   return getHelpSession(messageId);
 }

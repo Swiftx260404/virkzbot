@@ -2,6 +2,9 @@ import { SlashCommandBuilder, ChatInputCommandInteraction, StringSelectMenuBuild
 import { prisma } from '../../lib/db.js';
 import { onCooldown } from '../../services/cooldowns.js';
 import { registerSequenceSample, resetSequence } from '../../services/antiCheat.js';
+import { extractBuffState, sumBuffs, buffAppliesTo } from '../../services/buffs.js';
+import type { ActiveBuff } from '../../services/buffs.js';
+import { EffectType } from '@prisma/client';
 
 export default {
   data: new SlashCommandBuilder().setName('fish').setDescription('Ir a pescar (requiere caña).'),
@@ -62,21 +65,66 @@ export default {
         const meta = (loc?.metadata || {}) as any;
         const drops: string[] = meta.drop ?? ['fish_common'];
         const multi: number = Number(meta.multi ?? 1);
-        const key = drops[Math.floor(Math.random()*drops.length)];
-        const item = await prisma.item.findUnique({ where: { key } });
-        if (item) {
-          const qty = 1 + Math.floor(Math.random()*multi);
-          await prisma.userItem.upsert({
+
+        const user = await prisma.user.findUnique({ where: { id: interaction.user.id } });
+        let buffs: ActiveBuff[] = [];
+        if (user) {
+          const state = extractBuffState(user.metadata);
+          buffs = state.active;
+          if (state.changed) {
+            await prisma.user.update({ where: { id: user.id }, data: { metadata: state.root } });
+          }
+        }
+        const appliesFish = (buff: ActiveBuff) => buffAppliesTo(buff, 'FISH') || buffAppliesTo(buff, 'ROD');
+        const dropBonus = sumBuffs(buffs, EffectType.BUFF_DROP_RATE, appliesFish);
+        const yieldBonus = sumBuffs(buffs, EffectType.BUFF_RESOURCE_YIELD, appliesFish);
+        const luckBonus = sumBuffs(buffs, EffectType.BUFF_LUCK, appliesFish);
+
+        let stacks = 1;
+        if (dropBonus > 0) {
+          stacks += Math.floor(dropBonus);
+          if (Math.random() < dropBonus - Math.floor(dropBonus)) stacks += 1;
+        }
+        if (luckBonus > 0) {
+          stacks += Math.floor(luckBonus);
+          if (Math.random() < luckBonus - Math.floor(luckBonus)) stacks += 1;
+        }
+
+        const ops: any[] = [];
+        const lines: string[] = [];
+
+        for (let i = 0; i < stacks; i++) {
+          const key = drops[Math.floor(Math.random() * drops.length)];
+          const item = await prisma.item.findUnique({ where: { key } });
+          if (!item) continue;
+          let qty = 1 + Math.floor(Math.random() * Math.max(1, multi));
+          if (yieldBonus > 0) {
+            const scaled = qty * (1 + yieldBonus);
+            qty = Math.max(1, Math.round(scaled));
+          }
+          ops.push(prisma.userItem.upsert({
             where: { userId_itemId: { userId: interaction.user.id, itemId: item.id } },
             update: { quantity: { increment: qty } },
             create: { userId: interaction.user.id, itemId: item.id, quantity: qty }
-          });
-          resetSequence(sequenceKey);
-          return interaction.update({ content: `🐠 ¡Pescaste **${qty} × ${item.name}**!`, components: [] });
-        } else {
+          }));
+          lines.push(`+${qty} × ${item.name}`);
+        }
+
+        if (!ops.length) {
           resetSequence(sequenceKey);
           return interaction.update({ content: 'Nada mordió el anzuelo...', components: [] });
         }
+
+        await prisma.$transaction(ops);
+        resetSequence(sequenceKey);
+        if (dropBonus > 0 || yieldBonus > 0 || luckBonus > 0) {
+          const parts: string[] = [];
+          if (dropBonus > 0) parts.push(`drop +${Math.round(dropBonus * 100)}%`);
+          if (yieldBonus > 0) parts.push(`rendimiento +${Math.round(yieldBonus * 100)}%`);
+          if (luckBonus > 0) parts.push(`suerte +${Math.round(luckBonus * 100)}%`);
+          lines.push(`🔸 Buffs activos: ${parts.join(' · ')}`);
+        }
+        return interaction.update({ content: `🐠 ¡Pescaste!\n${lines.join('\n')}`, components: [] });
       }
 
       const btn = new (ButtonBuilder as any)().setCustomId(`fish:reel:${next}:${locStr}:${pullsStr}:${startStr}`).setLabel(`Recoger ${next}/${pullsStr}`).setStyle(1);

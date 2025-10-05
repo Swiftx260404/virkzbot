@@ -2,6 +2,9 @@ import { SlashCommandBuilder, ChatInputCommandInteraction, StringSelectMenuBuild
 import { prisma } from '../../lib/db.js';
 import { onCooldown } from '../../services/cooldowns.js';
 import { registerSequenceSample, resetSequence } from '../../services/antiCheat.js';
+import { extractBuffState, sumBuffs, buffAppliesTo } from '../../services/buffs.js';
+import type { ActiveBuff } from '../../services/buffs.js';
+import { EffectType } from '@prisma/client';
 
 export default {
   data: new SlashCommandBuilder().setName('mine').setDescription('Entrar a una mina y minar (requiere pico).'),
@@ -69,8 +72,30 @@ export default {
         // Use pick tier to scale
         const u = await prisma.user.findUnique({ where: { id: interaction.user.id } });
         const pick = u?.equippedPickaxeId ? await prisma.item.findUnique({ where: { id: u!.equippedPickaxeId } }) : null;
+        let buffs: ActiveBuff[] = [];
+        if (u) {
+          const state = extractBuffState(u.metadata);
+          buffs = state.active;
+          if (state.changed) {
+            await prisma.user.update({ where: { id: u.id }, data: { metadata: state.root } });
+          }
+        }
+        const appliesMine = (buff: ActiveBuff) => buffAppliesTo(buff, 'MINE') || buffAppliesTo(buff, 'PICKAXE');
+        const dropBonus = sumBuffs(buffs, EffectType.BUFF_DROP_RATE, appliesMine);
+        const yieldBonus = sumBuffs(buffs, EffectType.BUFF_RESOURCE_YIELD, appliesMine);
+        const luckBonus = sumBuffs(buffs, EffectType.BUFF_LUCK, appliesMine);
         const tier = pick?.tier ?? 1;
-        const totalStacks = Math.max(1, Math.floor(tier * multi));
+        const baseStacks = Math.max(1, Math.floor((tier || 1) * multi));
+        let totalStacks = baseStacks;
+        if (dropBonus > 0) {
+          const extra = baseStacks * dropBonus;
+          totalStacks += Math.floor(extra);
+          if (Math.random() < extra - Math.floor(extra)) totalStacks += 1;
+        }
+        if (luckBonus > 0) {
+          totalStacks += Math.floor(luckBonus);
+          if (Math.random() < luckBonus - Math.floor(luckBonus)) totalStacks += 1;
+        }
         let lines: string[] = [];
         const ops: any[] = [];
 
@@ -78,7 +103,11 @@ export default {
           const key = drops[Math.floor(Math.random()*drops.length)];
           const item = await prisma.item.findUnique({ where: { key } });
           if (!item) continue;
-          const qty = 1 + Math.floor(Math.random()*tier);
+          let qty = 1 + Math.floor(Math.random()*Math.max(1, tier));
+          if (yieldBonus > 0) {
+            const scaled = qty * (1 + yieldBonus);
+            qty = Math.max(1, Math.round(scaled));
+          }
           ops.push(prisma.userItem.upsert({
             where: { userId_itemId: { userId: interaction.user.id, itemId: item.id } },
             update: { quantity: { increment: qty } },
@@ -88,6 +117,13 @@ export default {
         }
         await prisma.$transaction(ops);
         resetSequence(sequenceKey);
+        if (dropBonus > 0 || yieldBonus > 0 || luckBonus > 0) {
+          const bonusParts: string[] = [];
+          if (dropBonus > 0) bonusParts.push(`drop +${Math.round(dropBonus * 100)}%`);
+          if (yieldBonus > 0) bonusParts.push(`rendimiento +${Math.round(yieldBonus * 100)}%`);
+          if (luckBonus > 0) bonusParts.push(`suerte +${Math.round(luckBonus * 100)}%`);
+          lines.push(`🔸 Buffs activos: ${bonusParts.join(' · ')}`);
+        }
         return interaction.update({ content: `🪨 Recolectaste:\n` + lines.join('\n'), components: [] });
       }
 

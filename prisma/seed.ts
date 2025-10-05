@@ -74,6 +74,14 @@ async function main() {
 
     { key: 'fish_common', name: 'Pez Común',  type: ItemType.MATERIAL, rarity: Rarity.COMMON,   price: 6,  buyable: false, sellable: true, usable: false, toolKind: ToolKind.NONE },
     { key: 'fish_rare',   name: 'Pez Raro',   type: ItemType.MATERIAL, rarity: Rarity.RARE,     price: 20, buyable: false, sellable: true, usable: false, toolKind: ToolKind.NONE },
+    { key: 'ore_coal',    name: 'Carbón',          type: ItemType.MATERIAL, rarity: Rarity.COMMON,   price: 8,  buyable: false, sellable: true, usable: false, toolKind: ToolKind.NONE },
+    { key: 'ore_obsidian',name: 'Obsidiana',       type: ItemType.MATERIAL, rarity: Rarity.EPIC,     price: 40, buyable: false, sellable: true, usable: false, toolKind: ToolKind.NONE },
+    { key: 'herb_sun',    name: 'Hierba Solar',    type: ItemType.MATERIAL, rarity: Rarity.COMMON,   price: 6,  buyable: false, sellable: true, usable: false, toolKind: ToolKind.NONE },
+    { key: 'herb_moon',   name: 'Hierba Lunar',    type: ItemType.MATERIAL, rarity: Rarity.UNCOMMON, price: 12, buyable: false, sellable: true, usable: false, toolKind: ToolKind.NONE },
+    { key: 'dust_arcane', name: 'Polvo Arcano',    type: ItemType.MATERIAL, rarity: Rarity.RARE,     price: 60, buyable: false, sellable: true, usable: false, toolKind: ToolKind.NONE },
+    { key: 'fiber_silk',  name: 'Fibra de Seda',   type: ItemType.MATERIAL, rarity: Rarity.UNCOMMON, price: 18, buyable: false, sellable: true, usable: false, toolKind: ToolKind.NONE },
+    { key: 'pearl_black', name: 'Perla Negra',     type: ItemType.MATERIAL, rarity: Rarity.RARE,     price: 65, buyable: false, sellable: true, usable: false, toolKind: ToolKind.NONE },
+    { key: 'scale_serpent', name: 'Escama de Serpiente', type: ItemType.MATERIAL, rarity: Rarity.RARE, price: 55, buyable: false, sellable: true, usable: false, toolKind: ToolKind.NONE },
 
     // CONSUMABLES (usables)
     { key: 'potion_small',   name: 'Poción Pequeña', type: ItemType.CONSUMABLE, rarity: Rarity.COMMON,   price: 30,  buyable: true,  sellable: true, usable: true, toolKind: ToolKind.NONE, metadata: { cdSec: 10 } },
@@ -83,10 +91,41 @@ async function main() {
     { key: 'tincture_crit',  name: 'Tinción del Asesino', type: ItemType.CONSUMABLE, rarity: Rarity.EPIC, price: 300, buyable: true, sellable: true, usable: true, toolKind: ToolKind.NONE, metadata: { cdSec: 30 } },
     { key: 'bait_basic',     name: 'Cebo Básico',    type: ItemType.CONSUMABLE, rarity: Rarity.COMMON,   price: 12,  buyable: true,  sellable: true, usable: true, toolKind: ToolKind.NONE, metadata: { uses: 5 } },
     { key: 'bait_premium',   name: 'Cebo Premium',   type: ItemType.CONSUMABLE, rarity: Rarity.RARE,     price: 60,  buyable: true,  sellable: true, usable: true, toolKind: ToolKind.NONE, metadata: { uses: 10 } },
+    { key: 'tea_focus',      name: 'Té de Enfoque',  type: ItemType.CONSUMABLE, rarity: Rarity.UNCOMMON, price: 45, buyable: false, sellable: true, usable: true, toolKind: ToolKind.NONE },
+    { key: 'tonic_miner',    name: 'Tónico del Minero', type: ItemType.CONSUMABLE, rarity: Rarity.RARE, price: 70, buyable: false, sellable: true, usable: true, toolKind: ToolKind.NONE },
+    { key: 'elixir_luck',    name: 'Elixir de Suerte', type: ItemType.CONSUMABLE, rarity: Rarity.EPIC, price: 140, buyable: false, sellable: true, usable: true, toolKind: ToolKind.NONE },
+    { key: 'bait_luminous',  name: 'Cebo Luminoso',  type: ItemType.CONSUMABLE, rarity: Rarity.EPIC, price: 120, buyable: false, sellable: true, usable: true, toolKind: ToolKind.NONE, metadata: { uses: 15 } },
   ];
 
   for (const it of items) {
     await prisma.item.upsert({ where: { key: it.key }, update: it, create: it });
+  }
+
+  const disassembleConfigs = [
+    { key: 'pick_stone', outputs: [ { itemKey: 'ore_copper', min: 1, max: 2 }, { itemKey: 'ore_tin', min: 1, max: 1 } ] },
+    { key: 'pick_copper', outputs: [ { itemKey: 'bar_bronze', min: 1, max: 2 } ] },
+    { key: 'pick_iron', outputs: [ { itemKey: 'bar_iron', min: 1, max: 2 }, { itemKey: 'ore_coal', min: 1, max: 1 } ] },
+    { key: 'pick_steel', outputs: [ { itemKey: 'bar_steel', min: 1, max: 2 }, { itemKey: 'dust_arcane', min: 0, max: 1, chance: 0.35 } ] },
+    { key: 'pick_diamond', outputs: [ { itemKey: 'gem_sapphire', min: 0, max: 1, chance: 0.6 }, { itemKey: 'ore_obsidian', min: 1, max: 1 } ] },
+    { key: 'pick_mythic', outputs: [ { itemKey: 'gem_ruby', min: 0, max: 1, chance: 0.5 }, { itemKey: 'gem_sapphire', min: 0, max: 1, chance: 0.5 }, { itemKey: 'dust_arcane', min: 1, max: 2 } ] },
+    { key: 'sword_stone', outputs: [ { itemKey: 'bar_bronze', min: 1, max: 2 } ] },
+    { key: 'sword_iron', outputs: [ { itemKey: 'bar_iron', min: 1, max: 2 }, { itemKey: 'dust_arcane', min: 0, max: 1, chance: 0.25 } ] },
+    { key: 'sword_steel', outputs: [ { itemKey: 'bar_steel', min: 1, max: 2 }, { itemKey: 'gem_ruby', min: 0, max: 1, chance: 0.35 } ] },
+    { key: 'sword_mythic', outputs: [ { itemKey: 'gem_emerald', min: 0, max: 1, chance: 0.4 }, { itemKey: 'dust_arcane', min: 1, max: 2 }, { itemKey: 'core_mythic', min: 0, max: 1, chance: 0.25 } ] },
+    { key: 'armor_chain', outputs: [ { itemKey: 'bar_bronze', min: 1, max: 2 }, { itemKey: 'leather', min: 1, max: 2 } ] },
+    { key: 'armor_plate', outputs: [ { itemKey: 'bar_steel', min: 1, max: 2 }, { itemKey: 'scale_serpent', min: 1, max: 1 } ] },
+    { key: 'armor_mythic', outputs: [ { itemKey: 'core_mythic', min: 0, max: 1, chance: 0.25 }, { itemKey: 'gem_emerald', min: 0, max: 1, chance: 0.4 }, { itemKey: 'dust_arcane', min: 1, max: 2 } ] },
+    { key: 'rod_oak', outputs: [ { itemKey: 'leather', min: 1, max: 2 }, { itemKey: 'fiber_silk', min: 0, max: 1, chance: 0.4 } ] },
+    { key: 'rod_flex', outputs: [ { itemKey: 'fiber_silk', min: 1, max: 2 }, { itemKey: 'herb_moon', min: 1, max: 1 } ] },
+    { key: 'rod_pro', outputs: [ { itemKey: 'fiber_silk', min: 1, max: 2 }, { itemKey: 'pearl_black', min: 0, max: 1, chance: 0.4 } ] },
+    { key: 'rod_legend', outputs: [ { itemKey: 'pearl_black', min: 1, max: 1 }, { itemKey: 'gem_sapphire', min: 0, max: 1, chance: 0.3 } ] },
+  ];
+
+  for (const cfg of disassembleConfigs) {
+    const current = await prisma.item.findUnique({ where: { key: cfg.key }, select: { metadata: true } });
+    const baseMeta = (current?.metadata && typeof current.metadata === 'object' && !Array.isArray(current.metadata)) ? { ...(current.metadata as any) } : {};
+    baseMeta.disassemble = { outputs: cfg.outputs };
+    await prisma.item.update({ where: { key: cfg.key }, data: { metadata: baseMeta } });
   }
 
   const itemId = async (key: string) =>
@@ -103,12 +142,18 @@ async function main() {
     { itemKey: 'tincture_crit',type: EffectType.BUFF_CRIT,      target: EffectTarget.SELF,  magnitude: 0.15, durationSec: 300 },
     { itemKey: 'bait_basic',   type: EffectType.BUFF_DROP_RATE, target: EffectTarget.TOOL,  magnitude: 0.10, durationSec: 1800, metadata: { appliesTo: 'ROD' } },
     { itemKey: 'bait_premium', type: EffectType.BUFF_DROP_RATE, target: EffectTarget.TOOL,  magnitude: 0.25, durationSec: 1800, metadata: { appliesTo: 'ROD' } },
+    { itemKey: 'tea_focus',    type: EffectType.BUFF_WORK_PAYOUT, target: EffectTarget.SELF, magnitude: 0.25, durationSec: 600, metadata: { appliesTo: 'WORK' } },
+    { itemKey: 'tonic_miner',  type: EffectType.BUFF_RESOURCE_YIELD, target: EffectTarget.TOOL, magnitude: 0.35, durationSec: 900, metadata: { appliesTo: ['PICKAXE', 'MINE'] } },
+    { itemKey: 'elixir_luck',  type: EffectType.BUFF_LUCK,      target: EffectTarget.SELF,  magnitude: 0.25, durationSec: 600, metadata: { appliesTo: ['MINE','FISH','WORK'] } },
+    { itemKey: 'bait_luminous',type: EffectType.BUFF_DROP_RATE, target: EffectTarget.TOOL,  magnitude: 0.40, durationSec: 1800, metadata: { appliesTo: 'ROD' } },
   ];
 
   for (const e of effectsData) {
+    const id = await itemId(e.itemKey);
+    await prisma.itemEffect.deleteMany({ where: { itemId: id } });
     await prisma.itemEffect.create({
       data: {
-        itemId: await itemId(e.itemKey),
+        itemId: id,
         type: e.type,
         target: e.target,
         magnitude: e.magnitude,
@@ -164,18 +209,18 @@ async function main() {
         { key: 'gem_emerald', qty: 1 },
         { key: 'core_mythic', qty: 1 },
       ],
-      metadata: { timeSec: 30 },
+      metadata: { timeSec: 45, costVcoins: 800 },
     },
     {
       result: 'rod_mythic',
       station: 'mesa',
       ingredients: [
         { key: 'rod_legend',  qty: 1 },
-        { key: 'leather',     qty: 8 },
+        { key: 'fiber_silk',  qty: 4 },
         { key: 'gem_emerald', qty: 1 },
         { key: 'core_mythic', qty: 1 },
       ],
-      metadata: { timeSec: 20 },
+      metadata: { timeSec: 30, costVcoins: 650 },
     },
     {
       result: 'bar_bronze',
@@ -184,11 +229,16 @@ async function main() {
         { key: 'ore_copper', qty: 2 },
         { key: 'ore_tin',    qty: 1 },
       ],
+      metadata: { costVcoins: 8, timeSec: 4 },
     },
     {
       result: 'bar_iron',
       station: 'forja',
-      ingredients: [{ key: 'ore_iron', qty: 2 }],
+      ingredients: [
+        { key: 'ore_iron', qty: 2 },
+        { key: 'ore_coal', qty: 1 },
+      ],
+      metadata: { costVcoins: 12, timeSec: 5 },
     },
     {
       result: 'bar_steel',
@@ -196,22 +246,306 @@ async function main() {
       ingredients: [
         { key: 'bar_iron', qty: 2 },
         { key: 'ore_silver', qty: 1 },
+        { key: 'ore_coal', qty: 1 },
       ],
+      metadata: { costVcoins: 18, timeSec: 6 },
+    },
+    {
+      result: 'bait_premium',
+      station: 'alquimia',
+      ingredients: [
+        { key: 'bait_basic', qty: 1 },
+        { key: 'fish_rare',  qty: 2 },
+        { key: 'herb_sun',   qty: 1 },
+      ],
+      metadata: { costVcoins: 25, timeSec: 3 },
+    },
+    {
+      result: 'bait_luminous',
+      station: 'alquimia',
+      ingredients: [
+        { key: 'bait_premium', qty: 1 },
+        { key: 'pearl_black', qty: 1 },
+        { key: 'gem_sapphire', qty: 1 },
+      ],
+      metadata: { costVcoins: 80, timeSec: 5 },
+    },
+    {
+      result: 'potion_small',
+      station: 'alquimia',
+      ingredients: [
+        { key: 'herb_sun',    qty: 2 },
+        { key: 'fish_common', qty: 1 },
+      ],
+      metadata: { costVcoins: 10, timeSec: 2 },
+    },
+    {
+      result: 'potion_large',
+      station: 'alquimia',
+      ingredients: [
+        { key: 'potion_small', qty: 1 },
+        { key: 'herb_moon',    qty: 2 },
+        { key: 'dust_arcane',  qty: 1 },
+      ],
+      metadata: { costVcoins: 35, timeSec: 4 },
+    },
+    {
+      result: 'food_meat',
+      station: 'cocina',
+      ingredients: [
+        { key: 'fish_common', qty: 2 },
+        { key: 'herb_sun',    qty: 1 },
+        { key: 'leather',     qty: 1 },
+      ],
+      metadata: { costVcoins: 15, timeSec: 3 },
+    },
+    {
+      result: 'tea_focus',
+      station: 'alquimia',
+      ingredients: [
+        { key: 'herb_sun',   qty: 1 },
+        { key: 'herb_moon',  qty: 1 },
+        { key: 'dust_arcane', qty: 1 },
+      ],
+      metadata: { costVcoins: 40, timeSec: 4 },
+    },
+    {
+      result: 'tonic_miner',
+      station: 'alquimia',
+      ingredients: [
+        { key: 'ore_coal',    qty: 2 },
+        { key: 'herb_sun',    qty: 1 },
+        { key: 'dust_arcane', qty: 1 },
+      ],
+      metadata: { costVcoins: 45, timeSec: 4 },
+    },
+    {
+      result: 'elixir_luck',
+      station: 'alquimia',
+      ingredients: [
+        { key: 'gem_sapphire', qty: 1 },
+        { key: 'herb_moon',    qty: 2 },
+        { key: 'dust_arcane',  qty: 2 },
+      ],
+      metadata: { costVcoins: 120, timeSec: 6 },
+    },
+    {
+      result: 'pick_stone',
+      station: 'forja',
+      ingredients: [
+        { key: 'pick_wood',   qty: 1 },
+        { key: 'bar_bronze',  qty: 1 },
+        { key: 'ore_coal',    qty: 1 },
+      ],
+      metadata: { costVcoins: 40, timeSec: 5 },
+    },
+    {
+      result: 'pick_copper',
+      station: 'forja',
+      ingredients: [
+        { key: 'pick_stone', qty: 1 },
+        { key: 'bar_bronze', qty: 2 },
+        { key: 'ore_tin',    qty: 2 },
+      ],
+      metadata: { costVcoins: 80, timeSec: 6 },
+    },
+    {
+      result: 'pick_iron',
+      station: 'forja',
+      ingredients: [
+        { key: 'pick_copper', qty: 1 },
+        { key: 'bar_iron',    qty: 2 },
+        { key: 'ore_iron',    qty: 2 },
+      ],
+      metadata: { costVcoins: 120, timeSec: 6 },
+    },
+    {
+      result: 'pick_steel',
+      station: 'forja',
+      ingredients: [
+        { key: 'pick_iron',  qty: 1 },
+        { key: 'bar_steel',  qty: 2 },
+        { key: 'gem_ruby',   qty: 1 },
+      ],
+      metadata: { costVcoins: 180, timeSec: 8 },
+    },
+    {
+      result: 'pick_diamond',
+      station: 'forja',
+      ingredients: [
+        { key: 'pick_steel',   qty: 1 },
+        { key: 'bar_steel',    qty: 2 },
+        { key: 'gem_sapphire', qty: 1 },
+        { key: 'dust_arcane',  qty: 1 },
+      ],
+      metadata: { costVcoins: 280, timeSec: 8 },
+    },
+    {
+      result: 'rod_oak',
+      station: 'mesa',
+      ingredients: [
+        { key: 'rod_basic', qty: 1 },
+        { key: 'leather',   qty: 3 },
+        { key: 'fiber_silk', qty: 1 },
+      ],
+      metadata: { costVcoins: 90, timeSec: 5 },
+    },
+    {
+      result: 'rod_flex',
+      station: 'mesa',
+      ingredients: [
+        { key: 'rod_oak',    qty: 1 },
+        { key: 'fiber_silk', qty: 2 },
+        { key: 'herb_moon',  qty: 1 },
+      ],
+      metadata: { costVcoins: 130, timeSec: 5 },
+    },
+    {
+      result: 'rod_pro',
+      station: 'mesa',
+      ingredients: [
+        { key: 'rod_flex',   qty: 1 },
+        { key: 'fiber_silk', qty: 2 },
+        { key: 'pearl_black', qty: 1 },
+      ],
+      metadata: { costVcoins: 200, timeSec: 6 },
+    },
+    {
+      result: 'rod_legend',
+      station: 'mesa',
+      ingredients: [
+        { key: 'rod_pro',     qty: 1 },
+        { key: 'gem_sapphire', qty: 1 },
+        { key: 'pearl_black',  qty: 1 },
+        { key: 'dust_arcane',  qty: 1 },
+      ],
+      metadata: { costVcoins: 320, timeSec: 8 },
+    },
+    {
+      result: 'armor_chain',
+      station: 'forja',
+      ingredients: [
+        { key: 'armor_leather', qty: 1 },
+        { key: 'bar_bronze',    qty: 3 },
+        { key: 'scale_serpent', qty: 2 },
+      ],
+      metadata: { costVcoins: 180, timeSec: 6 },
+    },
+    {
+      result: 'armor_plate',
+      station: 'forja',
+      ingredients: [
+        { key: 'armor_chain',   qty: 1 },
+        { key: 'bar_steel',     qty: 3 },
+        { key: 'scale_serpent', qty: 2 },
+      ],
+      metadata: { costVcoins: 320, timeSec: 8 },
+    },
+    {
+      result: 'armor_mythic',
+      station: 'forja',
+      ingredients: [
+        { key: 'armor_plate', qty: 1 },
+        { key: 'core_mythic', qty: 1 },
+        { key: 'gem_emerald', qty: 1 },
+        { key: 'dust_arcane', qty: 2 },
+      ],
+      metadata: { costVcoins: 600, timeSec: 12 },
+    },
+    {
+      result: 'sword_stone',
+      station: 'forja',
+      ingredients: [
+        { key: 'sword_wood',  qty: 1 },
+        { key: 'bar_bronze',  qty: 2 },
+        { key: 'ore_coal',    qty: 1 },
+      ],
+      metadata: { costVcoins: 70, timeSec: 4 },
+    },
+    {
+      result: 'sword_iron',
+      station: 'forja',
+      ingredients: [
+        { key: 'sword_stone', qty: 1 },
+        { key: 'bar_iron',    qty: 3 },
+        { key: 'dust_arcane', qty: 1 },
+      ],
+      metadata: { costVcoins: 140, timeSec: 5 },
+    },
+    {
+      result: 'sword_steel',
+      station: 'forja',
+      ingredients: [
+        { key: 'sword_iron', qty: 1 },
+        { key: 'bar_steel',  qty: 3 },
+        { key: 'gem_ruby',   qty: 1 },
+      ],
+      metadata: { costVcoins: 260, timeSec: 6 },
+    },
+    {
+      result: 'sword_mythic',
+      station: 'forja',
+      ingredients: [
+        { key: 'sword_steel', qty: 1 },
+        { key: 'gem_emerald', qty: 1 },
+        { key: 'core_mythic', qty: 1 },
+        { key: 'dust_arcane', qty: 2 },
+      ],
+      metadata: { costVcoins: 520, timeSec: 10 },
+    },
+    {
+      result: 'fiber_silk',
+      station: 'mesa',
+      ingredients: [
+        { key: 'leather',     qty: 2 },
+        { key: 'fish_common', qty: 1 },
+        { key: 'herb_sun',    qty: 1 },
+      ],
+      metadata: { costVcoins: 25, batch: 2, timeSec: 3 },
+    },
+    {
+      result: 'dust_arcane',
+      station: 'alquimia',
+      ingredients: [
+        { key: 'slime',       qty: 3 },
+        { key: 'herb_moon',   qty: 1 },
+        { key: 'ore_obsidian', qty: 1 },
+      ],
+      metadata: { costVcoins: 30, batch: 2, timeSec: 4 },
+    },
+    {
+      result: 'pearl_black',
+      station: 'mesa',
+      ingredients: [
+        { key: 'fish_rare',    qty: 2 },
+        { key: 'ore_obsidian', qty: 1 },
+      ],
+      metadata: { costVcoins: 45, timeSec: 4 },
+    },
+    {
+      result: 'scale_serpent',
+      station: 'forja',
+      ingredients: [
+        { key: 'leather',     qty: 2 },
+        { key: 'dust_arcane', qty: 1 },
+        { key: 'ore_silver',  qty: 1 },
+      ],
+      metadata: { costVcoins: 40, timeSec: 5 },
     },
   ];
-
   for (const r of craftRecipes) {
-    const rec = await prisma.craftRecipe.create({
-      data: {
-        resultItemId: await itemId(r.result),
-        station: r.station,
-        metadata: r.metadata,
-      },
+    const rec = await prisma.craftRecipe.upsert({
+      where: { resultItemId: await itemId(r.result) },
+      update: { station: r.station, metadata: r.metadata },
+      create: { resultItemId: await itemId(r.result), station: r.station, metadata: r.metadata },
     });
+    await prisma.craftIngredient.deleteMany({ where: { recipeId: rec.id } });
+    const ingredientsData = [] as { recipeId: number; itemId: number; quantity: number }[];
     for (const ing of r.ingredients) {
-      await prisma.craftIngredient.create({
-        data: { recipeId: rec.id, itemId: await itemId(ing.key), quantity: ing.qty },
-      });
+      ingredientsData.push({ recipeId: rec.id, itemId: await itemId(ing.key), quantity: ing.qty });
+    }
+    if (ingredientsData.length) {
+      await prisma.craftIngredient.createMany({ data: ingredientsData });
     }
   }
 
