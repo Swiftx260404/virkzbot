@@ -6,6 +6,7 @@ import {
 import { prisma } from '../../lib/db.js';
 import { extractBuffState } from '../../services/buffs.js';
 import { buildAttributeSummary, xpToNext } from '../../services/progression.js';
+import { getActivePetContext, summarizePassiveBonus } from '../../services/pets.js';
 
 function progressBar(fraction: number, size = 12) {
   const full = '█';
@@ -88,6 +89,13 @@ export default {
     const xpBar = progressBar(frac, 14);
     const color = 0x8e44ad;
 
+    const activePet = await getActivePetContext(uid);
+    const petSummary = activePet
+      ? `**${activePet.userPet.pet.name}** · Nv ${activePet.userPet.level}\n${
+          summarizePassiveBonus(activePet.passive).join(' · ') || 'Sin bonos activos'
+        }`
+      : 'Sin mascota activa.';
+
     const embed = new EmbedBuilder()
       .setAuthor({ name: `Perfil de ${interaction.user.username}` })
       .setThumbnail(interaction.user.displayAvatarURL())
@@ -122,6 +130,11 @@ export default {
             `🎣 **Caña:** ${rod ? `${rod.name} (T${rod.tier ?? '-'})` : '—'}\n` +
             `⚔️ **Arma:** ${weapon ? `${weapon.name}` : '—'}\n` +
             `🛡️ **Armadura:** ${armor ? `${armor.name}` : '—'}`,
+          inline: false,
+        },
+        {
+          name: '🐾 Mascota',
+          value: petSummary,
           inline: false,
         },
         {

@@ -1,0 +1,434 @@
+[
+  {
+    "key": "ember_pup",
+    "name": "Cachorro Ascua",
+    "rarity": "COMMON",
+    "formStage": 1,
+    "basePower": 18,
+    "passiveBonus": {
+      "attack": 0.05
+    },
+    "activeSkill": {
+      "key": "ember_burst",
+      "name": "Ráfaga Ascua",
+      "description": "Golpe ardiente que escala con tu fuerza.",
+      "cooldown": 3,
+      "scaling": {
+        "attack": 0.6,
+        "strength": 2.1
+      },
+      "flat": 12,
+      "critBonus": 0.05
+    },
+    "evolvesTo": "blaze_hound",
+    "requirements": {
+      "level": 12,
+      "bond": 20,
+      "items": [
+        { "key": "ember_core", "qty": 1 }
+      ]
+    }
+  },
+  {
+    "key": "blaze_hound",
+    "name": "Sabueso Llama",
+    "rarity": "RARE",
+    "formStage": 2,
+    "basePower": 32,
+    "passiveBonus": {
+      "attack": 0.1,
+      "dropRate": 0.03
+    },
+    "activeSkill": {
+      "key": "blazing_charge",
+      "name": "Carga Abrasadora",
+      "description": "Investida que ignora parte de la defensa enemiga.",
+      "cooldown": 4,
+      "scaling": {
+        "attack": 0.9,
+        "strength": 2.6
+      },
+      "flat": 20,
+      "critBonus": 0.08
+    },
+    "evolvesTo": "inferno_drake",
+    "requirements": {
+      "level": 25,
+      "bond": 40,
+      "items": [
+        { "key": "ember_core", "qty": 2 },
+        { "key": "pet_snack_feast", "qty": 1 }
+      ]
+    }
+  },
+  {
+    "key": "inferno_drake",
+    "name": "Draco Ígneo",
+    "rarity": "LEGENDARY",
+    "formStage": 3,
+    "basePower": 52,
+    "passiveBonus": {
+      "attack": 0.18,
+      "dropRate": 0.05,
+      "critChance": 0.04
+    },
+    "activeSkill": {
+      "key": "inferno_nova",
+      "name": "Nova Infernal",
+      "description": "Descarga devastadora que deja brasas dañinas.",
+      "cooldown": 5,
+      "scaling": {
+        "attack": 1.1,
+        "strength": 3.1
+      },
+      "flat": 42,
+      "critBonus": 0.12
+    }
+  },
+  {
+    "key": "tide_sprite",
+    "name": "Duende de Mareas",
+    "rarity": "UNCOMMON",
+    "formStage": 1,
+    "basePower": 16,
+    "passiveBonus": {
+      "luck": 0.04,
+      "dropRate": 0.02
+    },
+    "activeSkill": {
+      "key": "tidal_whisper",
+      "name": "Susurro de Marea",
+      "description": "Impulso acuático que ralentiza al enemigo.",
+      "cooldown": 3,
+      "scaling": {
+        "attack": 0.5,
+        "intellect": 1.8
+      },
+      "flat": 10,
+      "critBonus": 0.04
+    },
+    "evolvesTo": "coral_guardian",
+    "requirements": {
+      "level": 11,
+      "bond": 18,
+      "items": [
+        { "key": "tide_pearl", "qty": 1 }
+      ]
+    }
+  },
+  {
+    "key": "coral_guardian",
+    "name": "Guardián Coral",
+    "rarity": "RARE",
+    "formStage": 2,
+    "basePower": 30,
+    "passiveBonus": {
+      "luck": 0.08,
+      "resourceYield": 0.06
+    },
+    "activeSkill": {
+      "key": "coral_shield",
+      "name": "Escudo Coralino",
+      "description": "Levanta un muro de agua que absorbe daño.",
+      "cooldown": 4,
+      "scaling": {
+        "defense": 0.6,
+        "intellect": 2.4
+      },
+      "shield": 32,
+      "heal": 12
+    },
+    "evolvesTo": "abyss_leviathan",
+    "requirements": {
+      "level": 24,
+      "bond": 38,
+      "items": [
+        { "key": "tide_pearl", "qty": 2 }
+      ]
+    }
+  },
+  {
+    "key": "abyss_leviathan",
+    "name": "Leviatán Abisal",
+    "rarity": "MYTHIC",
+    "formStage": 3,
+    "basePower": 55,
+    "passiveBonus": {
+      "luck": 0.12,
+      "resourceYield": 0.1,
+      "defense": 0.14
+    },
+    "activeSkill": {
+      "key": "abyssal_wave",
+      "name": "Ola Abisal",
+      "description": "Maremoto que arrastra al enemigo y cura un poco.",
+      "cooldown": 5,
+      "scaling": {
+        "attack": 0.9,
+        "intellect": 3.2
+      },
+      "flat": 34,
+      "heal": 24,
+      "critBonus": 0.1
+    }
+  },
+  {
+    "key": "terra_sprout",
+    "name": "Brote de Gaia",
+    "rarity": "COMMON",
+    "formStage": 1,
+    "basePower": 14,
+    "passiveBonus": {
+      "defense": 0.06
+    },
+    "activeSkill": {
+      "key": "earth_spike",
+      "name": "Púa Terrestre",
+      "description": "Estaca pétrea que escala con tu defensa.",
+      "cooldown": 3,
+      "scaling": {
+        "defense": 1.1,
+        "strength": 1.4
+      },
+      "flat": 9
+    },
+    "evolvesTo": "grove_stag",
+    "requirements": {
+      "level": 10,
+      "bond": 16,
+      "items": [
+        { "key": "terra_heart", "qty": 1 }
+      ]
+    }
+  },
+  {
+    "key": "grove_stag",
+    "name": "Ciervo del Bosque",
+    "rarity": "UNCOMMON",
+    "formStage": 2,
+    "basePower": 27,
+    "passiveBonus": {
+      "defense": 0.12,
+      "hp": 0.08
+    },
+    "activeSkill": {
+      "key": "verdant_barrier",
+      "name": "Barrera Verdor",
+      "description": "Barrera que refuerza tu resistencia y cura.",
+      "cooldown": 4,
+      "scaling": {
+        "defense": 1.3,
+        "intellect": 1.2
+      },
+      "shield": 36,
+      "heal": 16
+    },
+    "evolvesTo": "ancient_treant",
+    "requirements": {
+      "level": 22,
+      "bond": 34,
+      "items": [
+        { "key": "terra_heart", "qty": 2 }
+      ]
+    }
+  },
+  {
+    "key": "ancient_treant",
+    "name": "Antiguo Treant",
+    "rarity": "LEGENDARY",
+    "formStage": 3,
+    "basePower": 48,
+    "passiveBonus": {
+      "defense": 0.2,
+      "hp": 0.14,
+      "coinGain": 0.08
+    },
+    "activeSkill": {
+      "key": "wrath_of_roots",
+      "name": "Ira de las Raíces",
+      "description": "Golpe contundente que inmoviliza.",
+      "cooldown": 5,
+      "scaling": {
+        "defense": 1.5,
+        "strength": 1.8
+      },
+      "flat": 30,
+      "shield": 24
+    }
+  },
+  {
+    "key": "spark_wisp",
+    "name": "Chispa Zumbante",
+    "rarity": "UNCOMMON",
+    "formStage": 1,
+    "basePower": 15,
+    "passiveBonus": {
+      "critChance": 0.05,
+      "luck": 0.03
+    },
+    "activeSkill": {
+      "key": "spark_frenzy",
+      "name": "Frenesí Chispeante",
+      "description": "Serie de descargas que potencia críticos.",
+      "cooldown": 3,
+      "scaling": {
+        "attack": 0.7,
+        "agility": 1.6
+      },
+      "flat": 11,
+      "critBonus": 0.1
+    },
+    "evolvesTo": "thunder_roc",
+    "requirements": {
+      "level": 13,
+      "bond": 22,
+      "items": [
+        { "key": "storm_crystal", "qty": 1 }
+      ]
+    }
+  },
+  {
+    "key": "thunder_roc",
+    "name": "Roc Tronador",
+    "rarity": "RARE",
+    "formStage": 2,
+    "basePower": 29,
+    "passiveBonus": {
+      "critChance": 0.08,
+      "attack": 0.08
+    },
+    "activeSkill": {
+      "key": "tempest_dive",
+      "name": "Picado Tempestuoso",
+      "description": "Ataque relámpago que aumenta la evasión.",
+      "cooldown": 4,
+      "scaling": {
+        "attack": 1.0,
+        "agility": 2.2
+      },
+      "flat": 24,
+      "critBonus": 0.12
+    },
+    "evolvesTo": "tempest_phoenix",
+    "requirements": {
+      "level": 26,
+      "bond": 42,
+      "items": [
+        { "key": "storm_crystal", "qty": 2 },
+        { "key": "pet_snack_hearty", "qty": 1 }
+      ]
+    }
+  },
+  {
+    "key": "tempest_phoenix",
+    "name": "Fénix Tempestad",
+    "rarity": "MYTHIC",
+    "formStage": 3,
+    "basePower": 50,
+    "passiveBonus": {
+      "critChance": 0.14,
+      "attack": 0.14,
+      "luck": 0.06
+    },
+    "activeSkill": {
+      "key": "storm_rebirth",
+      "name": "Renacer de Tormenta",
+      "description": "Explosión eléctrica que restaura energía.",
+      "cooldown": 6,
+      "scaling": {
+        "attack": 1.2,
+        "agility": 2.6
+      },
+      "flat": 40,
+      "heal": 18,
+      "critBonus": 0.15
+    }
+  },
+  {
+    "key": "dusk_lynx",
+    "name": "Lince Crepuscular",
+    "rarity": "UNCOMMON",
+    "formStage": 1,
+    "basePower": 17,
+    "passiveBonus": {
+      "luck": 0.05,
+      "coinGain": 0.04
+    },
+    "activeSkill": {
+      "key": "shadow_pounce",
+      "name": "Zarpazo Sombrío",
+      "description": "Ataque súbito que roba monedas.",
+      "cooldown": 3,
+      "scaling": {
+        "attack": 0.8,
+        "luck": 1.6
+      },
+      "flat": 13,
+      "critBonus": 0.06
+    },
+    "evolvesTo": "night_panther",
+    "requirements": {
+      "level": 14,
+      "bond": 24,
+      "items": [
+        { "key": "shadow_essence", "qty": 1 }
+      ]
+    }
+  },
+  {
+    "key": "night_panther",
+    "name": "Pantera Nocturna",
+    "rarity": "RARE",
+    "formStage": 2,
+    "basePower": 31,
+    "passiveBonus": {
+      "luck": 0.09,
+      "coinGain": 0.08,
+      "dropRate": 0.04
+    },
+    "activeSkill": {
+      "key": "veil_strike",
+      "name": "Golpe del Velo",
+      "description": "Ataque preciso que baja la defensa enemiga.",
+      "cooldown": 4,
+      "scaling": {
+        "attack": 1.1,
+        "luck": 2.0
+      },
+      "flat": 22,
+      "critBonus": 0.1
+    },
+    "evolvesTo": "eclipse_chimera",
+    "requirements": {
+      "level": 27,
+      "bond": 44,
+      "items": [
+        { "key": "shadow_essence", "qty": 2 }
+      ]
+    }
+  },
+  {
+    "key": "eclipse_chimera",
+    "name": "Quimera Eclipse",
+    "rarity": "LEGENDARY",
+    "formStage": 3,
+    "basePower": 53,
+    "passiveBonus": {
+      "luck": 0.14,
+      "coinGain": 0.12,
+      "dropRate": 0.07
+    },
+    "activeSkill": {
+      "key": "void_rend",
+      "name": "Desgarro del Vacío",
+      "description": "Raja dimensional que drena recompensas.",
+      "cooldown": 5,
+      "scaling": {
+        "attack": 1.3,
+        "luck": 2.8
+      },
+      "flat": 38,
+      "critBonus": 0.16
+    }
+  }
+]
