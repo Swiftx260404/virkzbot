@@ -7,9 +7,20 @@ import {
   ButtonBuilder,
   ButtonStyle,
 } from 'discord.js';
+import { ItemType } from '@prisma/client';
 import { prisma } from '../../lib/db.js';
 
-type ShopCat = 'TOOL' | 'CONSUMABLE' | 'MATERIAL' | 'WEAPON' | 'ARMOR' | 'MISC';
+type ShopCat =
+  | 'TOOL'
+  | 'CONSUMABLE'
+  | 'MATERIAL'
+  | 'WEAPON'
+  | 'ARMOR'
+  | 'PET'
+  | 'COSMETIC'
+  | 'CHARM'
+  | 'SUPPORT'
+  | 'MISC';
 
 const LABEL: Record<ShopCat, string> = {
   TOOL: 'Herramientas',
@@ -17,10 +28,23 @@ const LABEL: Record<ShopCat, string> = {
   MATERIAL: 'Materiales',
   WEAPON: 'Armas',
   ARMOR: 'Armaduras',
-  MISC: 'Varios',
+  PET: 'Mascotas',
+  COSMETIC: 'Cosméticos',
+  CHARM: 'Amuletos',
+  SUPPORT: 'Planos & Soporte',
+  MISC: 'Coleccionables',
 };
 const ICON: Record<ShopCat, string> = {
-  TOOL: '🛠️', CONSUMABLE: '🧪', MATERIAL: '🪨', WEAPON: '⚔️', ARMOR: '🛡️', MISC: '🎁',
+  TOOL: '🛠️',
+  CONSUMABLE: '🧪',
+  MATERIAL: '🪨',
+  WEAPON: '⚔️',
+  ARMOR: '🛡️',
+  PET: '🐾',
+  COSMETIC: '✨',
+  CHARM: '🔮',
+  SUPPORT: '📜',
+  MISC: '🎁',
 };
 
 const PAGE_SIZE = 10;
@@ -55,19 +79,52 @@ function buildPager(cat: ShopCat, page: number, totalPages: number) {
 function fmt(i: any) {
   const tier = i.tier ? ` T${i.tier}` : '';
   const power = i.power ? ` · Poder ${i.power}` : '';
-  return `• **${i.name}**${tier}${power} — **${i.price} V**`;
+  const base = `• **${i.name}**${tier}${power} — **${i.price} V**`;
+  const meta = (i.metadata ?? {}) as any;
+  const descParts: string[] = [];
+  if (typeof meta.description === 'string') descParts.push(meta.description);
+  if (meta.passive && typeof meta.passive === 'object') {
+    const passive = Object.entries(meta.passive)
+      .map(([k, v]) => `${k.replace(/_/g, ' ')} ${Math.round(Number(v) * 100) / 100}`)
+      .join(' · ');
+    if (passive) descParts.push(`Pasiva: ${passive}`);
+  }
+  if (typeof meta.uses === 'number') descParts.push(`Usos: ${meta.uses}`);
+  return descParts.length ? `${base}\n   ${descParts.join(' · ')}` : base;
 }
 
+const BASE_TYPE: Partial<Record<ShopCat, ItemType>> = {
+  TOOL: ItemType.TOOL,
+  CONSUMABLE: ItemType.CONSUMABLE,
+  MATERIAL: ItemType.MATERIAL,
+  WEAPON: ItemType.WEAPON,
+  ARMOR: ItemType.ARMOR,
+  PET: ItemType.MISC,
+  COSMETIC: ItemType.MISC,
+  CHARM: ItemType.MISC,
+  SUPPORT: ItemType.MISC,
+  MISC: ItemType.MISC,
+};
+
+const META_FILTER: Partial<Record<ShopCat, (meta: any) => boolean>> = {
+  PET: (meta) => meta?.category === 'Pet',
+  COSMETIC: (meta) => meta?.category === 'Cosmetic',
+  CHARM: (meta) => meta?.category === 'Charm',
+  SUPPORT: (meta) => ['Support', 'Blueprint'].includes(meta?.category),
+  MISC: (meta) => !meta?.category || ['Pet', 'Cosmetic', 'Charm', 'Support', 'Quest'].indexOf(meta?.category) === -1,
+};
+
 async function getFiltered(cat: ShopCat) {
-  // 1) Trae desde la DB por tipo y precio
+  const baseType = BASE_TYPE[cat] ?? 'MISC';
   const rows = await prisma.item.findMany({
-    where: { type: cat, price: { gt: 0 } },
+    where: { type: baseType, price: { gt: 0 } },
     orderBy: [{ price: 'asc' }, { name: 'asc' }],
   });
-  // 2) Filtra en JS si metadata.buyable === false
   return rows.filter(r => {
     const meta: any = r.metadata ?? {};
-    return meta.buyable !== false;
+    if (meta.buyable === false) return false;
+    const filter = META_FILTER[cat];
+    return filter ? filter(meta) : true;
   });
 }
 

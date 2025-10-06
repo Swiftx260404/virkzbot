@@ -1,21 +1,3540 @@
 [
-  {"key":"pick_wood","name":"Pico de Madera","type":"TOOL","price":50,"toolKind":"PICKAXE","tier":1,"power":1},
-  {"key":"pick_stone","name":"Pico de Piedra","type":"TOOL","price":150,"toolKind":"PICKAXE","tier":2,"power":2},
-  {"key":"pick_iron","name":"Pico de Hierro","type":"TOOL","price":400,"toolKind":"PICKAXE","tier":3,"power":3},
-  {"key":"pick_diamond","name":"Pico de Diamante","type":"TOOL","price":1200,"toolKind":"PICKAXE","tier":4,"power":4},
-  {"key":"pick_mythic","name":"Pico Mítico","type":"TOOL","price":3000,"toolKind":"PICKAXE","tier":5,"power":5},
-
-  {"key":"rod_basic","name":"Caña Básica","type":"TOOL","price":80,"toolKind":"ROD","tier":1,"power":1},
-  {"key":"rod_better","name":"Caña Mejorada","type":"TOOL","price":200,"toolKind":"ROD","tier":2,"power":2},
-  {"key":"rod_pro","name":"Caña Pro","type":"TOOL","price":600,"toolKind":"ROD","tier":3,"power":3},
-  {"key":"rod_elite","name":"Caña Élite","type":"TOOL","price":1500,"toolKind":"ROD","tier":4,"power":4},
-
-  {"key":"ore_copper","name":"Mena de Cobre","type":"MATERIAL","price":5,"toolKind":"NONE"},
-  {"key":"ore_iron","name":"Mena de Hierro","type":"MATERIAL","price":10,"toolKind":"NONE"},
-  {"key":"ore_gold","name":"Mena de Oro","type":"MATERIAL","price":25,"toolKind":"NONE"},
-
-  {"key":"fish_common","name":"Pez Común","type":"MATERIAL","price":6,"toolKind":"NONE"},
-  {"key":"fish_rare","name":"Pez Raro","type":"MATERIAL","price":20,"toolKind":"NONE"},
-
-  {"key":"bait_basic","name":"Cebo Básico","type":"CONSUMABLE","price":12,"toolKind":"NONE","metadata":{"uses":5}}
+  {
+    "key": "pick_wood",
+    "name": "Pico de Madera",
+    "type": "TOOL",
+    "rarity": "COMMON",
+    "price": 60,
+    "buyable": true,
+    "sellable": true,
+    "usable": false,
+    "toolKind": "PICKAXE",
+    "tier": 1,
+    "power": 1,
+    "durability": 45,
+    "metadata": {
+      "description": "Un mango sencillo tallado a mano."
+    }
+  },
+  {
+    "key": "pick_stone",
+    "name": "Pico de Piedra",
+    "type": "TOOL",
+    "rarity": "COMMON",
+    "price": 140,
+    "buyable": true,
+    "sellable": true,
+    "usable": false,
+    "toolKind": "PICKAXE",
+    "tier": 2,
+    "power": 2,
+    "durability": 65,
+    "metadata": {
+      "description": "Las puntas de piedra son reemplazables."
+    }
+  },
+  {
+    "key": "pick_copper",
+    "name": "Pico de Cobre",
+    "type": "TOOL",
+    "rarity": "UNCOMMON",
+    "price": 240,
+    "buyable": true,
+    "sellable": true,
+    "usable": false,
+    "toolKind": "PICKAXE",
+    "tier": 2,
+    "power": 3,
+    "durability": 80,
+    "metadata": {
+      "description": "Ideal para vetas tier 2 con brillo anaranjado."
+    }
+  },
+  {
+    "key": "pick_iron",
+    "name": "Pico de Hierro",
+    "type": "TOOL",
+    "rarity": "UNCOMMON",
+    "price": 420,
+    "buyable": true,
+    "sellable": true,
+    "usable": false,
+    "toolKind": "PICKAXE",
+    "tier": 3,
+    "power": 4,
+    "durability": 110,
+    "metadata": {
+      "description": "El peso justo para jornadas largas."
+    }
+  },
+  {
+    "key": "pick_steel",
+    "name": "Pico de Acero",
+    "type": "TOOL",
+    "rarity": "RARE",
+    "price": 760,
+    "buyable": true,
+    "sellable": true,
+    "usable": false,
+    "toolKind": "PICKAXE",
+    "tier": 4,
+    "power": 5,
+    "durability": 150,
+    "metadata": {
+      "description": "Templado en aceite de magma."
+    }
+  },
+  {
+    "key": "pick_diamond",
+    "name": "Pico de Diamante",
+    "type": "TOOL",
+    "rarity": "EPIC",
+    "price": 1320,
+    "buyable": true,
+    "sellable": true,
+    "usable": false,
+    "toolKind": "PICKAXE",
+    "tier": 5,
+    "power": 6,
+    "durability": 210,
+    "metadata": {
+      "description": "Los filos de diamante cortan como luz pura."
+    }
+  },
+  {
+    "key": "pick_mythic",
+    "name": "Pico Mítico",
+    "type": "TOOL",
+    "rarity": "LEGENDARY",
+    "price": 2200,
+    "buyable": true,
+    "sellable": true,
+    "usable": false,
+    "toolKind": "PICKAXE",
+    "tier": 6,
+    "power": 7,
+    "durability": 260,
+    "metadata": {
+      "description": "Vibra con energía ancestral.",
+      "aura": 0.05
+    }
+  },
+  {
+    "key": "pick_ancient",
+    "name": "Pico Ancestral",
+    "type": "TOOL",
+    "rarity": "MYTHIC",
+    "price": 0,
+    "buyable": true,
+    "sellable": false,
+    "usable": false,
+    "toolKind": "PICKAXE",
+    "tier": 7,
+    "power": 9,
+    "durability": 320,
+    "metadata": {
+      "description": "Artefacto rescatado de ruinas olvidadas.",
+      "soulbound": true
+    }
+  },
+  {
+    "key": "pick_astral",
+    "name": "Pico Astral",
+    "type": "TOOL",
+    "rarity": "MYTHIC",
+    "price": 4200,
+    "buyable": true,
+    "sellable": true,
+    "usable": false,
+    "toolKind": "PICKAXE",
+    "tier": 7,
+    "power": 10,
+    "durability": 400,
+    "metadata": {
+      "description": "Canaliza constelaciones en cada golpe.",
+      "critChance": 0.1
+    }
+  },
+  {
+    "key": "rod_basic",
+    "name": "Caña Básica",
+    "type": "TOOL",
+    "rarity": "COMMON",
+    "price": 90,
+    "buyable": true,
+    "sellable": true,
+    "usable": false,
+    "toolKind": "ROD",
+    "tier": 1,
+    "power": 1,
+    "durability": 45,
+    "metadata": {
+      "description": "Caña para pescadores novatos."
+    }
+  },
+  {
+    "key": "rod_oak",
+    "name": "Caña de Roble",
+    "type": "TOOL",
+    "rarity": "UNCOMMON",
+    "price": 170,
+    "buyable": true,
+    "sellable": true,
+    "usable": false,
+    "toolKind": "ROD",
+    "tier": 2,
+    "power": 2,
+    "durability": 70,
+    "metadata": {
+      "description": "Madera tratada resistente a la humedad."
+    }
+  },
+  {
+    "key": "rod_flex",
+    "name": "Caña Flexible",
+    "type": "TOOL",
+    "rarity": "UNCOMMON",
+    "price": 280,
+    "buyable": true,
+    "sellable": true,
+    "usable": false,
+    "toolKind": "ROD",
+    "tier": 3,
+    "power": 3,
+    "durability": 95,
+    "metadata": {
+      "description": "Fibra reforzada para peces nerviosos."
+    }
+  },
+  {
+    "key": "rod_pro",
+    "name": "Caña Pro",
+    "type": "TOOL",
+    "rarity": "RARE",
+    "price": 520,
+    "buyable": true,
+    "sellable": true,
+    "usable": false,
+    "toolKind": "ROD",
+    "tier": 3,
+    "power": 3,
+    "durability": 110,
+    "metadata": {
+      "description": "Carrete preciso con rodamientos arcanos."
+    }
+  },
+  {
+    "key": "rod_elite",
+    "name": "Caña Élite",
+    "type": "TOOL",
+    "rarity": "EPIC",
+    "price": 980,
+    "buyable": true,
+    "sellable": true,
+    "usable": false,
+    "toolKind": "ROD",
+    "tier": 4,
+    "power": 4,
+    "durability": 160,
+    "metadata": {
+      "description": "Encordado de hilo lunar."
+    }
+  },
+  {
+    "key": "rod_legend",
+    "name": "Caña Legendaria",
+    "type": "TOOL",
+    "rarity": "LEGENDARY",
+    "price": 1660,
+    "buyable": true,
+    "sellable": true,
+    "usable": false,
+    "toolKind": "ROD",
+    "tier": 5,
+    "power": 5,
+    "durability": 210,
+    "metadata": {
+      "description": "El anzuelo brilla con luz marina."
+    }
+  },
+  {
+    "key": "rod_mythic",
+    "name": "Caña Mítica",
+    "type": "TOOL",
+    "rarity": "MYTHIC",
+    "price": 0,
+    "buyable": false,
+    "sellable": false,
+    "usable": false,
+    "toolKind": "ROD",
+    "tier": 6,
+    "power": 6,
+    "durability": 260,
+    "metadata": {
+      "description": "Creada con escamas astrales.",
+      "soulbound": true
+    }
+  },
+  {
+    "key": "lamp_miner",
+    "name": "Lámpara Minera",
+    "type": "TOOL",
+    "rarity": "COMMON",
+    "price": 110,
+    "buyable": true,
+    "sellable": true,
+    "usable": false,
+    "toolKind": "NONE",
+    "tier": 1,
+    "power": 1,
+    "metadata": {
+      "description": "Aumenta la visibilidad en minas oscuras.",
+      "bonus": {
+        "mine_visibility": 0.15
+      }
+    }
+  },
+  {
+    "key": "detector_quartz",
+    "name": "Detector de Cuarzo",
+    "type": "TOOL",
+    "rarity": "UNCOMMON",
+    "price": 360,
+    "buyable": true,
+    "sellable": true,
+    "usable": false,
+    "toolKind": "NONE",
+    "tier": 2,
+    "power": 1,
+    "metadata": {
+      "description": "Emite pulsos cuando hay cristales cercanos.",
+      "bonus": {
+        "crystal_find": 0.2
+      }
+    }
+  },
+  {
+    "key": "drill_auto",
+    "name": "Taladro Autónomo",
+    "type": "TOOL",
+    "rarity": "EPIC",
+    "price": 2100,
+    "buyable": true,
+    "sellable": true,
+    "usable": false,
+    "toolKind": "NONE",
+    "tier": 4,
+    "power": 6,
+    "metadata": {
+      "description": "Un dron perforador que duplica golpes críticos.",
+      "bonus": {
+        "extra_hits": 1
+      }
+    }
+  },
+  {
+    "key": "net_sun",
+    "name": "Red Solar",
+    "type": "TOOL",
+    "rarity": "UNCOMMON",
+    "price": 240,
+    "buyable": true,
+    "sellable": true,
+    "usable": false,
+    "toolKind": "NONE",
+    "tier": 2,
+    "power": 2,
+    "metadata": {
+      "description": "Red adicional para capturar peces pequeños.",
+      "bonus": {
+        "smallfish_bonus": 0.25
+      }
+    }
+  },
+  {
+    "key": "lure_myth",
+    "name": "Señuelo Mítico",
+    "type": "TOOL",
+    "rarity": "EPIC",
+    "price": 780,
+    "buyable": true,
+    "sellable": true,
+    "usable": false,
+    "toolKind": "NONE",
+    "tier": 5,
+    "power": 4,
+    "metadata": {
+      "description": "Atrae criaturas brillantes en aguas profundas.",
+      "bonus": {
+        "rare_fish": 0.35
+      }
+    }
+  },
+  {
+    "key": "gloves_grip",
+    "name": "Guantes de Agarre",
+    "type": "TOOL",
+    "rarity": "COMMON",
+    "price": 95,
+    "buyable": true,
+    "sellable": true,
+    "usable": false,
+    "toolKind": "NONE",
+    "tier": 1,
+    "power": 1,
+    "metadata": {
+      "description": "Evitan que la herramienta resbale.",
+      "bonus": {
+        "stability": 0.1
+      }
+    }
+  },
+  {
+    "key": "helmet_echo",
+    "name": "Casco de Eco",
+    "type": "TOOL",
+    "rarity": "RARE",
+    "price": 640,
+    "buyable": true,
+    "sellable": true,
+    "usable": false,
+    "toolKind": "NONE",
+    "tier": 3,
+    "power": 2,
+    "metadata": {
+      "description": "Reproduce el sonido de vetas huecas.",
+      "bonus": {
+        "vein_detection": 0.22
+      }
+    }
+  },
+  {
+    "key": "boots_river",
+    "name": "Botas de Río",
+    "type": "TOOL",
+    "rarity": "COMMON",
+    "price": 180,
+    "buyable": true,
+    "sellable": true,
+    "usable": false,
+    "toolKind": "NONE",
+    "tier": 2,
+    "power": 1,
+    "metadata": {
+      "description": "No se hunden en ríos caudalosos.",
+      "bonus": {
+        "balance": 0.18
+      }
+    }
+  },
+  {
+    "key": "sword_wood",
+    "name": "Espada de Madera",
+    "type": "WEAPON",
+    "rarity": "COMMON",
+    "price": 75,
+    "buyable": true,
+    "sellable": true,
+    "usable": false,
+    "toolKind": "WEAPON",
+    "tier": 1,
+    "power": 6,
+    "metadata": {
+      "description": "Arma forjada para aventureros de nivel T1.",
+      "crit": 0.04
+    }
+  },
+  {
+    "key": "sword_stone",
+    "name": "Espada de Piedra",
+    "type": "WEAPON",
+    "rarity": "UNCOMMON",
+    "price": 210,
+    "buyable": true,
+    "sellable": true,
+    "usable": false,
+    "toolKind": "WEAPON",
+    "tier": 2,
+    "power": 12,
+    "metadata": {
+      "description": "Arma forjada para aventureros de nivel T2.",
+      "crit": 0.05
+    }
+  },
+  {
+    "key": "sword_iron",
+    "name": "Espada de Hierro",
+    "type": "WEAPON",
+    "rarity": "RARE",
+    "price": 520,
+    "buyable": true,
+    "sellable": true,
+    "usable": false,
+    "toolKind": "WEAPON",
+    "tier": 3,
+    "power": 20,
+    "metadata": {
+      "description": "Arma forjada para aventureros de nivel T3.",
+      "crit": 0.06
+    }
+  },
+  {
+    "key": "sword_steel",
+    "name": "Espada de Acero",
+    "type": "WEAPON",
+    "rarity": "EPIC",
+    "price": 980,
+    "buyable": true,
+    "sellable": true,
+    "usable": false,
+    "toolKind": "WEAPON",
+    "tier": 4,
+    "power": 30,
+    "metadata": {
+      "description": "Arma forjada para aventureros de nivel T4.",
+      "crit": 0.07
+    }
+  },
+  {
+    "key": "sword_mythic",
+    "name": "Espada Mítica",
+    "type": "WEAPON",
+    "rarity": "LEGENDARY",
+    "price": 0,
+    "buyable": false,
+    "sellable": false,
+    "usable": false,
+    "toolKind": "WEAPON",
+    "tier": 5,
+    "power": 48,
+    "metadata": {
+      "description": "Arma forjada para aventureros de nivel T5.",
+      "crit": 0.08
+    }
+  },
+  {
+    "key": "blade_dusk",
+    "name": "Hoja del Ocaso",
+    "type": "WEAPON",
+    "rarity": "EPIC",
+    "price": 1500,
+    "buyable": true,
+    "sellable": true,
+    "usable": false,
+    "toolKind": "WEAPON",
+    "tier": 5,
+    "power": 38,
+    "metadata": {
+      "description": "Arma forjada para aventureros de nivel T5.",
+      "crit": 0.08
+    }
+  },
+  {
+    "key": "halberd_tempest",
+    "name": "Alabarda de la Tempestad",
+    "type": "WEAPON",
+    "rarity": "LEGENDARY",
+    "price": 2400,
+    "buyable": true,
+    "sellable": true,
+    "usable": false,
+    "toolKind": "WEAPON",
+    "tier": 6,
+    "power": 60,
+    "metadata": {
+      "description": "Arma forjada para aventureros de nivel T6.",
+      "crit": 0.09
+    }
+  },
+  {
+    "key": "bow_moon",
+    "name": "Arco Lunar",
+    "type": "WEAPON",
+    "rarity": "EPIC",
+    "price": 890,
+    "buyable": true,
+    "sellable": true,
+    "usable": false,
+    "toolKind": "WEAPON",
+    "tier": 4,
+    "power": 26,
+    "metadata": {
+      "description": "Arma forjada para aventureros de nivel T4.",
+      "crit": 0.07
+    }
+  },
+  {
+    "key": "dagger_shadow",
+    "name": "Daga Sombría",
+    "type": "WEAPON",
+    "rarity": "RARE",
+    "price": 460,
+    "buyable": true,
+    "sellable": true,
+    "usable": false,
+    "toolKind": "WEAPON",
+    "tier": 3,
+    "power": 18,
+    "metadata": {
+      "description": "Arma forjada para aventureros de nivel T3.",
+      "crit": 0.06
+    }
+  },
+  {
+    "key": "staff_ember",
+    "name": "Bastón Ascua",
+    "type": "WEAPON",
+    "rarity": "RARE",
+    "price": 430,
+    "buyable": true,
+    "sellable": true,
+    "usable": false,
+    "toolKind": "WEAPON",
+    "tier": 3,
+    "power": 16,
+    "metadata": {
+      "description": "Arma forjada para aventureros de nivel T3.",
+      "crit": 0.06
+    }
+  },
+  {
+    "key": "staff_torrent",
+    "name": "Bastón Torrente",
+    "type": "WEAPON",
+    "rarity": "EPIC",
+    "price": 970,
+    "buyable": true,
+    "sellable": true,
+    "usable": false,
+    "toolKind": "WEAPON",
+    "tier": 4,
+    "power": 28,
+    "metadata": {
+      "description": "Arma forjada para aventureros de nivel T4.",
+      "crit": 0.07
+    }
+  },
+  {
+    "key": "hammer_titan",
+    "name": "Martillo Titánico",
+    "type": "WEAPON",
+    "rarity": "LEGENDARY",
+    "price": 2600,
+    "buyable": true,
+    "sellable": true,
+    "usable": false,
+    "toolKind": "WEAPON",
+    "tier": 6,
+    "power": 64,
+    "metadata": {
+      "description": "Arma forjada para aventureros de nivel T6.",
+      "crit": 0.09
+    }
+  },
+  {
+    "key": "spear_dragon",
+    "name": "Lanza Dragón",
+    "type": "WEAPON",
+    "rarity": "EPIC",
+    "price": 1620,
+    "buyable": true,
+    "sellable": true,
+    "usable": false,
+    "toolKind": "WEAPON",
+    "tier": 5,
+    "power": 40,
+    "metadata": {
+      "description": "Arma forjada para aventureros de nivel T5.",
+      "crit": 0.08
+    }
+  },
+  {
+    "key": "katana_aurora",
+    "name": "Katana Aurora",
+    "type": "WEAPON",
+    "rarity": "MYTHIC",
+    "price": 4100,
+    "buyable": true,
+    "sellable": true,
+    "usable": false,
+    "toolKind": "WEAPON",
+    "tier": 7,
+    "power": 72,
+    "metadata": {
+      "description": "Arma forjada para aventureros de nivel T7.",
+      "crit": 0.1
+    }
+  },
+  {
+    "key": "whip_starlight",
+    "name": "Látigo Estelar",
+    "type": "WEAPON",
+    "rarity": "EPIC",
+    "price": 780,
+    "buyable": true,
+    "sellable": true,
+    "usable": false,
+    "toolKind": "WEAPON",
+    "tier": 4,
+    "power": 24,
+    "metadata": {
+      "description": "Arma forjada para aventureros de nivel T4.",
+      "crit": 0.07
+    }
+  },
+  {
+    "key": "crossbow_obsidian",
+    "name": "Ballesta de Obsidiana",
+    "type": "WEAPON",
+    "rarity": "EPIC",
+    "price": 1580,
+    "buyable": true,
+    "sellable": true,
+    "usable": false,
+    "toolKind": "WEAPON",
+    "tier": 5,
+    "power": 42,
+    "metadata": {
+      "description": "Arma forjada para aventureros de nivel T5.",
+      "crit": 0.08
+    }
+  },
+  {
+    "key": "armor_leather",
+    "name": "Armadura de Cuero",
+    "type": "ARMOR",
+    "rarity": "COMMON",
+    "price": 140,
+    "buyable": true,
+    "sellable": true,
+    "usable": false,
+    "toolKind": "ARMOR",
+    "tier": 1,
+    "power": 4,
+    "metadata": {
+      "description": "Protección equilibrada para combates T1."
+    }
+  },
+  {
+    "key": "armor_hardened",
+    "name": "Cuero Endurecido",
+    "type": "ARMOR",
+    "rarity": "UNCOMMON",
+    "price": 260,
+    "buyable": true,
+    "sellable": true,
+    "usable": false,
+    "toolKind": "ARMOR",
+    "tier": 2,
+    "power": 8,
+    "metadata": {
+      "description": "Protección equilibrada para combates T2."
+    }
+  },
+  {
+    "key": "armor_chain",
+    "name": "Cota de Malla",
+    "type": "ARMOR",
+    "rarity": "UNCOMMON",
+    "price": 520,
+    "buyable": true,
+    "sellable": true,
+    "usable": false,
+    "toolKind": "ARMOR",
+    "tier": 3,
+    "power": 12,
+    "metadata": {
+      "description": "Protección equilibrada para combates T3."
+    }
+  },
+  {
+    "key": "armor_scale",
+    "name": "Armadura de Escamas",
+    "type": "ARMOR",
+    "rarity": "RARE",
+    "price": 740,
+    "buyable": true,
+    "sellable": true,
+    "usable": false,
+    "toolKind": "ARMOR",
+    "tier": 3,
+    "power": 16,
+    "metadata": {
+      "description": "Protección equilibrada para combates T3."
+    }
+  },
+  {
+    "key": "armor_plate",
+    "name": "Armadura de Placas",
+    "type": "ARMOR",
+    "rarity": "RARE",
+    "price": 1120,
+    "buyable": true,
+    "sellable": true,
+    "usable": false,
+    "toolKind": "ARMOR",
+    "tier": 4,
+    "power": 22,
+    "metadata": {
+      "description": "Protección equilibrada para combates T4."
+    }
+  },
+  {
+    "key": "armor_sentinel",
+    "name": "Acorazado Centinela",
+    "type": "ARMOR",
+    "rarity": "EPIC",
+    "price": 1680,
+    "buyable": true,
+    "sellable": true,
+    "usable": false,
+    "toolKind": "ARMOR",
+    "tier": 5,
+    "power": 30,
+    "metadata": {
+      "description": "Protección equilibrada para combates T5."
+    }
+  },
+  {
+    "key": "armor_phoenix",
+    "name": "Armadura Fénix",
+    "type": "ARMOR",
+    "rarity": "LEGENDARY",
+    "price": 2400,
+    "buyable": true,
+    "sellable": true,
+    "usable": false,
+    "toolKind": "ARMOR",
+    "tier": 6,
+    "power": 36,
+    "metadata": {
+      "description": "Protección equilibrada para combates T6."
+    }
+  },
+  {
+    "key": "armor_mythic",
+    "name": "Armadura Mítica",
+    "type": "ARMOR",
+    "rarity": "LEGENDARY",
+    "price": 0,
+    "buyable": false,
+    "sellable": false,
+    "usable": false,
+    "toolKind": "ARMOR",
+    "tier": 6,
+    "power": 44,
+    "metadata": {
+      "description": "Protección equilibrada para combates T6.",
+      "shield": 18,
+      "soulbound": true
+    }
+  },
+  {
+    "key": "armor_astral",
+    "name": "Armadura Astral",
+    "type": "ARMOR",
+    "rarity": "MYTHIC",
+    "price": 4100,
+    "buyable": true,
+    "sellable": true,
+    "usable": false,
+    "toolKind": "ARMOR",
+    "tier": 7,
+    "power": 52,
+    "metadata": {
+      "description": "Protección equilibrada para combates T7."
+    }
+  },
+  {
+    "key": "cloak_twilight",
+    "name": "Capa del Crepúsculo",
+    "type": "ARMOR",
+    "rarity": "EPIC",
+    "price": 780,
+    "buyable": true,
+    "sellable": true,
+    "usable": false,
+    "toolKind": "ARMOR",
+    "tier": 4,
+    "power": 18,
+    "metadata": {
+      "description": "Protección equilibrada para combates T4."
+    }
+  },
+  {
+    "key": "ward_reef",
+    "name": "Coraza de Arrecife",
+    "type": "ARMOR",
+    "rarity": "EPIC",
+    "price": 1500,
+    "buyable": true,
+    "sellable": true,
+    "usable": false,
+    "toolKind": "ARMOR",
+    "tier": 5,
+    "power": 26,
+    "metadata": {
+      "description": "Protección equilibrada para combates T5."
+    }
+  },
+  {
+    "key": "ore_copper",
+    "name": "Mena de Cobre",
+    "type": "MATERIAL",
+    "rarity": "COMMON",
+    "price": 6,
+    "buyable": false,
+    "sellable": true,
+    "usable": false,
+    "toolKind": "NONE",
+    "metadata": {
+      "category": "Ore",
+      "tier": 1,
+      "description": "Brilla con un tono naranja cálido."
+    }
+  },
+  {
+    "key": "ore_tin",
+    "name": "Mena de Estaño",
+    "type": "MATERIAL",
+    "rarity": "COMMON",
+    "price": 5,
+    "buyable": false,
+    "sellable": true,
+    "usable": false,
+    "toolKind": "NONE",
+    "metadata": {
+      "category": "Ore",
+      "tier": 1,
+      "description": "Ligera y maleable."
+    }
+  },
+  {
+    "key": "ore_iron",
+    "name": "Mena de Hierro",
+    "type": "MATERIAL",
+    "rarity": "UNCOMMON",
+    "price": 10,
+    "buyable": false,
+    "sellable": true,
+    "usable": false,
+    "toolKind": "NONE",
+    "metadata": {
+      "category": "Ore",
+      "tier": 2,
+      "description": "Esencial para herramientas robustas."
+    }
+  },
+  {
+    "key": "ore_coal",
+    "name": "Mena de Carbón",
+    "type": "MATERIAL",
+    "rarity": "COMMON",
+    "price": 8,
+    "buyable": false,
+    "sellable": true,
+    "usable": false,
+    "toolKind": "NONE",
+    "metadata": {
+      "category": "Ore",
+      "tier": 1,
+      "description": "Combustible oscuro y poroso."
+    }
+  },
+  {
+    "key": "ore_silver",
+    "name": "Mena de Plata",
+    "type": "MATERIAL",
+    "rarity": "RARE",
+    "price": 18,
+    "buyable": false,
+    "sellable": true,
+    "usable": false,
+    "toolKind": "NONE",
+    "metadata": {
+      "category": "Ore",
+      "tier": 3,
+      "description": "Irradia reflejos fríos."
+    }
+  },
+  {
+    "key": "ore_gold",
+    "name": "Mena de Oro",
+    "type": "MATERIAL",
+    "rarity": "RARE",
+    "price": 26,
+    "buyable": false,
+    "sellable": true,
+    "usable": false,
+    "toolKind": "NONE",
+    "metadata": {
+      "category": "Ore",
+      "tier": 3,
+      "description": "Reluce como el sol."
+    }
+  },
+  {
+    "key": "ore_mythril",
+    "name": "Mena de Mithril",
+    "type": "MATERIAL",
+    "rarity": "EPIC",
+    "price": 34,
+    "buyable": false,
+    "sellable": true,
+    "usable": false,
+    "toolKind": "NONE",
+    "metadata": {
+      "category": "Ore",
+      "tier": 4,
+      "description": "Metal liviano de tono celeste."
+    }
+  },
+  {
+    "key": "ore_adamant",
+    "name": "Mena de Adamantita",
+    "type": "MATERIAL",
+    "rarity": "EPIC",
+    "price": 46,
+    "buyable": false,
+    "sellable": true,
+    "usable": false,
+    "toolKind": "NONE",
+    "metadata": {
+      "category": "Ore",
+      "tier": 5,
+      "description": "Dureza incomparable."
+    }
+  },
+  {
+    "key": "ore_orichalcum",
+    "name": "Mena de Oricalco",
+    "type": "MATERIAL",
+    "rarity": "LEGENDARY",
+    "price": 60,
+    "buyable": false,
+    "sellable": true,
+    "usable": false,
+    "toolKind": "NONE",
+    "metadata": {
+      "category": "Ore",
+      "tier": 6,
+      "description": "Vibra con poder antiguo."
+    }
+  },
+  {
+    "key": "ore_obsidian",
+    "name": "Obsidiana Pulida",
+    "type": "MATERIAL",
+    "rarity": "EPIC",
+    "price": 40,
+    "buyable": false,
+    "sellable": true,
+    "usable": false,
+    "toolKind": "NONE",
+    "metadata": {
+      "category": "Ore",
+      "tier": 4,
+      "description": "Vidrio volcánico afilado."
+    }
+  },
+  {
+    "key": "ore_aether",
+    "name": "Mena de Éter",
+    "type": "MATERIAL",
+    "rarity": "MYTHIC",
+    "price": 84,
+    "buyable": false,
+    "sellable": true,
+    "usable": false,
+    "toolKind": "NONE",
+    "metadata": {
+      "category": "Ore",
+      "tier": 7,
+      "description": "Sólido formado por pura magia."
+    }
+  },
+  {
+    "key": "ore_quartz",
+    "name": "Cuarzo Brillante",
+    "type": "MATERIAL",
+    "rarity": "COMMON",
+    "price": 4,
+    "buyable": false,
+    "sellable": true,
+    "usable": false,
+    "toolKind": "NONE",
+    "metadata": {
+      "category": "Ore",
+      "tier": 1,
+      "description": "Cristal transparente muy demandado."
+    }
+  },
+  {
+    "key": "ore_selenite",
+    "name": "Selenita Lechosa",
+    "type": "MATERIAL",
+    "rarity": "UNCOMMON",
+    "price": 9,
+    "buyable": false,
+    "sellable": true,
+    "usable": false,
+    "toolKind": "NONE",
+    "metadata": {
+      "category": "Ore",
+      "tier": 2,
+      "description": "Canaliza magia lunar."
+    }
+  },
+  {
+    "key": "ore_pyrite",
+    "name": "Pirita Dorada",
+    "type": "MATERIAL",
+    "rarity": "COMMON",
+    "price": 7,
+    "buyable": false,
+    "sellable": true,
+    "usable": false,
+    "toolKind": "NONE",
+    "metadata": {
+      "category": "Ore",
+      "tier": 2,
+      "description": "El oro de los necios, útil en reacciones alquímicas."
+    }
+  },
+  {
+    "key": "ore_cobalt",
+    "name": "Mena de Cobalto",
+    "type": "MATERIAL",
+    "rarity": "UNCOMMON",
+    "price": 14,
+    "buyable": false,
+    "sellable": true,
+    "usable": false,
+    "toolKind": "NONE",
+    "metadata": {
+      "category": "Ore",
+      "tier": 3,
+      "description": "Azul intenso para aleaciones precisas."
+    }
+  },
+  {
+    "key": "bar_bronze",
+    "name": "Lingote de Bronce",
+    "type": "MATERIAL",
+    "rarity": "UNCOMMON",
+    "price": 16,
+    "buyable": false,
+    "sellable": true,
+    "usable": false,
+    "toolKind": "NONE",
+    "metadata": {
+      "category": "Bar",
+      "tier": 2,
+      "description": "Aleación de cobre y estaño."
+    }
+  },
+  {
+    "key": "bar_iron",
+    "name": "Lingote de Hierro",
+    "type": "MATERIAL",
+    "rarity": "UNCOMMON",
+    "price": 28,
+    "buyable": false,
+    "sellable": true,
+    "usable": false,
+    "toolKind": "NONE",
+    "metadata": {
+      "category": "Bar",
+      "tier": 3,
+      "description": "Tratado en hornos de carbón."
+    }
+  },
+  {
+    "key": "bar_steel",
+    "name": "Lingote de Acero",
+    "type": "MATERIAL",
+    "rarity": "RARE",
+    "price": 44,
+    "buyable": false,
+    "sellable": true,
+    "usable": false,
+    "toolKind": "NONE",
+    "metadata": {
+      "category": "Bar",
+      "tier": 3,
+      "description": "Templado para máxima resistencia."
+    }
+  },
+  {
+    "key": "bar_mythril",
+    "name": "Lingote de Mithril",
+    "type": "MATERIAL",
+    "rarity": "EPIC",
+    "price": 68,
+    "buyable": false,
+    "sellable": true,
+    "usable": false,
+    "toolKind": "NONE",
+    "metadata": {
+      "category": "Bar",
+      "tier": 4,
+      "description": "Liviano como una pluma."
+    }
+  },
+  {
+    "key": "bar_adamant",
+    "name": "Lingote de Adamantita",
+    "type": "MATERIAL",
+    "rarity": "EPIC",
+    "price": 86,
+    "buyable": false,
+    "sellable": true,
+    "usable": false,
+    "toolKind": "NONE",
+    "metadata": {
+      "category": "Bar",
+      "tier": 5,
+      "description": "Casi indestructible."
+    }
+  },
+  {
+    "key": "bar_orichalcum",
+    "name": "Lingote de Oricalco",
+    "type": "MATERIAL",
+    "rarity": "LEGENDARY",
+    "price": 120,
+    "buyable": false,
+    "sellable": true,
+    "usable": false,
+    "toolKind": "NONE",
+    "metadata": {
+      "category": "Bar",
+      "tier": 6,
+      "description": "Canaliza la energía del rayo."
+    }
+  },
+  {
+    "key": "bar_aether",
+    "name": "Lingote de Éter",
+    "type": "MATERIAL",
+    "rarity": "MYTHIC",
+    "price": 180,
+    "buyable": false,
+    "sellable": true,
+    "usable": false,
+    "toolKind": "NONE",
+    "metadata": {
+      "category": "Bar",
+      "tier": 7,
+      "description": "Materializa pura magia."
+    }
+  },
+  {
+    "key": "gem_agate",
+    "name": "Ágata Veteada",
+    "type": "MATERIAL",
+    "rarity": "COMMON",
+    "price": 12,
+    "buyable": false,
+    "sellable": true,
+    "usable": false,
+    "toolKind": "NONE",
+    "metadata": {
+      "category": "Gem",
+      "tier": 1,
+      "description": "Piedra multicolor usada en artesanía."
+    }
+  },
+  {
+    "key": "gem_garnet",
+    "name": "Granate Carmesí",
+    "type": "MATERIAL",
+    "rarity": "UNCOMMON",
+    "price": 22,
+    "buyable": false,
+    "sellable": true,
+    "usable": false,
+    "toolKind": "NONE",
+    "metadata": {
+      "category": "Gem",
+      "tier": 2,
+      "description": "Favorece la vitalidad."
+    }
+  },
+  {
+    "key": "gem_amethyst",
+    "name": "Amatista",
+    "type": "MATERIAL",
+    "rarity": "UNCOMMON",
+    "price": 28,
+    "buyable": false,
+    "sellable": true,
+    "usable": false,
+    "toolKind": "NONE",
+    "metadata": {
+      "category": "Gem",
+      "tier": 2,
+      "description": "Canaliza energía psíquica."
+    }
+  },
+  {
+    "key": "gem_topaz",
+    "name": "Topacio Solar",
+    "type": "MATERIAL",
+    "rarity": "RARE",
+    "price": 40,
+    "buyable": false,
+    "sellable": true,
+    "usable": false,
+    "toolKind": "NONE",
+    "metadata": {
+      "category": "Gem",
+      "tier": 3,
+      "description": "Luz cálida atrapada en cristal."
+    }
+  },
+  {
+    "key": "gem_sapphire",
+    "name": "Zafiro Marino",
+    "type": "MATERIAL",
+    "rarity": "EPIC",
+    "price": 64,
+    "buyable": false,
+    "sellable": true,
+    "usable": false,
+    "toolKind": "NONE",
+    "metadata": {
+      "category": "Gem",
+      "tier": 4,
+      "description": "Energía acuática concentrada."
+    }
+  },
+  {
+    "key": "gem_ruby",
+    "name": "Rubí Ígneo",
+    "type": "MATERIAL",
+    "rarity": "EPIC",
+    "price": 68,
+    "buyable": false,
+    "sellable": true,
+    "usable": false,
+    "toolKind": "NONE",
+    "metadata": {
+      "category": "Gem",
+      "tier": 4,
+      "description": "Corazón ardiente de la montaña."
+    }
+  },
+  {
+    "key": "gem_emerald",
+    "name": "Esmeralda Espectral",
+    "type": "MATERIAL",
+    "rarity": "LEGENDARY",
+    "price": 120,
+    "buyable": false,
+    "sellable": true,
+    "usable": false,
+    "toolKind": "NONE",
+    "metadata": {
+      "category": "Gem",
+      "tier": 5,
+      "description": "Canaliza la esencia de la vida."
+    }
+  },
+  {
+    "key": "gem_diamond",
+    "name": "Diamante Purificado",
+    "type": "MATERIAL",
+    "rarity": "LEGENDARY",
+    "price": 150,
+    "buyable": false,
+    "sellable": true,
+    "usable": false,
+    "toolKind": "NONE",
+    "metadata": {
+      "category": "Gem",
+      "tier": 6,
+      "description": "Pureza perfecta."
+    }
+  },
+  {
+    "key": "gem_star",
+    "name": "Gema Estelar",
+    "type": "MATERIAL",
+    "rarity": "MYTHIC",
+    "price": 220,
+    "buyable": false,
+    "sellable": true,
+    "usable": false,
+    "toolKind": "NONE",
+    "metadata": {
+      "category": "Gem",
+      "tier": 7,
+      "description": "Fragmento de constelación."
+    }
+  },
+  {
+    "key": "gem_void",
+    "name": "Gema del Vacío",
+    "type": "MATERIAL",
+    "rarity": "MYTHIC",
+    "price": 260,
+    "buyable": false,
+    "sellable": true,
+    "usable": false,
+    "toolKind": "NONE",
+    "metadata": {
+      "category": "Gem",
+      "tier": 7,
+      "description": "Absorbe la luz cercana."
+    }
+  },
+  {
+    "key": "wood_pine",
+    "name": "Madera de Pino",
+    "type": "MATERIAL",
+    "rarity": "COMMON",
+    "price": 6,
+    "buyable": false,
+    "sellable": true,
+    "usable": false,
+    "toolKind": "NONE",
+    "metadata": {
+      "category": "Wood",
+      "tier": 1,
+      "description": "Ligera y maleable."
+    }
+  },
+  {
+    "key": "wood_oak",
+    "name": "Madera de Roble",
+    "type": "MATERIAL",
+    "rarity": "COMMON",
+    "price": 9,
+    "buyable": false,
+    "sellable": true,
+    "usable": false,
+    "toolKind": "NONE",
+    "metadata": {
+      "category": "Wood",
+      "tier": 2,
+      "description": "Resistente y versátil."
+    }
+  },
+  {
+    "key": "wood_willow",
+    "name": "Madera de Sauce",
+    "type": "MATERIAL",
+    "rarity": "UNCOMMON",
+    "price": 11,
+    "buyable": false,
+    "sellable": true,
+    "usable": false,
+    "toolKind": "NONE",
+    "metadata": {
+      "category": "Wood",
+      "tier": 2,
+      "description": "Flexible y absorbente de magia."
+    }
+  },
+  {
+    "key": "wood_maple",
+    "name": "Madera de Arce",
+    "type": "MATERIAL",
+    "rarity": "UNCOMMON",
+    "price": 14,
+    "buyable": false,
+    "sellable": true,
+    "usable": false,
+    "toolKind": "NONE",
+    "metadata": {
+      "category": "Wood",
+      "tier": 3,
+      "description": "Grano liso ideal para tallas."
+    }
+  },
+  {
+    "key": "wood_ebony",
+    "name": "Madera de Ébano",
+    "type": "MATERIAL",
+    "rarity": "RARE",
+    "price": 20,
+    "buyable": false,
+    "sellable": true,
+    "usable": false,
+    "toolKind": "NONE",
+    "metadata": {
+      "category": "Wood",
+      "tier": 4,
+      "description": "Negra como la noche."
+    }
+  },
+  {
+    "key": "wood_astral",
+    "name": "Madera Astral",
+    "type": "MATERIAL",
+    "rarity": "EPIC",
+    "price": 34,
+    "buyable": false,
+    "sellable": true,
+    "usable": false,
+    "toolKind": "NONE",
+    "metadata": {
+      "category": "Wood",
+      "tier": 6,
+      "description": "Crecida en bosques suspendidos."
+    }
+  },
+  {
+    "key": "fiber_linen",
+    "name": "Fibra de Lino",
+    "type": "MATERIAL",
+    "rarity": "COMMON",
+    "price": 7,
+    "buyable": false,
+    "sellable": true,
+    "usable": false,
+    "toolKind": "NONE",
+    "metadata": {
+      "category": "Fiber",
+      "tier": 1,
+      "description": "Tejido básico para ropas ligeras."
+    }
+  },
+  {
+    "key": "fiber_hemp",
+    "name": "Fibra de Cáñamo",
+    "type": "MATERIAL",
+    "rarity": "COMMON",
+    "price": 8,
+    "buyable": false,
+    "sellable": true,
+    "usable": false,
+    "toolKind": "NONE",
+    "metadata": {
+      "category": "Fiber",
+      "tier": 1,
+      "description": "Resistente y natural."
+    }
+  },
+  {
+    "key": "fiber_silk",
+    "name": "Fibra de Seda",
+    "type": "MATERIAL",
+    "rarity": "UNCOMMON",
+    "price": 18,
+    "buyable": false,
+    "sellable": true,
+    "usable": false,
+    "toolKind": "NONE",
+    "metadata": {
+      "category": "Fiber",
+      "tier": 2,
+      "description": "Suave como la luna."
+    }
+  },
+  {
+    "key": "fiber_moonweave",
+    "name": "Fibra Tejido Lunar",
+    "type": "MATERIAL",
+    "rarity": "RARE",
+    "price": 28,
+    "buyable": false,
+    "sellable": true,
+    "usable": false,
+    "toolKind": "NONE",
+    "metadata": {
+      "category": "Fiber",
+      "tier": 3,
+      "description": "Irradia un brillo azulado."
+    }
+  },
+  {
+    "key": "fiber_sunstrand",
+    "name": "Fibra Hilo Solar",
+    "type": "MATERIAL",
+    "rarity": "EPIC",
+    "price": 36,
+    "buyable": false,
+    "sellable": true,
+    "usable": false,
+    "toolKind": "NONE",
+    "metadata": {
+      "category": "Fiber",
+      "tier": 4,
+      "description": "Calidez encapsulada."
+    }
+  },
+  {
+    "key": "fiber_shadowlace",
+    "name": "Fibra Encaje Sombrío",
+    "type": "MATERIAL",
+    "rarity": "EPIC",
+    "price": 48,
+    "buyable": false,
+    "sellable": true,
+    "usable": false,
+    "toolKind": "NONE",
+    "metadata": {
+      "category": "Fiber",
+      "tier": 5,
+      "description": "Difumina la luz a su alrededor."
+    }
+  },
+  {
+    "key": "fish_riverling",
+    "name": "Alevín de Río",
+    "type": "MATERIAL",
+    "rarity": "COMMON",
+    "price": 6,
+    "buyable": false,
+    "sellable": true,
+    "usable": false,
+    "toolKind": "NONE",
+    "metadata": {
+      "category": "Fish",
+      "tier": 1,
+      "description": "Pequeño y abundante."
+    }
+  },
+  {
+    "key": "fish_sunperch",
+    "name": "Percha Solar",
+    "type": "MATERIAL",
+    "rarity": "COMMON",
+    "price": 8,
+    "buyable": false,
+    "sellable": true,
+    "usable": false,
+    "toolKind": "NONE",
+    "metadata": {
+      "category": "Fish",
+      "tier": 1,
+      "description": "Escamas doradas brillantes."
+    }
+  },
+  {
+    "key": "fish_moontrout",
+    "name": "Trucha Lunar",
+    "type": "MATERIAL",
+    "rarity": "UNCOMMON",
+    "price": 14,
+    "buyable": false,
+    "sellable": true,
+    "usable": false,
+    "toolKind": "NONE",
+    "metadata": {
+      "category": "Fish",
+      "tier": 2,
+      "description": "Brilla en aguas oscuras."
+    }
+  },
+  {
+    "key": "fish_glacier_cod",
+    "name": "Bacalao Glaciar",
+    "type": "MATERIAL",
+    "rarity": "UNCOMMON",
+    "price": 20,
+    "buyable": false,
+    "sellable": true,
+    "usable": false,
+    "toolKind": "NONE",
+    "metadata": {
+      "category": "Fish",
+      "tier": 3,
+      "description": "Procedente de lagos helados."
+    }
+  },
+  {
+    "key": "fish_emberfin",
+    "name": "Pez Ascuas",
+    "type": "MATERIAL",
+    "rarity": "RARE",
+    "price": 26,
+    "buyable": false,
+    "sellable": true,
+    "usable": false,
+    "toolKind": "NONE",
+    "metadata": {
+      "category": "Fish",
+      "tier": 3,
+      "description": "Sangre cálida y especiada."
+    }
+  },
+  {
+    "key": "fish_stormray",
+    "name": "Raya Tormenta",
+    "type": "MATERIAL",
+    "rarity": "RARE",
+    "price": 34,
+    "buyable": false,
+    "sellable": true,
+    "usable": false,
+    "toolKind": "NONE",
+    "metadata": {
+      "category": "Fish",
+      "tier": 4,
+      "description": "Acumula carga eléctrica."
+    }
+  },
+  {
+    "key": "fish_abyssal_eel",
+    "name": "Anguila Abisal",
+    "type": "MATERIAL",
+    "rarity": "EPIC",
+    "price": 46,
+    "buyable": false,
+    "sellable": true,
+    "usable": false,
+    "toolKind": "NONE",
+    "metadata": {
+      "category": "Fish",
+      "tier": 5,
+      "description": "Habita en fosas sin luz."
+    }
+  },
+  {
+    "key": "fish_starlit_koi",
+    "name": "Koi Estelar",
+    "type": "MATERIAL",
+    "rarity": "EPIC",
+    "price": 52,
+    "buyable": false,
+    "sellable": true,
+    "usable": false,
+    "toolKind": "NONE",
+    "metadata": {
+      "category": "Fish",
+      "tier": 5,
+      "description": "Nadan siguiendo constelaciones."
+    }
+  },
+  {
+    "key": "fish_leviathan_scale",
+    "name": "Escama de Leviatán",
+    "type": "MATERIAL",
+    "rarity": "LEGENDARY",
+    "price": 88,
+    "buyable": false,
+    "sellable": true,
+    "usable": false,
+    "toolKind": "NONE",
+    "metadata": {
+      "category": "Fish",
+      "tier": 6,
+      "description": "Rara escama de bestia marina."
+    }
+  },
+  {
+    "key": "fish_tidal_coral",
+    "name": "Coral de Marea",
+    "type": "MATERIAL",
+    "rarity": "UNCOMMON",
+    "price": 16,
+    "buyable": false,
+    "sellable": true,
+    "usable": false,
+    "toolKind": "NONE",
+    "metadata": {
+      "category": "Fish",
+      "tier": 2,
+      "description": "Esponjoso y lleno de maná."
+    }
+  },
+  {
+    "key": "herb_sun",
+    "name": "Hierba Solar",
+    "type": "MATERIAL",
+    "rarity": "COMMON",
+    "price": 6,
+    "buyable": false,
+    "sellable": true,
+    "usable": false,
+    "toolKind": "NONE",
+    "metadata": {
+      "category": "Herb",
+      "tier": 1,
+      "description": "Favorece la recuperación rápida."
+    }
+  },
+  {
+    "key": "herb_moon",
+    "name": "Hierba Lunar",
+    "type": "MATERIAL",
+    "rarity": "UNCOMMON",
+    "price": 12,
+    "buyable": false,
+    "sellable": true,
+    "usable": false,
+    "toolKind": "NONE",
+    "metadata": {
+      "category": "Herb",
+      "tier": 2,
+      "description": "Enfría la mente y el cuerpo."
+    }
+  },
+  {
+    "key": "herb_storm",
+    "name": "Hierba Tormentosa",
+    "type": "MATERIAL",
+    "rarity": "UNCOMMON",
+    "price": 18,
+    "buyable": false,
+    "sellable": true,
+    "usable": false,
+    "toolKind": "NONE",
+    "metadata": {
+      "category": "Herb",
+      "tier": 3,
+      "description": "Tiene toques picantes."
+    }
+  },
+  {
+    "key": "herb_ember",
+    "name": "Flor Ascua",
+    "type": "MATERIAL",
+    "rarity": "RARE",
+    "price": 24,
+    "buyable": false,
+    "sellable": true,
+    "usable": false,
+    "toolKind": "NONE",
+    "metadata": {
+      "category": "Herb",
+      "tier": 3,
+      "description": "Combustible alquímico fuerte."
+    }
+  },
+  {
+    "key": "herb_frost",
+    "name": "Flor Helada",
+    "type": "MATERIAL",
+    "rarity": "RARE",
+    "price": 28,
+    "buyable": false,
+    "sellable": true,
+    "usable": false,
+    "toolKind": "NONE",
+    "metadata": {
+      "category": "Herb",
+      "tier": 4,
+      "description": "Emana una brisa fría constante."
+    }
+  },
+  {
+    "key": "herb_aurora",
+    "name": "Pétalo Aurora",
+    "type": "MATERIAL",
+    "rarity": "EPIC",
+    "price": 42,
+    "buyable": false,
+    "sellable": true,
+    "usable": false,
+    "toolKind": "NONE",
+    "metadata": {
+      "category": "Herb",
+      "tier": 5,
+      "description": "Brilla en siete colores."
+    }
+  },
+  {
+    "key": "herb_voidroot",
+    "name": "Raíz del Vacío",
+    "type": "MATERIAL",
+    "rarity": "MYTHIC",
+    "price": 90,
+    "buyable": false,
+    "sellable": true,
+    "usable": false,
+    "toolKind": "NONE",
+    "metadata": {
+      "category": "Herb",
+      "tier": 7,
+      "description": "Crece donde la luz no llega."
+    }
+  },
+  {
+    "key": "leather",
+    "name": "Cuero Suave",
+    "type": "MATERIAL",
+    "rarity": "COMMON",
+    "price": 8,
+    "buyable": true,
+    "sellable": true,
+    "usable": false,
+    "toolKind": "NONE",
+    "metadata": {
+      "category": "Monster Part",
+      "tier": 1,
+      "description": "Piel curtida de bestias comunes."
+    }
+  },
+  {
+    "key": "hide_rugged",
+    "name": "Piel Rugosa",
+    "type": "MATERIAL",
+    "rarity": "UNCOMMON",
+    "price": 12,
+    "buyable": true,
+    "sellable": true,
+    "usable": false,
+    "toolKind": "NONE",
+    "metadata": {
+      "category": "Monster Part",
+      "tier": 2,
+      "description": "Protege contra raspones."
+    }
+  },
+  {
+    "key": "scale_serpent",
+    "name": "Escama de Serpiente",
+    "type": "MATERIAL",
+    "rarity": "RARE",
+    "price": 30,
+    "buyable": true,
+    "sellable": true,
+    "usable": false,
+    "toolKind": "NONE",
+    "metadata": {
+      "category": "Monster Part",
+      "tier": 3,
+      "description": "Ligera pero resistente."
+    }
+  },
+  {
+    "key": "fang_alpha",
+    "name": "Colmillo Alfa",
+    "type": "MATERIAL",
+    "rarity": "RARE",
+    "price": 34,
+    "buyable": true,
+    "sellable": true,
+    "usable": false,
+    "toolKind": "NONE",
+    "metadata": {
+      "category": "Monster Part",
+      "tier": 4,
+      "description": "Arma natural muy afilada."
+    }
+  },
+  {
+    "key": "claw_shadow",
+    "name": "Garra Sombría",
+    "type": "MATERIAL",
+    "rarity": "EPIC",
+    "price": 40,
+    "buyable": true,
+    "sellable": true,
+    "usable": false,
+    "toolKind": "NONE",
+    "metadata": {
+      "category": "Monster Part",
+      "tier": 4,
+      "description": "Absorbe la luz."
+    }
+  },
+  {
+    "key": "core_mythic",
+    "name": "Núcleo Mítico",
+    "type": "MATERIAL",
+    "rarity": "MYTHIC",
+    "price": 0,
+    "buyable": false,
+    "sellable": false,
+    "usable": false,
+    "toolKind": "NONE",
+    "metadata": {
+      "category": "Monster Part",
+      "tier": 6,
+      "description": "Corazón cristalizado de un campeón."
+    }
+  },
+  {
+    "key": "essence_fire",
+    "name": "Esencia de Fuego",
+    "type": "MATERIAL",
+    "rarity": "EPIC",
+    "price": 36,
+    "buyable": true,
+    "sellable": true,
+    "usable": false,
+    "toolKind": "NONE",
+    "metadata": {
+      "category": "Monster Part",
+      "tier": 4,
+      "description": "Arde sin consumir aire."
+    }
+  },
+  {
+    "key": "essence_frost",
+    "name": "Esencia de Escarcha",
+    "type": "MATERIAL",
+    "rarity": "EPIC",
+    "price": 36,
+    "buyable": true,
+    "sellable": true,
+    "usable": false,
+    "toolKind": "NONE",
+    "metadata": {
+      "category": "Monster Part",
+      "tier": 4,
+      "description": "Congela con solo tocarla."
+    }
+  },
+  {
+    "key": "feather_celestial",
+    "name": "Pluma Celestial",
+    "type": "MATERIAL",
+    "rarity": "LEGENDARY",
+    "price": 72,
+    "buyable": true,
+    "sellable": true,
+    "usable": false,
+    "toolKind": "NONE",
+    "metadata": {
+      "category": "Monster Part",
+      "tier": 5,
+      "description": "Liviana como un suspiro."
+    }
+  },
+  {
+    "key": "carapace_titan",
+    "name": "Caparazón Titán",
+    "type": "MATERIAL",
+    "rarity": "LEGENDARY",
+    "price": 96,
+    "buyable": true,
+    "sellable": true,
+    "usable": false,
+    "toolKind": "NONE",
+    "metadata": {
+      "category": "Monster Part",
+      "tier": 6,
+      "description": "Capas superpuestas extremadamente duras."
+    }
+  },
+  {
+    "key": "ichor_night",
+    "name": "Icor Nocturno",
+    "type": "MATERIAL",
+    "rarity": "LEGENDARY",
+    "price": 84,
+    "buyable": true,
+    "sellable": true,
+    "usable": false,
+    "toolKind": "NONE",
+    "metadata": {
+      "category": "Monster Part",
+      "tier": 6,
+      "description": "Líquido oscuro con brillo violeta."
+    }
+  },
+  {
+    "key": "heart_ancient",
+    "name": "Corazón Ancestral",
+    "type": "MATERIAL",
+    "rarity": "MYTHIC",
+    "price": 0,
+    "buyable": false,
+    "sellable": false,
+    "usable": false,
+    "toolKind": "NONE",
+    "metadata": {
+      "category": "Monster Part",
+      "tier": 7,
+      "description": "Latiendo con magia primigenia."
+    }
+  },
+  {
+    "key": "ice_shard",
+    "name": "Fragmento Helado",
+    "type": "MATERIAL",
+    "rarity": "UNCOMMON",
+    "price": 14,
+    "buyable": false,
+    "sellable": true,
+    "usable": false,
+    "toolKind": "NONE",
+    "metadata": {
+      "category": "Shard",
+      "tier": 2,
+      "description": "Trozo de hielo perpetuo."
+    }
+  },
+  {
+    "key": "potion_small",
+    "name": "Poción Pequeña",
+    "type": "CONSUMABLE",
+    "rarity": "COMMON",
+    "price": 36,
+    "buyable": true,
+    "sellable": true,
+    "usable": true,
+    "toolKind": "NONE",
+    "metadata": {
+      "effect": "heal",
+      "value": 60,
+      "cdSec": 20
+    }
+  },
+  {
+    "key": "potion_medium",
+    "name": "Poción Mediana",
+    "type": "CONSUMABLE",
+    "rarity": "UNCOMMON",
+    "price": 70,
+    "buyable": true,
+    "sellable": true,
+    "usable": true,
+    "toolKind": "NONE",
+    "metadata": {
+      "effect": "heal",
+      "value": 120,
+      "cdSec": 25
+    }
+  },
+  {
+    "key": "potion_large",
+    "name": "Poción Grande",
+    "type": "CONSUMABLE",
+    "rarity": "RARE",
+    "price": 140,
+    "buyable": true,
+    "sellable": true,
+    "usable": true,
+    "toolKind": "NONE",
+    "metadata": {
+      "effect": "heal",
+      "value": 220,
+      "cdSec": 30
+    }
+  },
+  {
+    "key": "potion_major",
+    "name": "Poción Superior",
+    "type": "CONSUMABLE",
+    "rarity": "EPIC",
+    "price": 260,
+    "buyable": true,
+    "sellable": true,
+    "usable": true,
+    "toolKind": "NONE",
+    "metadata": {
+      "effect": "heal",
+      "value": 420,
+      "cdSec": 35
+    }
+  },
+  {
+    "key": "elixir_luck",
+    "name": "Elixir de Suerte",
+    "type": "CONSUMABLE",
+    "rarity": "EPIC",
+    "price": 180,
+    "buyable": true,
+    "sellable": true,
+    "usable": true,
+    "toolKind": "NONE",
+    "metadata": {
+      "effect": "luck",
+      "value": 0.25,
+      "durationSec": 900
+    }
+  },
+  {
+    "key": "elixir_focus",
+    "name": "Elixir de Enfoque",
+    "type": "CONSUMABLE",
+    "rarity": "RARE",
+    "price": 120,
+    "buyable": true,
+    "sellable": true,
+    "usable": true,
+    "toolKind": "NONE",
+    "metadata": {
+      "effect": "focus",
+      "value": 0.2,
+      "durationSec": 600
+    }
+  },
+  {
+    "key": "tonic_miner",
+    "name": "Tónico del Minero",
+    "type": "CONSUMABLE",
+    "rarity": "RARE",
+    "price": 110,
+    "buyable": true,
+    "sellable": true,
+    "usable": true,
+    "toolKind": "NONE",
+    "metadata": {
+      "effect": "mine_yield",
+      "value": 0.35,
+      "durationSec": 900
+    }
+  },
+  {
+    "key": "tonic_fisher",
+    "name": "Tónico del Pescador",
+    "type": "CONSUMABLE",
+    "rarity": "RARE",
+    "price": 105,
+    "buyable": true,
+    "sellable": true,
+    "usable": true,
+    "toolKind": "NONE",
+    "metadata": {
+      "effect": "fish_yield",
+      "value": 0.35,
+      "durationSec": 900
+    }
+  },
+  {
+    "key": "draught_power",
+    "name": "Breve Poder",
+    "type": "CONSUMABLE",
+    "rarity": "EPIC",
+    "price": 190,
+    "buyable": true,
+    "sellable": true,
+    "usable": true,
+    "toolKind": "NONE",
+    "metadata": {
+      "effect": "attack",
+      "value": 0.3,
+      "durationSec": 600
+    }
+  },
+  {
+    "key": "draught_guard",
+    "name": "Breve Guardia",
+    "type": "CONSUMABLE",
+    "rarity": "EPIC",
+    "price": 190,
+    "buyable": true,
+    "sellable": true,
+    "usable": true,
+    "toolKind": "NONE",
+    "metadata": {
+      "effect": "defense",
+      "value": 0.3,
+      "durationSec": 600
+    }
+  },
+  {
+    "key": "food_meat",
+    "name": "Carne Asada",
+    "type": "CONSUMABLE",
+    "rarity": "UNCOMMON",
+    "price": 28,
+    "buyable": true,
+    "sellable": true,
+    "usable": true,
+    "toolKind": "NONE",
+    "metadata": {
+      "effect": "stamina",
+      "value": 25
+    }
+  },
+  {
+    "key": "food_stew",
+    "name": "Estofado Reconfortante",
+    "type": "CONSUMABLE",
+    "rarity": "UNCOMMON",
+    "price": 34,
+    "buyable": true,
+    "sellable": true,
+    "usable": true,
+    "toolKind": "NONE",
+    "metadata": {
+      "effect": "heal_over_time",
+      "value": 80,
+      "durationSec": 600
+    }
+  },
+  {
+    "key": "food_pie",
+    "name": "Pastel de Hongos",
+    "type": "CONSUMABLE",
+    "rarity": "RARE",
+    "price": 52,
+    "buyable": true,
+    "sellable": true,
+    "usable": true,
+    "toolKind": "NONE",
+    "metadata": {
+      "effect": "intellect",
+      "value": 2,
+      "durationSec": 1800
+    }
+  },
+  {
+    "key": "food_feast",
+    "name": "Banquete de Gremio",
+    "type": "CONSUMABLE",
+    "rarity": "EPIC",
+    "price": 120,
+    "buyable": true,
+    "sellable": true,
+    "usable": true,
+    "toolKind": "NONE",
+    "metadata": {
+      "effect": "party_buff",
+      "value": 0.15,
+      "durationSec": 1800
+    }
+  },
+  {
+    "key": "food_sushi",
+    "name": "Sushi Estelar",
+    "type": "CONSUMABLE",
+    "rarity": "EPIC",
+    "price": 150,
+    "buyable": true,
+    "sellable": true,
+    "usable": true,
+    "toolKind": "NONE",
+    "metadata": {
+      "effect": "crit",
+      "value": 0.12,
+      "durationSec": 1200
+    }
+  },
+  {
+    "key": "food_broth",
+    "name": "Caldo de Leviatán",
+    "type": "CONSUMABLE",
+    "rarity": "LEGENDARY",
+    "price": 220,
+    "buyable": true,
+    "sellable": true,
+    "usable": true,
+    "toolKind": "NONE",
+    "metadata": {
+      "effect": "max_health",
+      "value": 50,
+      "durationSec": 1800
+    }
+  },
+  {
+    "key": "food_spice",
+    "name": "Guiso Especiado",
+    "type": "CONSUMABLE",
+    "rarity": "RARE",
+    "price": 60,
+    "buyable": true,
+    "sellable": true,
+    "usable": true,
+    "toolKind": "NONE",
+    "metadata": {
+      "effect": "energy",
+      "value": 35
+    }
+  },
+  {
+    "key": "food_dessert",
+    "name": "Postre Lunar",
+    "type": "CONSUMABLE",
+    "rarity": "RARE",
+    "price": 65,
+    "buyable": true,
+    "sellable": true,
+    "usable": true,
+    "toolKind": "NONE",
+    "metadata": {
+      "effect": "luck",
+      "value": 0.12,
+      "durationSec": 1200
+    }
+  },
+  {
+    "key": "bait_basic",
+    "name": "Cebo Básico",
+    "type": "CONSUMABLE",
+    "rarity": "COMMON",
+    "price": 16,
+    "buyable": true,
+    "sellable": true,
+    "usable": true,
+    "toolKind": "NONE",
+    "metadata": {
+      "uses": 6,
+      "dropBonus": 0.1
+    }
+  },
+  {
+    "key": "bait_river",
+    "name": "Cebo de Río",
+    "type": "CONSUMABLE",
+    "rarity": "UNCOMMON",
+    "price": 28,
+    "buyable": true,
+    "sellable": true,
+    "usable": true,
+    "toolKind": "NONE",
+    "metadata": {
+      "uses": 8,
+      "dropBonus": 0.18
+    }
+  },
+  {
+    "key": "bait_deep",
+    "name": "Cebo Profundo",
+    "type": "CONSUMABLE",
+    "rarity": "RARE",
+    "price": 42,
+    "buyable": true,
+    "sellable": true,
+    "usable": true,
+    "toolKind": "NONE",
+    "metadata": {
+      "uses": 10,
+      "dropBonus": 0.26
+    }
+  },
+  {
+    "key": "bait_storm",
+    "name": "Cebo Tormentoso",
+    "type": "CONSUMABLE",
+    "rarity": "EPIC",
+    "price": 78,
+    "buyable": true,
+    "sellable": true,
+    "usable": true,
+    "toolKind": "NONE",
+    "metadata": {
+      "uses": 12,
+      "dropBonus": 0.34
+    }
+  },
+  {
+    "key": "bait_luminous",
+    "name": "Cebo Luminoso",
+    "type": "CONSUMABLE",
+    "rarity": "EPIC",
+    "price": 120,
+    "buyable": true,
+    "sellable": true,
+    "usable": true,
+    "toolKind": "NONE",
+    "metadata": {
+      "uses": 15,
+      "dropBonus": 0.42
+    }
+  },
+  {
+    "key": "bait_abyss",
+    "name": "Cebo Abisal",
+    "type": "CONSUMABLE",
+    "rarity": "LEGENDARY",
+    "price": 160,
+    "buyable": true,
+    "sellable": true,
+    "usable": true,
+    "toolKind": "NONE",
+    "metadata": {
+      "uses": 18,
+      "dropBonus": 0.55
+    }
+  },
+  {
+    "key": "scroll_mining",
+    "name": "Pergamino Minero",
+    "type": "CONSUMABLE",
+    "rarity": "RARE",
+    "price": 80,
+    "buyable": true,
+    "sellable": true,
+    "usable": true,
+    "toolKind": "NONE",
+    "metadata": {
+      "effect": "mine_speed",
+      "value": 0.2,
+      "durationSec": 1200
+    }
+  },
+  {
+    "key": "scroll_fishing",
+    "name": "Pergamino de Pesca",
+    "type": "CONSUMABLE",
+    "rarity": "RARE",
+    "price": 80,
+    "buyable": true,
+    "sellable": true,
+    "usable": true,
+    "toolKind": "NONE",
+    "metadata": {
+      "effect": "fish_speed",
+      "value": 0.2,
+      "durationSec": 1200
+    }
+  },
+  {
+    "key": "scroll_boss",
+    "name": "Pergamino Bélico",
+    "type": "CONSUMABLE",
+    "rarity": "EPIC",
+    "price": 160,
+    "buyable": true,
+    "sellable": true,
+    "usable": true,
+    "toolKind": "NONE",
+    "metadata": {
+      "effect": "boss_damage",
+      "value": 0.25,
+      "durationSec": 900
+    }
+  },
+  {
+    "key": "scroll_luck",
+    "name": "Pergamino Fortuna",
+    "type": "CONSUMABLE",
+    "rarity": "EPIC",
+    "price": 140,
+    "buyable": true,
+    "sellable": true,
+    "usable": true,
+    "toolKind": "NONE",
+    "metadata": {
+      "effect": "luck",
+      "value": 0.2,
+      "durationSec": 900
+    }
+  },
+  {
+    "key": "booster_work",
+    "name": "Booster Laboral",
+    "type": "CONSUMABLE",
+    "rarity": "UNCOMMON",
+    "price": 55,
+    "buyable": true,
+    "sellable": true,
+    "usable": true,
+    "toolKind": "NONE",
+    "metadata": {
+      "effect": "work_reward",
+      "value": 0.18,
+      "durationSec": 1800
+    }
+  },
+  {
+    "key": "booster_skill",
+    "name": "Booster Maestría",
+    "type": "CONSUMABLE",
+    "rarity": "EPIC",
+    "price": 150,
+    "buyable": true,
+    "sellable": true,
+    "usable": true,
+    "toolKind": "NONE",
+    "metadata": {
+      "effect": "skill_xp",
+      "value": 0.3,
+      "durationSec": 1800
+    }
+  },
+  {
+    "key": "pet_puff",
+    "name": "Paf esponjoso",
+    "type": "MISC",
+    "rarity": "RARE",
+    "price": 860,
+    "buyable": true,
+    "sellable": true,
+    "usable": false,
+    "toolKind": "NONE",
+    "metadata": {
+      "category": "Pet",
+      "passive": {
+        "mine_drop": 0.12
+      },
+      "flavor": "Adora las vetas brillantes."
+    }
+  },
+  {
+    "key": "pet_krill",
+    "name": "Krill Lumínico",
+    "type": "MISC",
+    "rarity": "EPIC",
+    "price": 960,
+    "buyable": true,
+    "sellable": true,
+    "usable": false,
+    "toolKind": "NONE",
+    "metadata": {
+      "category": "Pet",
+      "passive": {
+        "fish_speed": 0.18
+      },
+      "flavor": "Hace de faro submarino."
+    }
+  },
+  {
+    "key": "pet_wisp",
+    "name": "Luz Susurrante",
+    "type": "MISC",
+    "rarity": "EPIC",
+    "price": 1040,
+    "buyable": true,
+    "sellable": true,
+    "usable": false,
+    "toolKind": "NONE",
+    "metadata": {
+      "category": "Pet",
+      "passive": {
+        "luck": 0.08
+      },
+      "flavor": "Susurra pistas de tesoros."
+    }
+  },
+  {
+    "key": "pet_rockling",
+    "name": "Gólemito",
+    "type": "MISC",
+    "rarity": "UNCOMMON",
+    "price": 540,
+    "buyable": true,
+    "sellable": true,
+    "usable": false,
+    "toolKind": "NONE",
+    "metadata": {
+      "category": "Pet",
+      "passive": {
+        "durability_loss": -0.1
+      },
+      "flavor": "Cura herramientas dañadas."
+    }
+  },
+  {
+    "key": "pet_phoenix",
+    "name": "Polluelo Fénix",
+    "type": "MISC",
+    "rarity": "LEGENDARY",
+    "price": 1380,
+    "buyable": true,
+    "sellable": true,
+    "usable": false,
+    "toolKind": "NONE",
+    "metadata": {
+      "category": "Pet",
+      "passive": {
+        "revive": 0.05
+      },
+      "flavor": "Renace una vez al día."
+    }
+  },
+  {
+    "key": "pet_serpent",
+    "name": "Serpiente Coral",
+    "type": "MISC",
+    "rarity": "EPIC",
+    "price": 1200,
+    "buyable": true,
+    "sellable": true,
+    "usable": false,
+    "toolKind": "NONE",
+    "metadata": {
+      "category": "Pet",
+      "passive": {
+        "rare_fish": 0.12
+      },
+      "flavor": "Domina mareas cambiantes."
+    }
+  },
+  {
+    "key": "pet_gryphon",
+    "name": "Grifo Juvenil",
+    "type": "MISC",
+    "rarity": "MYTHIC",
+    "price": 0,
+    "buyable": false,
+    "sellable": false,
+    "usable": false,
+    "toolKind": "NONE",
+    "metadata": {
+      "category": "Pet",
+      "passive": {
+        "all_rewards": 0.08
+      },
+      "flavor": "Solo obedece a campeones.",
+      "soulbound": true
+    }
+  },
+  {
+    "key": "cos_aurora_cloak",
+    "name": "Capa Aurora",
+    "type": "MISC",
+    "rarity": "EPIC",
+    "price": 320,
+    "buyable": true,
+    "sellable": true,
+    "usable": false,
+    "toolKind": "NONE",
+    "metadata": {
+      "category": "Cosmetic",
+      "description": "Deja un rastro de luz multicolor."
+    }
+  },
+  {
+    "key": "cos_miner_hat",
+    "name": "Casco con Lámpara Retro",
+    "type": "MISC",
+    "rarity": "UNCOMMON",
+    "price": 140,
+    "buyable": true,
+    "sellable": true,
+    "usable": false,
+    "toolKind": "NONE",
+    "metadata": {
+      "category": "Cosmetic",
+      "description": "Un clásico restaurado con estilo."
+    }
+  },
+  {
+    "key": "cos_tide_cape",
+    "name": "Capa Marea",
+    "type": "MISC",
+    "rarity": "RARE",
+    "price": 240,
+    "buyable": true,
+    "sellable": true,
+    "usable": false,
+    "toolKind": "NONE",
+    "metadata": {
+      "category": "Cosmetic",
+      "description": "Tela que ondula como agua."
+    }
+  },
+  {
+    "key": "cos_void_wings",
+    "name": "Alas del Vacío",
+    "type": "MISC",
+    "rarity": "LEGENDARY",
+    "price": 520,
+    "buyable": true,
+    "sellable": true,
+    "usable": false,
+    "toolKind": "NONE",
+    "metadata": {
+      "category": "Cosmetic",
+      "description": "Oscuridad cristalizada en forma de alas."
+    }
+  },
+  {
+    "key": "cos_crown_sprout",
+    "name": "Corona Brotante",
+    "type": "MISC",
+    "rarity": "RARE",
+    "price": 260,
+    "buyable": true,
+    "sellable": true,
+    "usable": false,
+    "toolKind": "NONE",
+    "metadata": {
+      "category": "Cosmetic",
+      "description": "Pequeñas hojas se abren al andar."
+    }
+  },
+  {
+    "key": "cos_trail_stars",
+    "name": "Sendero Estelar",
+    "type": "MISC",
+    "rarity": "EPIC",
+    "price": 380,
+    "buyable": true,
+    "sellable": true,
+    "usable": false,
+    "toolKind": "NONE",
+    "metadata": {
+      "category": "Cosmetic",
+      "description": "Estelas de estrellas siguen tus pasos."
+    }
+  },
+  {
+    "key": "cos_halo",
+    "name": "Halo Dorado",
+    "type": "MISC",
+    "rarity": "RARE",
+    "price": 280,
+    "buyable": true,
+    "sellable": true,
+    "usable": false,
+    "toolKind": "NONE",
+    "metadata": {
+      "category": "Cosmetic",
+      "description": "Resplandece suavemente en todo lugar."
+    }
+  },
+  {
+    "key": "quest_relic_fragment",
+    "name": "Fragmento de Reliquia",
+    "type": "MISC",
+    "rarity": "RARE",
+    "price": 0,
+    "buyable": false,
+    "sellable": false,
+    "usable": false,
+    "toolKind": "NONE",
+    "metadata": {
+      "category": "Quest",
+      "description": "Trozo de estatua antigua."
+    }
+  },
+  {
+    "key": "quest_frozen_core",
+    "name": "Núcleo Helado",
+    "type": "MISC",
+    "rarity": "EPIC",
+    "price": 0,
+    "buyable": false,
+    "sellable": false,
+    "usable": false,
+    "toolKind": "NONE",
+    "metadata": {
+      "category": "Quest",
+      "description": "Se necesita para enfriar la fragua del norte."
+    }
+  },
+  {
+    "key": "quest_siren_note",
+    "name": "Nota de Sirena",
+    "type": "MISC",
+    "rarity": "RARE",
+    "price": 0,
+    "buyable": false,
+    "sellable": false,
+    "usable": false,
+    "toolKind": "NONE",
+    "metadata": {
+      "category": "Quest",
+      "description": "Melodía atrapada en una gota de agua."
+    }
+  },
+  {
+    "key": "quest_goblin_map",
+    "name": "Mapa Goblin",
+    "type": "MISC",
+    "rarity": "UNCOMMON",
+    "price": 0,
+    "buyable": false,
+    "sellable": false,
+    "usable": false,
+    "toolKind": "NONE",
+    "metadata": {
+      "category": "Quest",
+      "description": "Guía hacia campamentos ocultos."
+    }
+  },
+  {
+    "key": "quest_dragonscale",
+    "name": "Escama de Dragón Ancestral",
+    "type": "MISC",
+    "rarity": "LEGENDARY",
+    "price": 0,
+    "buyable": false,
+    "sellable": false,
+    "usable": false,
+    "toolKind": "NONE",
+    "metadata": {
+      "category": "Quest",
+      "description": "Prueba de tu valor ante los ancianos."
+    }
+  },
+  {
+    "key": "quest_raid_sigil",
+    "name": "Sigilo de Incursión",
+    "type": "MISC",
+    "rarity": "EPIC",
+    "price": 0,
+    "buyable": false,
+    "sellable": false,
+    "usable": false,
+    "toolKind": "NONE",
+    "metadata": {
+      "category": "Quest",
+      "description": "Permite abrir portales de incursión."
+    }
+  },
+  {
+    "key": "quest_ember_key",
+    "name": "Llave Ascua",
+    "type": "MISC",
+    "rarity": "RARE",
+    "price": 0,
+    "buyable": false,
+    "sellable": false,
+    "usable": false,
+    "toolKind": "NONE",
+    "metadata": {
+      "category": "Quest",
+      "description": "Abre cofres sellados con runas de fuego."
+    }
+  },
+  {
+    "key": "quest_starlight_compass",
+    "name": "Brújula Lúcida",
+    "type": "MISC",
+    "rarity": "EPIC",
+    "price": 0,
+    "buyable": false,
+    "sellable": false,
+    "usable": false,
+    "toolKind": "NONE",
+    "metadata": {
+      "category": "Quest",
+      "description": "Siempre apunta al santuario perdido."
+    }
+  },
+  {
+    "key": "quest_fathom_pearl",
+    "name": "Perla del Abismo",
+    "type": "MISC",
+    "rarity": "LEGENDARY",
+    "price": 0,
+    "buyable": false,
+    "sellable": false,
+    "usable": false,
+    "toolKind": "NONE",
+    "metadata": {
+      "category": "Quest",
+      "description": "Solo se forma en la fosa eterna."
+    }
+  },
+  {
+    "key": "misc_blueprint_mine",
+    "name": "Plano de Elevador Minero",
+    "type": "MISC",
+    "rarity": "UNCOMMON",
+    "price": 180,
+    "buyable": true,
+    "sellable": true,
+    "usable": false,
+    "toolKind": "NONE",
+    "metadata": {
+      "category": "Support",
+      "description": "Permite construir un elevador básico."
+    }
+  },
+  {
+    "key": "misc_blueprint_forge",
+    "name": "Plano de Forja Portátil",
+    "type": "MISC",
+    "rarity": "RARE",
+    "price": 260,
+    "buyable": true,
+    "sellable": true,
+    "usable": false,
+    "toolKind": "NONE",
+    "metadata": {
+      "category": "Support",
+      "description": "Instala una forja en cualquier campamento."
+    }
+  },
+  {
+    "key": "misc_beacon",
+    "name": "Baliza de Retorno",
+    "type": "MISC",
+    "rarity": "EPIC",
+    "price": 360,
+    "buyable": true,
+    "sellable": true,
+    "usable": false,
+    "toolKind": "NONE",
+    "metadata": {
+      "category": "Support",
+      "description": "Regresa al último campamento activado."
+    }
+  },
+  {
+    "key": "misc_contract_trader",
+    "name": "Contrato Comercial",
+    "type": "MISC",
+    "rarity": "UNCOMMON",
+    "price": 120,
+    "buyable": true,
+    "sellable": true,
+    "usable": false,
+    "toolKind": "NONE",
+    "metadata": {
+      "category": "Support",
+      "description": "Abre rutas de intercambio temporal."
+    }
+  },
+  {
+    "key": "misc_token_arena",
+    "name": "Token de Arena",
+    "type": "MISC",
+    "rarity": "RARE",
+    "price": 210,
+    "buyable": true,
+    "sellable": true,
+    "usable": false,
+    "toolKind": "NONE",
+    "metadata": {
+      "category": "Support",
+      "description": "Entrada a desafíos PvE."
+    }
+  },
+  {
+    "key": "misc_compass",
+    "name": "Brújula Eterna",
+    "type": "MISC",
+    "rarity": "EPIC",
+    "price": 280,
+    "buyable": true,
+    "sellable": true,
+    "usable": false,
+    "toolKind": "NONE",
+    "metadata": {
+      "category": "Support",
+      "description": "Siempre apunta al tesoro más cercano."
+    }
+  },
+  {
+    "key": "incense_peace",
+    "name": "Incienso Pacífico",
+    "type": "CONSUMABLE",
+    "rarity": "UNCOMMON",
+    "price": 48,
+    "buyable": true,
+    "sellable": true,
+    "usable": true,
+    "toolKind": "NONE",
+    "metadata": {
+      "effect": "aggro_reduce",
+      "value": 0.25,
+      "durationSec": 900
+    }
+  },
+  {
+    "key": "incense_ember",
+    "name": "Incienso Ascua",
+    "type": "CONSUMABLE",
+    "rarity": "RARE",
+    "price": 68,
+    "buyable": true,
+    "sellable": true,
+    "usable": true,
+    "toolKind": "NONE",
+    "metadata": {
+      "effect": "attack_speed",
+      "value": 0.15,
+      "durationSec": 900
+    }
+  },
+  {
+    "key": "incense_tidal",
+    "name": "Incienso de Marea",
+    "type": "CONSUMABLE",
+    "rarity": "RARE",
+    "price": 68,
+    "buyable": true,
+    "sellable": true,
+    "usable": true,
+    "toolKind": "NONE",
+    "metadata": {
+      "effect": "fish_spawn",
+      "value": 0.22,
+      "durationSec": 900
+    }
+  },
+  {
+    "key": "incense_night",
+    "name": "Incienso Nocturno",
+    "type": "CONSUMABLE",
+    "rarity": "EPIC",
+    "price": 96,
+    "buyable": true,
+    "sellable": true,
+    "usable": true,
+    "toolKind": "NONE",
+    "metadata": {
+      "effect": "shadow_crit",
+      "value": 0.18,
+      "durationSec": 900
+    }
+  },
+  {
+    "key": "dust_arcane",
+    "name": "Polvo Arcano",
+    "type": "MATERIAL",
+    "rarity": "RARE",
+    "price": 38,
+    "buyable": false,
+    "sellable": true,
+    "usable": false,
+    "toolKind": "NONE",
+    "metadata": {
+      "category": "Refined",
+      "tier": 3,
+      "description": "Resto cristalino de hechizos fallidos."
+    }
+  },
+  {
+    "key": "dust_gilded",
+    "name": "Polvo Dorado",
+    "type": "MATERIAL",
+    "rarity": "EPIC",
+    "price": 52,
+    "buyable": false,
+    "sellable": true,
+    "usable": false,
+    "toolKind": "NONE",
+    "metadata": {
+      "category": "Refined",
+      "tier": 4,
+      "description": "Usado para joyería avanzada."
+    }
+  },
+  {
+    "key": "dust_void",
+    "name": "Polvo del Vacío",
+    "type": "MATERIAL",
+    "rarity": "LEGENDARY",
+    "price": 88,
+    "buyable": false,
+    "sellable": true,
+    "usable": false,
+    "toolKind": "NONE",
+    "metadata": {
+      "category": "Refined",
+      "tier": 6,
+      "description": "Atrae energía de planos lejanos."
+    }
+  },
+  {
+    "key": "salt_sea",
+    "name": "Sal Marina Pura",
+    "type": "MATERIAL",
+    "rarity": "COMMON",
+    "price": 5,
+    "buyable": false,
+    "sellable": true,
+    "usable": false,
+    "toolKind": "NONE",
+    "metadata": {
+      "category": "Refined",
+      "tier": 1,
+      "description": "Condimento esencial en curados."
+    }
+  },
+  {
+    "key": "resin_sap",
+    "name": "Resina Ámbar",
+    "type": "MATERIAL",
+    "rarity": "UNCOMMON",
+    "price": 12,
+    "buyable": false,
+    "sellable": true,
+    "usable": false,
+    "toolKind": "NONE",
+    "metadata": {
+      "category": "Refined",
+      "tier": 2,
+      "description": "Pegamento natural y aromático."
+    }
+  },
+  {
+    "key": "charm_miner",
+    "name": "Amuleto del Minero",
+    "type": "MISC",
+    "rarity": "RARE",
+    "price": 340,
+    "buyable": true,
+    "sellable": true,
+    "usable": false,
+    "toolKind": "NONE",
+    "metadata": {
+      "category": "Charm",
+      "effect": "mine_buff",
+      "value": 0.18,
+      "durationSec": 1800
+    }
+  },
+  {
+    "key": "charm_sailor",
+    "name": "Amuleto del Marinero",
+    "type": "MISC",
+    "rarity": "RARE",
+    "price": 320,
+    "buyable": true,
+    "sellable": true,
+    "usable": false,
+    "toolKind": "NONE",
+    "metadata": {
+      "category": "Charm",
+      "effect": "fish_buff",
+      "value": 0.18,
+      "durationSec": 1800
+    }
+  },
+  {
+    "key": "charm_hunter",
+    "name": "Amuleto del Cazador",
+    "type": "MISC",
+    "rarity": "EPIC",
+    "price": 420,
+    "buyable": true,
+    "sellable": true,
+    "usable": false,
+    "toolKind": "NONE",
+    "metadata": {
+      "category": "Charm",
+      "effect": "crit",
+      "value": 0.12,
+      "durationSec": 1800
+    }
+  },
+  {
+    "key": "charm_magus",
+    "name": "Amuleto del Mago",
+    "type": "MISC",
+    "rarity": "EPIC",
+    "price": 420,
+    "buyable": true,
+    "sellable": true,
+    "usable": false,
+    "toolKind": "NONE",
+    "metadata": {
+      "category": "Charm",
+      "effect": "intellect",
+      "value": 4,
+      "durationSec": 1800
+    }
+  },
+  {
+    "key": "charm_guardian",
+    "name": "Amuleto Guardián",
+    "type": "MISC",
+    "rarity": "LEGENDARY",
+    "price": 0,
+    "buyable": false,
+    "sellable": false,
+    "usable": false,
+    "toolKind": "NONE",
+    "metadata": {
+      "category": "Charm",
+      "effect": "damage_reduce",
+      "value": 0.1,
+      "durationSec": 1800,
+      "soulbound": true
+    }
+  },
+  {
+    "key": "sigil_ember",
+    "name": "Sigilo Ascua",
+    "type": "MATERIAL",
+    "rarity": "EPIC",
+    "price": 0,
+    "buyable": false,
+    "sellable": false,
+    "usable": false,
+    "toolKind": "NONE",
+    "metadata": {
+      "category": "Sigil",
+      "tier": 5,
+      "description": "Llave ardiente para sellos antiguos."
+    }
+  },
+  {
+    "key": "sigil_tide",
+    "name": "Sigilo de Marea",
+    "type": "MATERIAL",
+    "rarity": "EPIC",
+    "price": 0,
+    "buyable": false,
+    "sellable": false,
+    "usable": false,
+    "toolKind": "NONE",
+    "metadata": {
+      "category": "Sigil",
+      "tier": 5,
+      "description": "El agua misma lo protege."
+    }
+  },
+  {
+    "key": "sigil_storm",
+    "name": "Sigilo Tormenta",
+    "type": "MATERIAL",
+    "rarity": "LEGENDARY",
+    "price": 0,
+    "buyable": false,
+    "sellable": false,
+    "usable": false,
+    "toolKind": "NONE",
+    "metadata": {
+      "category": "Sigil",
+      "tier": 6,
+      "description": "Retumba como un trueno distante."
+    }
+  },
+  {
+    "key": "core_astral",
+    "name": "Núcleo Astral",
+    "type": "MATERIAL",
+    "rarity": "MYTHIC",
+    "price": 0,
+    "buyable": false,
+    "sellable": false,
+    "usable": false,
+    "toolKind": "NONE",
+    "metadata": {
+      "category": "Sigil",
+      "tier": 7,
+      "description": "Cristaliza la esencia de una estrella."
+    }
+  },
+  {
+    "key": "snack_dried",
+    "name": "Tiras Secas",
+    "type": "CONSUMABLE",
+    "rarity": "COMMON",
+    "price": 12,
+    "buyable": true,
+    "sellable": true,
+    "usable": true,
+    "toolKind": "NONE",
+    "metadata": {
+      "effect": "stamina",
+      "value": 12
+    }
+  },
+  {
+    "key": "snack_fruit",
+    "name": "Fruta Brillante",
+    "type": "CONSUMABLE",
+    "rarity": "UNCOMMON",
+    "price": 18,
+    "buyable": true,
+    "sellable": true,
+    "usable": true,
+    "toolKind": "NONE",
+    "metadata": {
+      "effect": "energy",
+      "value": 18
+    }
+  },
+  {
+    "key": "snack_cookies",
+    "name": "Galletas de Hierbas",
+    "type": "CONSUMABLE",
+    "rarity": "UNCOMMON",
+    "price": 20,
+    "buyable": true,
+    "sellable": true,
+    "usable": true,
+    "toolKind": "NONE",
+    "metadata": {
+      "effect": "regen",
+      "value": 10
+    }
+  },
+  {
+    "key": "snack_spark",
+    "name": "Chispas de Azúcar",
+    "type": "CONSUMABLE",
+    "rarity": "RARE",
+    "price": 32,
+    "buyable": true,
+    "sellable": true,
+    "usable": true,
+    "toolKind": "NONE",
+    "metadata": {
+      "effect": "speed",
+      "value": 0.08,
+      "durationSec": 900
+    }
+  },
+  {
+    "key": "snack_crisp",
+    "name": "Crujientes Marinos",
+    "type": "CONSUMABLE",
+    "rarity": "RARE",
+    "price": 36,
+    "buyable": true,
+    "sellable": true,
+    "usable": true,
+    "toolKind": "NONE",
+    "metadata": {
+      "effect": "fish_drop",
+      "value": 0.15,
+      "durationSec": 600
+    }
+  },
+  {
+    "key": "snack_fume",
+    "name": "Bocado Ahumado",
+    "type": "CONSUMABLE",
+    "rarity": "RARE",
+    "price": 34,
+    "buyable": true,
+    "sellable": true,
+    "usable": true,
+    "toolKind": "NONE",
+    "metadata": {
+      "effect": "defense",
+      "value": 0.06,
+      "durationSec": 900
+    }
+  },
+  {
+    "key": "cook_spice_ember",
+    "name": "Especia Ascua",
+    "type": "MATERIAL",
+    "rarity": "RARE",
+    "price": 26,
+    "buyable": false,
+    "sellable": true,
+    "usable": false,
+    "toolKind": "NONE",
+    "metadata": {
+      "category": "Cooking",
+      "tier": 3,
+      "description": "Potencia sabores picantes."
+    }
+  },
+  {
+    "key": "cook_spice_frost",
+    "name": "Especia Helada",
+    "type": "MATERIAL",
+    "rarity": "RARE",
+    "price": 26,
+    "buyable": false,
+    "sellable": true,
+    "usable": false,
+    "toolKind": "NONE",
+    "metadata": {
+      "category": "Cooking",
+      "tier": 3,
+      "description": "Añade frescura extrema."
+    }
+  },
+  {
+    "key": "cook_grain_sky",
+    "name": "Grano Celeste",
+    "type": "MATERIAL",
+    "rarity": "UNCOMMON",
+    "price": 14,
+    "buyable": false,
+    "sellable": true,
+    "usable": false,
+    "toolKind": "NONE",
+    "metadata": {
+      "category": "Cooking",
+      "tier": 2,
+      "description": "Cultivado en terrazas flotantes."
+    }
+  },
+  {
+    "key": "cook_mushroom_echo",
+    "name": "Hongo Eco",
+    "type": "MATERIAL",
+    "rarity": "UNCOMMON",
+    "price": 16,
+    "buyable": false,
+    "sellable": true,
+    "usable": false,
+    "toolKind": "NONE",
+    "metadata": {
+      "category": "Cooking",
+      "tier": 2,
+      "description": "Repite sonidos suaves al ser cortado."
+    }
+  },
+  {
+    "key": "cook_oil_stellar",
+    "name": "Aceite Estelar",
+    "type": "MATERIAL",
+    "rarity": "EPIC",
+    "price": 32,
+    "buyable": false,
+    "sellable": true,
+    "usable": false,
+    "toolKind": "NONE",
+    "metadata": {
+      "category": "Cooking",
+      "tier": 4,
+      "description": "Brilla en la oscuridad."
+    }
+  },
+  {
+    "key": "cook_sugar_moon",
+    "name": "Azúcar Lunar",
+    "type": "MATERIAL",
+    "rarity": "RARE",
+    "price": 24,
+    "buyable": false,
+    "sellable": true,
+    "usable": false,
+    "toolKind": "NONE",
+    "metadata": {
+      "category": "Cooking",
+      "tier": 3,
+      "description": "Disuelve en un brillo plateado."
+    }
+  },
+  {
+    "key": "trade_bundle_cloth",
+    "name": "Fardo de Telas",
+    "type": "MATERIAL",
+    "rarity": "COMMON",
+    "price": 18,
+    "buyable": true,
+    "sellable": true,
+    "usable": false,
+    "toolKind": "NONE",
+    "metadata": {
+      "category": "Trade",
+      "tier": 1,
+      "description": "Útil para contratos de comercio."
+    }
+  },
+  {
+    "key": "trade_bundle_ore",
+    "name": "Fardo de Mineral",
+    "type": "MATERIAL",
+    "rarity": "COMMON",
+    "price": 24,
+    "buyable": true,
+    "sellable": true,
+    "usable": false,
+    "toolKind": "NONE",
+    "metadata": {
+      "category": "Trade",
+      "tier": 2,
+      "description": "Mineral empaquetado listo para vender."
+    }
+  },
+  {
+    "key": "trade_relic_shard",
+    "name": "Esquirla Relicaria",
+    "type": "MATERIAL",
+    "rarity": "EPIC",
+    "price": 0,
+    "buyable": false,
+    "sellable": true,
+    "usable": false,
+    "toolKind": "NONE",
+    "metadata": {
+      "category": "Trade",
+      "tier": 5,
+      "description": "Intercambiable por reliquias antiguas."
+    }
+  },
+  {
+    "key": "trade_token_raid",
+    "name": "Ficha de Incursión",
+    "type": "MATERIAL",
+    "rarity": "LEGENDARY",
+    "price": 0,
+    "buyable": false,
+    "sellable": true,
+    "usable": false,
+    "toolKind": "NONE",
+    "metadata": {
+      "category": "Trade",
+      "tier": 6,
+      "description": "Moneda exclusiva de las incursiones."
+    }
+  }
 ]

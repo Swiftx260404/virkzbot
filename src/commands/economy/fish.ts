@@ -1,4 +1,4 @@
-import { SlashCommandBuilder, ChatInputCommandInteraction, StringSelectMenuBuilder, ActionRowBuilder, ButtonBuilder, ButtonStyle } from 'discord.js';
+import { SlashCommandBuilder, ChatInputCommandInteraction, StringSelectMenuBuilder, ActionRowBuilder, ButtonBuilder, ButtonStyle, EmbedBuilder } from 'discord.js';
 import { prisma } from '../../lib/db.js';
 import { onCooldown } from '../../services/cooldowns.js';
 import { registerSequenceSample, resetSequence } from '../../services/antiCheat.js';
@@ -6,8 +6,85 @@ import { extractBuffState, sumBuffs, buffAppliesTo } from '../../services/buffs.
 import type { ActiveBuff } from '../../services/buffs.js';
 import { EffectType } from '@prisma/client';
 
+type DropConfig = {
+  itemKey: string;
+  weight: number;
+  min: number;
+  max: number;
+};
+
+const randomInt = (min: number, max: number) => Math.floor(Math.random() * (max - min + 1)) + min;
+
+const parseDrops = (meta: any): DropConfig[] => {
+  if (!meta || !Array.isArray(meta.drops)) return [];
+  return meta.drops.map((entry: any) => ({
+    itemKey: String(entry.itemKey ?? 'fish_riverling'),
+    weight: Number(entry.weight ?? 1),
+    min: Number(entry.quantity?.min ?? 1),
+    max: Number(entry.quantity?.max ?? entry.quantity?.min ?? 1),
+  }));
+};
+
+const pickDrop = (drops: DropConfig[]) => {
+  const total = drops.reduce((sum, d) => sum + Math.max(0, d.weight), 0);
+  if (!total) return drops[0];
+  let roll = Math.random() * total;
+  for (const d of drops) {
+    roll -= Math.max(0, d.weight);
+    if (roll <= 0) return d;
+  }
+  return drops[drops.length - 1];
+};
+
+const formatZoneEmbed = async (rodTier: number) => {
+  const locations = await prisma.location.findMany({
+    where: { kind: 'FISHING' },
+    orderBy: [{ requiredTier: 'asc' }, { name: 'asc' }],
+  });
+
+  if (!locations.length) {
+    return new EmbedBuilder().setTitle('🎣 Zonas de pesca').setDescription('No hay zonas configuradas.').setColor(0x2e9aff);
+  }
+
+  const embed = new EmbedBuilder()
+    .setTitle('🎣 Zonas de pesca')
+    .setColor(0x2e9aff)
+    .setFooter({ text: 'Usa /fish start para intentar capturar en la zona que prefieras.' });
+
+  for (const loc of locations) {
+    const meta = (loc.metadata ?? {}) as any;
+    const emoji: string = typeof meta.emoji === 'string' ? meta.emoji : '🎣';
+    const xp = meta.xpRange ? `${meta.xpRange.min ?? 0}–${meta.xpRange.max ?? 0}` : '—';
+    const yieldMultiplier = Number(meta.yieldMultiplier ?? 1).toFixed(2);
+    const drops = parseDrops(meta);
+    const dropKeys = drops.map(d => d.itemKey);
+    const items = dropKeys.length
+      ? await prisma.item.findMany({ where: { key: { in: dropKeys } }, select: { key: true, name: true } })
+      : [];
+    const nameMap = new Map(items.map(i => [i.key, i.name] as const));
+    const totalWeight = drops.reduce((sum, d) => sum + Math.max(0, d.weight), 0) || 1;
+    const dropLines = drops.slice(0, 4).map(d => {
+      const pct = Math.round((Math.max(0, d.weight) / totalWeight) * 100);
+      const name = nameMap.get(d.itemKey) ?? d.itemKey;
+      return `• ${name} (${pct}% · ${d.min}-${d.max})`;
+    }).join('\n') || '• Capturas comunes';
+    const locked = rodTier < loc.requiredTier;
+    const title = `${locked ? '🔒' : '✅'} T${loc.requiredTier} · ${emoji} ${loc.name}`;
+    const descParts = [meta.description ?? 'Zona de pesca.'];
+    descParts.push(`**XP:** ${xp} · **Rendimiento:** ×${yieldMultiplier}`);
+    descParts.push(dropLines);
+    embed.addFields({ name: title, value: descParts.join('\n') });
+  }
+
+  return embed;
+};
+
 export default {
-  data: new SlashCommandBuilder().setName('fish').setDescription('Ir a pescar (requiere caña).'),
+  data: new SlashCommandBuilder()
+    .setName('fish')
+    .setDescription('Gestiona tus sesiones de pesca.')
+    .addSubcommand(sub => sub.setName('start').setDescription('Ir a pescar (requiere caña equipada).'))
+    .addSubcommand(sub => sub.setName('zones').setDescription('Ver las zonas de pesca y sus recompensas.')),
   ns: 'fish',
   async execute(interaction: ChatInputCommandInteraction) {
     const uid = interaction.user.id;
@@ -16,6 +93,13 @@ export default {
     if (!u.equippedRodId) return interaction.reply({ content: 'Equipa una **caña** con `/equip`.', ephemeral: true });
 
     const rod = await prisma.item.findUnique({ where: { id: u.equippedRodId } });
+    const sub = interaction.options.getSubcommand(false) ?? 'start';
+
+    if (sub === 'zones') {
+      const embed = await formatZoneEmbed(rod?.tier ?? 1);
+      return interaction.reply({ embeds: [embed], ephemeral: true });
+    }
+
     const locs = await prisma.location.findMany({ where: { kind: 'FISHING', requiredTier: { lte: rod?.tier ?? 0 } } });
     if (!locs.length) return interaction.reply({ content: 'Tu caña es demasiado básica. Compra una mejor en `/shop`.', ephemeral: true });
 
@@ -63,8 +147,8 @@ export default {
         const locId = Number(locStr);
         const loc = await prisma.location.findUnique({ where: { id: locId } });
         const meta = (loc?.metadata || {}) as any;
-        const drops: string[] = meta.drop ?? ['fish_common'];
-        const multi: number = Number(meta.multi ?? 1);
+        const drops = parseDrops(meta);
+        const yieldMultiplier: number = Number(meta.yieldMultiplier ?? 1);
 
         const user = await prisma.user.findUnique({ where: { id: interaction.user.id } });
         let buffs: ActiveBuff[] = [];
@@ -80,10 +164,12 @@ export default {
         const yieldBonus = sumBuffs(buffs, EffectType.BUFF_RESOURCE_YIELD, appliesFish);
         const luckBonus = sumBuffs(buffs, EffectType.BUFF_LUCK, appliesFish);
 
-        let stacks = 1;
+        const baseStacks = Math.max(1, Math.round(Number(meta.baseStacks ?? 1) || 1));
+        let stacks = baseStacks;
         if (dropBonus > 0) {
-          stacks += Math.floor(dropBonus);
-          if (Math.random() < dropBonus - Math.floor(dropBonus)) stacks += 1;
+          const extra = baseStacks * dropBonus;
+          stacks += Math.floor(extra);
+          if (Math.random() < extra - Math.floor(extra)) stacks += 1;
         }
         if (luckBonus > 0) {
           stacks += Math.floor(luckBonus);
@@ -94,13 +180,16 @@ export default {
         const lines: string[] = [];
 
         for (let i = 0; i < stacks; i++) {
-          const key = drops[Math.floor(Math.random() * drops.length)];
-          const item = await prisma.item.findUnique({ where: { key } });
+          const choice = drops.length ? pickDrop(drops) : { itemKey: 'fish_riverling', min: 1, max: 2 };
+          const item = await prisma.item.findUnique({ where: { key: choice.itemKey } });
           if (!item) continue;
-          let qty = 1 + Math.floor(Math.random() * Math.max(1, multi));
+          let qty = randomInt(choice.min, choice.max);
           if (yieldBonus > 0) {
             const scaled = qty * (1 + yieldBonus);
-            qty = Math.max(1, Math.round(scaled));
+            qty = Math.max(choice.min, Math.round(scaled));
+          }
+          if (yieldMultiplier > 1) {
+            qty = Math.max(choice.min, Math.round(qty * yieldMultiplier));
           }
           ops.push(prisma.userItem.upsert({
             where: { userId_itemId: { userId: interaction.user.id, itemId: item.id } },
@@ -116,6 +205,17 @@ export default {
         }
 
         await prisma.$transaction(ops);
+        if (loc && meta?.xpRange) {
+          const minXp = Number(meta.xpRange.min ?? 0);
+          const maxXp = Number(meta.xpRange.max ?? minXp);
+          if (!Number.isNaN(minXp) && !Number.isNaN(maxXp) && maxXp >= 0) {
+            const xpGained = randomInt(Math.max(0, minXp), Math.max(0, maxXp));
+            if (xpGained > 0) {
+              await prisma.user.update({ where: { id: interaction.user.id }, data: { xp: { increment: xpGained } } });
+              lines.push(`✨ ${xpGained} XP de pesca`);
+            }
+          }
+        }
         resetSequence(sequenceKey);
         if (dropBonus > 0 || yieldBonus > 0 || luckBonus > 0) {
           const parts: string[] = [];

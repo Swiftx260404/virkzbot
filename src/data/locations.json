@@ -1,9 +1,929 @@
 [
-  {"name":"Mina Pedregosa","kind":"MINE","requiredKind":"PICKAXE","requiredTier":1,"metadata":{"drop":["ore_copper"],"multi":1}},
-  {"name":"Mina Profunda","kind":"MINE","requiredKind":"PICKAXE","requiredTier":3,"metadata":{"drop":["ore_iron","ore_gold"],"multi":1.2}},
-  {"name":"Abismo Cristalino","kind":"MINE","requiredKind":"PICKAXE","requiredTier":5,"metadata":{"drop":["ore_gold"],"multi":1.5}},
-
-  {"name":"Lago Tranquilo","kind":"FISHING","requiredKind":"ROD","requiredTier":1,"metadata":{"drop":["fish_common"],"multi":1}},
-  {"name":"Costa Ventosa","kind":"FISHING","requiredKind":"ROD","requiredTier":2,"metadata":{"drop":["fish_common","fish_rare"],"multi":1.2}},
-  {"name":"Mar de Estrellas","kind":"FISHING","requiredKind":"ROD","requiredTier":4,"metadata":{"drop":["fish_rare"],"multi":1.5}}
+  {
+    "name": "Mina Pedregosa",
+    "kind": "MINE",
+    "requiredKind": "PICKAXE",
+    "requiredTier": 1,
+    "dangerLevel": 0,
+    "metadata": {
+      "emoji": "⛏️",
+      "biome": "Quebradas",
+      "description": "Vetas superficiales perfectas para principiantes.",
+      "xpRange": {
+        "min": 12,
+        "max": 18
+      },
+      "yieldMultiplier": 1.0,
+      "drops": [
+        {
+          "itemKey": "ore_copper",
+          "weight": 55,
+          "quantity": {
+            "min": 1,
+            "max": 3
+          }
+        },
+        {
+          "itemKey": "ore_tin",
+          "weight": 25,
+          "quantity": {
+            "min": 1,
+            "max": 2
+          }
+        },
+        {
+          "itemKey": "ore_quartz",
+          "weight": 20,
+          "quantity": {
+            "min": 1,
+            "max": 1
+          }
+        }
+      ]
+    }
+  },
+  {
+    "name": "Galería Ámbar",
+    "kind": "MINE",
+    "requiredKind": "PICKAXE",
+    "requiredTier": 1,
+    "dangerLevel": 0,
+    "metadata": {
+      "emoji": "🪨",
+      "biome": "Caverna cálida",
+      "description": "Tuneles con resina y gemas tempranas.",
+      "xpRange": {
+        "min": 14,
+        "max": 20
+      },
+      "yieldMultiplier": 1.05,
+      "drops": [
+        {
+          "itemKey": "ore_copper",
+          "weight": 40,
+          "quantity": {
+            "min": 1,
+            "max": 3
+          }
+        },
+        {
+          "itemKey": "ore_coal",
+          "weight": 30,
+          "quantity": {
+            "min": 1,
+            "max": 3
+          }
+        },
+        {
+          "itemKey": "resin_sap",
+          "weight": 30,
+          "quantity": {
+            "min": 1,
+            "max": 2
+          }
+        }
+      ]
+    }
+  },
+  {
+    "name": "Caverna Escarchada",
+    "kind": "MINE",
+    "requiredKind": "PICKAXE",
+    "requiredTier": 2,
+    "dangerLevel": 0,
+    "metadata": {
+      "emoji": "❄️",
+      "biome": "Caverna helada",
+      "description": "La escarcha cubre vetas de hierro y selenita.",
+      "xpRange": {
+        "min": 20,
+        "max": 30
+      },
+      "yieldMultiplier": 1.1,
+      "drops": [
+        {
+          "itemKey": "ore_iron",
+          "weight": 40,
+          "quantity": {
+            "min": 1,
+            "max": 3
+          }
+        },
+        {
+          "itemKey": "ore_selenite",
+          "weight": 25,
+          "quantity": {
+            "min": 1,
+            "max": 2
+          }
+        },
+        {
+          "itemKey": "ore_coal",
+          "weight": 20,
+          "quantity": {
+            "min": 1,
+            "max": 3
+          }
+        },
+        {
+          "itemKey": "ice_shard",
+          "weight": 15,
+          "quantity": {
+            "min": 1,
+            "max": 2
+          }
+        }
+      ]
+    }
+  },
+  {
+    "name": "Foso Ferruginoso",
+    "kind": "MINE",
+    "requiredKind": "PICKAXE",
+    "requiredTier": 3,
+    "dangerLevel": 0,
+    "metadata": {
+      "emoji": "🪓",
+      "biome": "Grieta subterránea",
+      "description": "Hierro puro y cristales cargados.",
+      "xpRange": {
+        "min": 28,
+        "max": 40
+      },
+      "yieldMultiplier": 1.2,
+      "drops": [
+        {
+          "itemKey": "ore_iron",
+          "weight": 35,
+          "quantity": {
+            "min": 2,
+            "max": 4
+          }
+        },
+        {
+          "itemKey": "ore_cobalt",
+          "weight": 25,
+          "quantity": {
+            "min": 1,
+            "max": 3
+          }
+        },
+        {
+          "itemKey": "dust_arcane",
+          "weight": 20,
+          "quantity": {
+            "min": 1,
+            "max": 2
+          }
+        },
+        {
+          "itemKey": "gem_garnet",
+          "weight": 20,
+          "quantity": {
+            "min": 1,
+            "max": 1
+          }
+        }
+      ]
+    }
+  },
+  {
+    "name": "Catacumbas Argentadas",
+    "kind": "MINE",
+    "requiredKind": "PICKAXE",
+    "requiredTier": 4,
+    "dangerLevel": 0,
+    "metadata": {
+      "emoji": "🪙",
+      "biome": "Ruinas antiguas",
+      "description": "Pasadizos con plata y gemas brillantes.",
+      "xpRange": {
+        "min": 40,
+        "max": 56
+      },
+      "yieldMultiplier": 1.35,
+      "drops": [
+        {
+          "itemKey": "ore_silver",
+          "weight": 35,
+          "quantity": {
+            "min": 2,
+            "max": 4
+          }
+        },
+        {
+          "itemKey": "ore_gold",
+          "weight": 25,
+          "quantity": {
+            "min": 1,
+            "max": 3
+          }
+        },
+        {
+          "itemKey": "gem_amethyst",
+          "weight": 20,
+          "quantity": {
+            "min": 1,
+            "max": 2
+          }
+        },
+        {
+          "itemKey": "dust_gilded",
+          "weight": 20,
+          "quantity": {
+            "min": 1,
+            "max": 2
+          }
+        }
+      ]
+    }
+  },
+  {
+    "name": "Forja Profunda",
+    "kind": "MINE",
+    "requiredKind": "PICKAXE",
+    "requiredTier": 5,
+    "dangerLevel": 0,
+    "metadata": {
+      "emoji": "🔥",
+      "biome": "Caverna volcánica",
+      "description": "Ríos de magma bañan la roca.",
+      "xpRange": {
+        "min": 52,
+        "max": 70
+      },
+      "yieldMultiplier": 1.5,
+      "drops": [
+        {
+          "itemKey": "ore_mythril",
+          "weight": 30,
+          "quantity": {
+            "min": 2,
+            "max": 4
+          }
+        },
+        {
+          "itemKey": "ore_adamant",
+          "weight": 25,
+          "quantity": {
+            "min": 1,
+            "max": 3
+          }
+        },
+        {
+          "itemKey": "gem_ruby",
+          "weight": 20,
+          "quantity": {
+            "min": 1,
+            "max": 2
+          }
+        },
+        {
+          "itemKey": "essence_fire",
+          "weight": 25,
+          "quantity": {
+            "min": 1,
+            "max": 2
+          }
+        }
+      ]
+    }
+  },
+  {
+    "name": "Ruinas Oricalcas",
+    "kind": "MINE",
+    "requiredKind": "PICKAXE",
+    "requiredTier": 6,
+    "dangerLevel": 0,
+    "metadata": {
+      "emoji": "⚡",
+      "biome": "Ruinas cargadas",
+      "description": "Oricalco puro protegido por guardianes.",
+      "xpRange": {
+        "min": 68,
+        "max": 90
+      },
+      "yieldMultiplier": 1.65,
+      "drops": [
+        {
+          "itemKey": "ore_orichalcum",
+          "weight": 30,
+          "quantity": {
+            "min": 2,
+            "max": 4
+          }
+        },
+        {
+          "itemKey": "gem_sapphire",
+          "weight": 20,
+          "quantity": {
+            "min": 1,
+            "max": 2
+          }
+        },
+        {
+          "itemKey": "essence_frost",
+          "weight": 20,
+          "quantity": {
+            "min": 1,
+            "max": 2
+          }
+        },
+        {
+          "itemKey": "sigil_ember",
+          "weight": 15,
+          "quantity": {
+            "min": 1,
+            "max": 1
+          }
+        },
+        {
+          "itemKey": "dust_void",
+          "weight": 15,
+          "quantity": {
+            "min": 1,
+            "max": 1
+          }
+        }
+      ]
+    }
+  },
+  {
+    "name": "Pozo Astral",
+    "kind": "MINE",
+    "requiredKind": "PICKAXE",
+    "requiredTier": 7,
+    "dangerLevel": 0,
+    "metadata": {
+      "emoji": "🌌",
+      "biome": "Cráter suspendido",
+      "description": "Cristales que capturan constelaciones.",
+      "xpRange": {
+        "min": 90,
+        "max": 120
+      },
+      "yieldMultiplier": 1.8,
+      "drops": [
+        {
+          "itemKey": "ore_aether",
+          "weight": 25,
+          "quantity": {
+            "min": 2,
+            "max": 4
+          }
+        },
+        {
+          "itemKey": "gem_star",
+          "weight": 20,
+          "quantity": {
+            "min": 1,
+            "max": 2
+          }
+        },
+        {
+          "itemKey": "gem_void",
+          "weight": 15,
+          "quantity": {
+            "min": 1,
+            "max": 1
+          }
+        },
+        {
+          "itemKey": "core_astral",
+          "weight": 15,
+          "quantity": {
+            "min": 1,
+            "max": 1
+          }
+        },
+        {
+          "itemKey": "essence_frost",
+          "weight": 15,
+          "quantity": {
+            "min": 1,
+            "max": 2
+          }
+        },
+        {
+          "itemKey": "sigil_storm",
+          "weight": 10,
+          "quantity": {
+            "min": 1,
+            "max": 1
+          }
+        }
+      ]
+    }
+  },
+  {
+    "name": "Lago Tranquilo",
+    "kind": "FISHING",
+    "requiredKind": "ROD",
+    "requiredTier": 1,
+    "dangerLevel": 0,
+    "metadata": {
+      "emoji": "🏞️",
+      "biome": "Bosque templado",
+      "description": "Aguas cristalinas con peces dóciles.",
+      "xpRange": {
+        "min": 10,
+        "max": 16
+      },
+      "yieldMultiplier": 1.0,
+      "drops": [
+        {
+          "itemKey": "fish_riverling",
+          "weight": 50,
+          "quantity": {
+            "min": 1,
+            "max": 3
+          }
+        },
+        {
+          "itemKey": "fish_sunperch",
+          "weight": 30,
+          "quantity": {
+            "min": 1,
+            "max": 2
+          }
+        },
+        {
+          "itemKey": "bait_basic",
+          "weight": 20,
+          "quantity": {
+            "min": 1,
+            "max": 1
+          }
+        }
+      ]
+    }
+  },
+  {
+    "name": "Delta Susurrante",
+    "kind": "FISHING",
+    "requiredKind": "ROD",
+    "requiredTier": 1,
+    "dangerLevel": 0,
+    "metadata": {
+      "emoji": "🌿",
+      "biome": "Manglar",
+      "description": "Corrientes suaves llenas de plantas acuáticas.",
+      "xpRange": {
+        "min": 12,
+        "max": 18
+      },
+      "yieldMultiplier": 1.05,
+      "drops": [
+        {
+          "itemKey": "fish_tidal_coral",
+          "weight": 35,
+          "quantity": {
+            "min": 1,
+            "max": 3
+          }
+        },
+        {
+          "itemKey": "herb_sun",
+          "weight": 35,
+          "quantity": {
+            "min": 1,
+            "max": 2
+          }
+        },
+        {
+          "itemKey": "bait_river",
+          "weight": 30,
+          "quantity": {
+            "min": 1,
+            "max": 1
+          }
+        }
+      ]
+    }
+  },
+  {
+    "name": "Costa Ventosa",
+    "kind": "FISHING",
+    "requiredKind": "ROD",
+    "requiredTier": 2,
+    "dangerLevel": 0,
+    "metadata": {
+      "emoji": "🌊",
+      "biome": "Costa abierta",
+      "description": "Corrientes constantes llenas de vida.",
+      "xpRange": {
+        "min": 18,
+        "max": 26
+      },
+      "yieldMultiplier": 1.15,
+      "drops": [
+        {
+          "itemKey": "fish_sunperch",
+          "weight": 40,
+          "quantity": {
+            "min": 1,
+            "max": 3
+          }
+        },
+        {
+          "itemKey": "fish_moontrout",
+          "weight": 30,
+          "quantity": {
+            "min": 1,
+            "max": 2
+          }
+        },
+        {
+          "itemKey": "herb_moon",
+          "weight": 20,
+          "quantity": {
+            "min": 1,
+            "max": 2
+          }
+        },
+        {
+          "itemKey": "bait_river",
+          "weight": 10,
+          "quantity": {
+            "min": 1,
+            "max": 1
+          }
+        }
+      ]
+    }
+  },
+  {
+    "name": "Fiordo Glacial",
+    "kind": "FISHING",
+    "requiredKind": "ROD",
+    "requiredTier": 3,
+    "dangerLevel": 0,
+    "metadata": {
+      "emoji": "🧊",
+      "biome": "Fiordo helado",
+      "description": "Aguas gélidas con peces resistentes.",
+      "xpRange": {
+        "min": 24,
+        "max": 34
+      },
+      "yieldMultiplier": 1.25,
+      "drops": [
+        {
+          "itemKey": "fish_glacier_cod",
+          "weight": 40,
+          "quantity": {
+            "min": 1,
+            "max": 3
+          }
+        },
+        {
+          "itemKey": "fish_emberfin",
+          "weight": 20,
+          "quantity": {
+            "min": 1,
+            "max": 2
+          }
+        },
+        {
+          "itemKey": "herb_frost",
+          "weight": 20,
+          "quantity": {
+            "min": 1,
+            "max": 2
+          }
+        },
+        {
+          "itemKey": "bait_deep",
+          "weight": 20,
+          "quantity": {
+            "min": 1,
+            "max": 1
+          }
+        }
+      ]
+    }
+  },
+  {
+    "name": "Mar de Estrellas",
+    "kind": "FISHING",
+    "requiredKind": "ROD",
+    "requiredTier": 4,
+    "dangerLevel": 0,
+    "metadata": {
+      "emoji": "✨",
+      "biome": "Mar nocturno",
+      "description": "Brillos de plancton iluminan la noche.",
+      "xpRange": {
+        "min": 32,
+        "max": 44
+      },
+      "yieldMultiplier": 1.35,
+      "drops": [
+        {
+          "itemKey": "fish_starlit_koi",
+          "weight": 35,
+          "quantity": {
+            "min": 1,
+            "max": 2
+          }
+        },
+        {
+          "itemKey": "fish_stormray",
+          "weight": 25,
+          "quantity": {
+            "min": 1,
+            "max": 2
+          }
+        },
+        {
+          "itemKey": "bait_luminous",
+          "weight": 20,
+          "quantity": {
+            "min": 1,
+            "max": 1
+          }
+        },
+        {
+          "itemKey": "essence_frost",
+          "weight": 20,
+          "quantity": {
+            "min": 1,
+            "max": 1
+          }
+        }
+      ]
+    }
+  },
+  {
+    "name": "Arrecife Tronador",
+    "kind": "FISHING",
+    "requiredKind": "ROD",
+    "requiredTier": 5,
+    "dangerLevel": 0,
+    "metadata": {
+      "emoji": "⚡",
+      "biome": "Arrecife cargado",
+      "description": "Relámpagos bajo el agua atraen fauna rara.",
+      "xpRange": {
+        "min": 40,
+        "max": 56
+      },
+      "yieldMultiplier": 1.45,
+      "drops": [
+        {
+          "itemKey": "fish_stormray",
+          "weight": 35,
+          "quantity": {
+            "min": 1,
+            "max": 2
+          }
+        },
+        {
+          "itemKey": "fish_abyssal_eel",
+          "weight": 25,
+          "quantity": {
+            "min": 1,
+            "max": 2
+          }
+        },
+        {
+          "itemKey": "essence_fire",
+          "weight": 20,
+          "quantity": {
+            "min": 1,
+            "max": 2
+          }
+        },
+        {
+          "itemKey": "bait_storm",
+          "weight": 20,
+          "quantity": {
+            "min": 1,
+            "max": 1
+          }
+        }
+      ]
+    }
+  },
+  {
+    "name": "Fosa Abisal",
+    "kind": "FISHING",
+    "requiredKind": "ROD",
+    "requiredTier": 6,
+    "dangerLevel": 0,
+    "metadata": {
+      "emoji": "🌑",
+      "biome": "Abismo",
+      "description": "Oscuridad absoluta con presas gigantes.",
+      "xpRange": {
+        "min": 52,
+        "max": 72
+      },
+      "yieldMultiplier": 1.6,
+      "drops": [
+        {
+          "itemKey": "fish_abyssal_eel",
+          "weight": 30,
+          "quantity": {
+            "min": 1,
+            "max": 3
+          }
+        },
+        {
+          "itemKey": "fish_leviathan_scale",
+          "weight": 25,
+          "quantity": {
+            "min": 1,
+            "max": 1
+          }
+        },
+        {
+          "itemKey": "bait_abyss",
+          "weight": 20,
+          "quantity": {
+            "min": 1,
+            "max": 1
+          }
+        },
+        {
+          "itemKey": "quest_fathom_pearl",
+          "weight": 15,
+          "quantity": {
+            "min": 1,
+            "max": 1
+          }
+        },
+        {
+          "itemKey": "essence_frost",
+          "weight": 10,
+          "quantity": {
+            "min": 1,
+            "max": 1
+          }
+        }
+      ]
+    }
+  },
+  {
+    "name": "Jardín Coralino",
+    "kind": "FISHING",
+    "requiredKind": "ROD",
+    "requiredTier": 7,
+    "dangerLevel": 0,
+    "metadata": {
+      "emoji": "🪸",
+      "biome": "Santuario submarino",
+      "description": "Corales cantores guían peces míticos.",
+      "xpRange": {
+        "min": 64,
+        "max": 84
+      },
+      "yieldMultiplier": 1.75,
+      "drops": [
+        {
+          "itemKey": "fish_starlit_koi",
+          "weight": 30,
+          "quantity": {
+            "min": 1,
+            "max": 3
+          }
+        },
+        {
+          "itemKey": "pet_serpent",
+          "weight": 10,
+          "quantity": {
+            "min": 1,
+            "max": 1
+          }
+        },
+        {
+          "itemKey": "essence_frost",
+          "weight": 20,
+          "quantity": {
+            "min": 1,
+            "max": 2
+          }
+        },
+        {
+          "itemKey": "bait_abyss",
+          "weight": 20,
+          "quantity": {
+            "min": 1,
+            "max": 1
+          }
+        },
+        {
+          "itemKey": "gem_sapphire",
+          "weight": 20,
+          "quantity": {
+            "min": 1,
+            "max": 1
+          }
+        }
+      ]
+    }
+  },
+  {
+    "name": "Cueva Goblin",
+    "kind": "DUNGEON",
+    "requiredKind": "WEAPON",
+    "requiredTier": 1,
+    "dangerLevel": 1,
+    "metadata": {
+      "emoji": "👺",
+      "description": "Guarida infestada de goblins rebeldes.",
+      "xpRange": {
+        "min": 30,
+        "max": 40
+      },
+      "recommendedPower": 120,
+      "dropTables": [
+        "dt_goblin"
+      ],
+      "loseOnDeath": {
+        "vcoinsPct": 0.05,
+        "items": [
+          "fish_riverling"
+        ]
+      }
+    }
+  },
+  {
+    "name": "Fosas de Cristal",
+    "kind": "DUNGEON",
+    "requiredKind": "WEAPON",
+    "requiredTier": 3,
+    "dangerLevel": 3,
+    "metadata": {
+      "emoji": "🪬",
+      "description": "Gólems cristalinos vigilan pasajes brillantes.",
+      "xpRange": {
+        "min": 60,
+        "max": 80
+      },
+      "recommendedPower": 260,
+      "dropTables": [
+        "dt_crystal"
+      ],
+      "loseOnDeath": {
+        "vcoinsPct": 0.1,
+        "items": [
+          "ore_copper",
+          "ore_iron"
+        ]
+      }
+    }
+  },
+  {
+    "name": "Santuario del Eco",
+    "kind": "DUNGEON",
+    "requiredKind": "WEAPON",
+    "requiredTier": 5,
+    "dangerLevel": 4,
+    "metadata": {
+      "emoji": "🌀",
+      "description": "Ruinas resonantes con espíritus de sonido.",
+      "xpRange": {
+        "min": 90,
+        "max": 120
+      },
+      "recommendedPower": 340,
+      "dropTables": [
+        "dt_echo"
+      ],
+      "loseOnDeath": {
+        "vcoinsPct": 0.12,
+        "items": [
+          "dust_arcane"
+        ]
+      }
+    }
+  },
+  {
+    "name": "Simas del Leviatán",
+    "kind": "DUNGEON",
+    "requiredKind": "WEAPON",
+    "requiredTier": 6,
+    "dangerLevel": 5,
+    "metadata": {
+      "emoji": "🐋",
+      "description": "Incursión cooperativa contra el Leviatán abisal.",
+      "xpRange": {
+        "min": 140,
+        "max": 200
+      },
+      "recommendedPower": 520,
+      "raid": true,
+      "dropTables": [
+        "dt_leviathan"
+      ],
+      "loseOnDeath": {
+        "vcoinsPct": 0.15,
+        "items": [
+          "fish_leviathan_scale",
+          "trade_token_raid"
+        ]
+      }
+    }
+  }
 ]
