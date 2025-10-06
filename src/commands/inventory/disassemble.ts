@@ -9,6 +9,7 @@ import {
   ButtonInteraction,
 } from 'discord.js';
 import { prisma } from '../../lib/db.js';
+import { ensureInventoryCapacity } from '../../services/inventory.js';
 
 interface YieldPreview {
   itemKey: string;
@@ -254,6 +255,9 @@ export default {
           });
         }
 
+        const totalIncoming = obtained.reduce((sum, entry) => sum + entry.quantity, 0);
+        await ensureInventoryCapacity(tx, targetUserId, totalIncoming);
+
         for (const entry of obtained) {
           await tx.userItem.upsert({
             where: { userId_itemId: { userId: targetUserId, itemId: entry.itemId } },
@@ -280,6 +284,9 @@ export default {
           break;
         case 'NO_OUTPUT':
           await interaction.update({ content: 'El desmontaje no produjo materiales esta vez.', components: [], embeds: [] });
+          break;
+        case 'INVENTORY_FULL':
+          await interaction.update({ content: 'Tu inventario está lleno para recibir los materiales.', components: [], embeds: [] });
           break;
         default:
           await interaction.update({ content: 'No se pudo completar el desmontaje.', components: [], embeds: [] });

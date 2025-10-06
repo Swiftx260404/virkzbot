@@ -62,6 +62,33 @@ enum EffectTarget {
   TOOL
 }
 
+enum GuildRole {
+  LEADER
+  OFFICER
+  MEMBER
+}
+
+enum GuildMemberStatus {
+  PENDING
+  ACTIVE
+}
+
+enum GuildUpgradeType {
+  DROP_RATE
+  INVENTORY_CAPACITY
+}
+
+enum GuildBankTxType {
+  COINS
+  ITEM
+}
+
+enum MarketListingStatus {
+  ACTIVE
+  COMPLETED
+  CANCELLED
+}
+
 model User {
   id          String    @id @db.VarChar(32)
   createdAt   DateTime  @default(now())
@@ -94,6 +121,11 @@ model User {
   items UserItem[]
   bossDamages BossDamage[]
   raidMembers RaidMember[]
+  guildMembership GuildMember?
+  guildsLed       Guild[]       @relation("GuildLeader")
+  marketListings  MarketListing[] @relation("MarketSeller")
+  marketPurchases MarketTx[]      @relation("MarketBuyer")
+  guildBankTxs    GuildBankTx[]
 }
 
 model Item {
@@ -121,6 +153,9 @@ model Item {
 
   // 🔧 Relaciones agregadas para evitar el error:
   // Costes de upgrade -> ItemUpgradeCost.item
+  guildBankItems GuildBankItem[] @relation("GuildBankItemItem")
+  guildBankTxs   GuildBankTx[]   @relation("GuildBankTxItem")
+  marketListings MarketListing[] @relation("MarketListingItem")
   upgradeCostItems ItemUpgradeCost[] @relation("CostItem")
 
   // Ingredientes de crafteo -> CraftIngredient.item
@@ -324,4 +359,108 @@ model RaidMember {
   user User @relation(fields: [userId], references: [id], onDelete: Cascade)
 
   @@unique([raidId, userId])
+}
+
+model Guild {
+  id          Int       @id @default(autoincrement())
+  name        String    @unique
+  description String?
+  leaderId    String
+  capacity    Int       @default(20)
+  bankCoins   Int       @default(0)
+  createdAt   DateTime  @default(now())
+  updatedAt   DateTime  @updatedAt
+  metadata    Json?
+
+  leader   User          @relation("GuildLeader", fields: [leaderId], references: [id], onDelete: Cascade)
+  members  GuildMember[]
+  upgrades GuildUpgrade[]
+  bankItems GuildBankItem[]
+  bankTransactions GuildBankTx[]
+}
+
+model GuildMember {
+  id        Int                @id @default(autoincrement())
+  guildId   Int
+  userId    String
+  role      GuildRole          @default(MEMBER)
+  status    GuildMemberStatus  @default(PENDING)
+  joinedAt  DateTime?
+  createdAt DateTime           @default(now())
+
+  guild Guild @relation(fields: [guildId], references: [id], onDelete: Cascade)
+  user  User  @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@unique([guildId, userId])
+  @@unique([userId])
+}
+
+model GuildUpgrade {
+  id        Int              @id @default(autoincrement())
+  guildId   Int
+  type      GuildUpgradeType
+  level     Int              @default(1)
+  createdAt DateTime         @default(now())
+  updatedAt DateTime         @updatedAt
+
+  guild Guild @relation(fields: [guildId], references: [id], onDelete: Cascade)
+
+  @@unique([guildId, type])
+}
+
+model GuildBankItem {
+  id        Int      @id @default(autoincrement())
+  guildId   Int
+  itemId    Int
+  quantity  Int      @default(0)
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  guild Guild @relation(fields: [guildId], references: [id], onDelete: Cascade)
+  item  Item  @relation("GuildBankItemItem", fields: [itemId], references: [id], onDelete: Cascade)
+
+  @@unique([guildId, itemId])
+}
+
+model GuildBankTx {
+  id        Int            @id @default(autoincrement())
+  guildId   Int
+  userId    String
+  type      GuildBankTxType
+  amount    Int?
+  itemId    Int?
+  quantity  Int?
+  createdAt DateTime        @default(now())
+
+  guild Guild @relation(fields: [guildId], references: [id], onDelete: Cascade)
+  user  User  @relation(fields: [userId], references: [id], onDelete: Cascade)
+  item  Item? @relation("GuildBankTxItem", fields: [itemId], references: [id], onDelete: SetNull)
+}
+
+model MarketListing {
+  id           Int                 @id @default(autoincrement())
+  sellerId     String
+  itemId       Int
+  qty          Int
+  remainingQty Int
+  price        Int
+  status       MarketListingStatus @default(ACTIVE)
+  createdAt    DateTime            @default(now())
+  updatedAt    DateTime            @updatedAt
+
+  seller User  @relation("MarketSeller", fields: [sellerId], references: [id], onDelete: Cascade)
+  item   Item  @relation("MarketListingItem", fields: [itemId], references: [id], onDelete: Cascade)
+  sales  MarketTx[]
+}
+
+model MarketTx {
+  id        Int      @id @default(autoincrement())
+  listingId Int
+  buyerId   String
+  qty       Int
+  price     Int
+  createdAt DateTime @default(now())
+
+  listing MarketListing @relation(fields: [listingId], references: [id], onDelete: Cascade)
+  buyer   User          @relation("MarketBuyer", fields: [buyerId], references: [id], onDelete: Cascade)
 }
