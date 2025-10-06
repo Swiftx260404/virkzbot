@@ -23,6 +23,13 @@ import { grantExperience } from '../../services/progression.js';
 import { getGuildBonusesForUser } from '../../services/guilds.js';
 import { ensureInventoryCapacity } from '../../services/inventory.js';
 import { buildPetCombatSkill, getActivePetContext, summarizePassiveBonus } from '../../services/pets.js';
+import {
+  getDropMultiplier,
+  getEventDropsForCommand,
+  getGlobalModifierSnapshot,
+} from '../../services/globalEvents.js';
+
+const randomInt = (min: number, max: number) => Math.floor(Math.random() * (max - min + 1)) + min;
 
 const DAILY_LIMIT = 5;
 
@@ -93,21 +100,66 @@ async function grantBattleLoot(userId: string, luck: number) {
   const luckBonus = Math.min(0.4, luck * 0.02);
   const baseChance = 0.2 + luckBonus;
   const guildBonuses = await getGuildBonusesForUser(userId);
-  const chance = Math.min(0.95, baseChance * (1 + guildBonuses.dropRate));
-  if (Math.random() > chance) return null;
+  const modifiers = await getGlobalModifierSnapshot();
+  const dropMultiplier = getDropMultiplier(modifiers);
+  const flatChance = Math.max(0, Number(modifiers.aggregates.drop.flatChance ?? 0));
 
-  const candidates = await prisma.item.findMany({ where: { type: 'MATERIAL' }, take: 50 });
-  if (!candidates.length) return null;
-  const item = candidates[Math.floor(Math.random() * candidates.length)];
+  let chance = baseChance * (1 + guildBonuses.dropRate);
+  if (dropMultiplier > 0) {
+    chance *= dropMultiplier;
+  }
+  chance = Math.min(0.95, chance + flatChance);
+
+  const rewards = new Map<number, { itemId: number; name: string; quantity: number }>();
+
+  if (Math.random() <= chance) {
+    const candidates = await prisma.item.findMany({ where: { type: 'MATERIAL' }, take: 50 });
+    if (candidates.length) {
+      const item = candidates[Math.floor(Math.random() * candidates.length)];
+      const current = rewards.get(item.id) ?? { itemId: item.id, name: item.name, quantity: 0 };
+      current.quantity += 1;
+      rewards.set(item.id, current);
+    }
+  }
+
+  const eventDrops = getEventDropsForCommand('battle', modifiers);
+  if (eventDrops.length) {
+    for (const drop of eventDrops) {
+      let eventChance = drop.chance;
+      if (dropMultiplier > 0) {
+        eventChance *= dropMultiplier;
+      }
+      eventChance = Math.min(1, Math.max(0, eventChance + flatChance));
+      if (Math.random() > eventChance) continue;
+      const item = await prisma.item.findUnique({ where: { key: drop.itemKey } });
+      if (!item) continue;
+      const qty = Math.max(1, randomInt(drop.qtyMin ?? 1, drop.qtyMax ?? drop.qtyMin ?? 1));
+      const current = rewards.get(item.id) ?? { itemId: item.id, name: item.name, quantity: 0 };
+      current.quantity += qty;
+      rewards.set(item.id, current);
+    }
+  }
+
+  if (!rewards.size) {
+    return null;
+  }
+
+  const totalQty = Array.from(rewards.values()).reduce((sum, entry) => sum + entry.quantity, 0);
   await prisma.$transaction(async (tx) => {
-    await ensureInventoryCapacity(tx, userId, 1);
-    await tx.userItem.upsert({
-      where: { userId_itemId: { userId, itemId: item.id } },
-      create: { userId, itemId: item.id, quantity: 1 },
-      update: { quantity: { increment: 1 } },
-    });
+    await ensureInventoryCapacity(tx, userId, totalQty);
+    for (const entry of rewards.values()) {
+      await tx.userItem.upsert({
+        where: { userId_itemId: { userId, itemId: entry.itemId } },
+        create: { userId, itemId: entry.itemId, quantity: entry.quantity },
+        update: { quantity: { increment: entry.quantity } },
+      });
+    }
   });
-  return item.name;
+
+  const lootLines = Array.from(rewards.values()).map((entry) =>
+    entry.quantity > 1 ? `${entry.quantity} × ${entry.name}` : entry.name
+  );
+  return lootLines.join(' · ');
 }
 
 export default {

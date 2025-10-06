@@ -375,6 +375,29 @@ model BossDamage {
   @@unique([bossId, userId])
 }
 
+model Event {
+  id           Int      @id @default(autoincrement())
+  templateKey  String
+  occurrenceId String   @unique
+  name         String
+  description  String
+  startDate    DateTime
+  endDate      DateTime
+  bonuses      Json?
+  drops        Json?
+  channels     Json?
+  isActive     Boolean  @default(false)
+  createdAt    DateTime @default(now())
+  updatedAt    DateTime @updatedAt
+}
+
+model GlobalModifier {
+  id        Int      @id @default(1)
+  data      Json
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
 model Raid {
   id        Int      @id @default(autoincrement())
   threadId  String   @unique

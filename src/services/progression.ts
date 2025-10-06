@@ -1,4 +1,5 @@
 import { prisma } from '../lib/db.js';
+import { getGlobalModifierSnapshot, getXpMultiplier } from './globalEvents.js';
 
 export const BASE_ATTRIBUTES = {
   strength: 1,
@@ -17,6 +18,14 @@ export async function grantExperience(userId: string, amount: number) {
   if (amount <= 0) {
     return null;
   }
+
+  const modifiers = await getGlobalModifierSnapshot();
+  const xpMultiplier = getXpMultiplier(modifiers);
+  const adjusted = Math.max(0, Math.round(amount * xpMultiplier));
+  if (adjusted <= 0) {
+    return null;
+  }
+  amount = adjusted;
 
   const user = await prisma.user.findUnique({
     where: { id: userId },

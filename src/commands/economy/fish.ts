@@ -8,6 +8,14 @@ import { EffectType } from '@prisma/client';
 import { getGuildBonusesForUser } from '../../services/guilds.js';
 import { ensureInventoryCapacity } from '../../services/inventory.js';
 import { getPetBonuses } from '../../services/pets.js';
+import {
+  computeEconomyMultiplier,
+  getDropMultiplier,
+  getEventDropsForCommand,
+  getFishingMultiplier,
+  getGlobalModifierSnapshot,
+  getXpMultiplier,
+} from '../../services/globalEvents.js';
 
 type DropConfig = {
   itemKey: string;
@@ -177,6 +185,10 @@ export default {
 
         const baseStacks = Math.max(1, Math.round(Number(meta.baseStacks ?? 1) || 1));
         let stacks = baseStacks;
+        const modifiers = await getGlobalModifierSnapshot();
+        const dropMultiplier = getDropMultiplier(modifiers);
+        const economyMultiplier = computeEconomyMultiplier(modifiers, 'fish');
+        const fishingMultiplier = getFishingMultiplier(modifiers);
         if (dropBonus > 0) {
           const extra = baseStacks * dropBonus;
           stacks += Math.floor(extra);
@@ -185,6 +197,16 @@ export default {
         if (luckBonus > 0) {
           stacks += Math.floor(luckBonus);
           if (Math.random() < luckBonus - Math.floor(luckBonus)) stacks += 1;
+        }
+        if (economyMultiplier > 1) {
+          const extra = baseStacks * (economyMultiplier - 1);
+          stacks += Math.floor(extra);
+          if (Math.random() < extra - Math.floor(extra)) stacks += 1;
+        }
+        if (dropMultiplier > 1) {
+          const extra = baseStacks * (dropMultiplier - 1);
+          stacks += Math.floor(extra);
+          if (Math.random() < extra - Math.floor(extra)) stacks += 1;
         }
 
         const lines: string[] = [];
@@ -202,10 +224,32 @@ export default {
           if (yieldMultiplier > 1) {
             qty = Math.max(choice.min, Math.round(qty * yieldMultiplier));
           }
+          if (fishingMultiplier > 1) {
+            qty = Math.max(choice.min, Math.round(qty * fishingMultiplier));
+          }
           const current = rewardMap.get(item.id) ?? { itemId: item.id, name: item.name, quantity: 0 };
           current.quantity += qty;
           rewardMap.set(item.id, current);
           lines.push(`+${qty} × ${item.name}`);
+        }
+
+        const eventDrops = getEventDropsForCommand('fish', modifiers);
+        if (eventDrops.length) {
+          for (const drop of eventDrops) {
+            let chance = drop.chance;
+            if (dropMultiplier > 0) {
+              chance *= dropMultiplier;
+            }
+            chance = Math.min(1, Math.max(0, chance));
+            if (Math.random() > chance) continue;
+            const item = await prisma.item.findUnique({ where: { key: drop.itemKey } });
+            if (!item) continue;
+            const qty = randomInt(drop.qtyMin ?? 1, drop.qtyMax ?? drop.qtyMin ?? 1);
+            const current = rewardMap.get(item.id) ?? { itemId: item.id, name: item.name, quantity: 0 };
+            current.quantity += qty;
+            rewardMap.set(item.id, current);
+            lines.push(`🎁 +${qty} × ${item.name}`);
+          }
         }
 
         if (!rewardMap.size) {
@@ -230,19 +274,26 @@ export default {
           if (!Number.isNaN(minXp) && !Number.isNaN(maxXp) && maxXp >= 0) {
             const xpGained = randomInt(Math.max(0, minXp), Math.max(0, maxXp));
             if (xpGained > 0) {
-              await prisma.user.update({ where: { id: interaction.user.id }, data: { xp: { increment: xpGained } } });
-              lines.push(`✨ ${xpGained} XP de pesca`);
+              const xpMultiplier = getXpMultiplier(modifiers);
+              const xpTotal = Math.max(0, Math.round(xpGained * xpMultiplier));
+              if (xpTotal > 0) {
+                await prisma.user.update({ where: { id: interaction.user.id }, data: { xp: { increment: xpTotal } } });
+                lines.push(`✨ ${xpTotal} XP de pesca`);
+              }
             }
           }
         }
         resetSequence(sequenceKey);
-        if (dropBonus > 0 || yieldBonus > 0 || luckBonus > 0 || guildBonuses.dropRate > 0 || petDropBonus > 0 || petYieldBonus > 0 || petLuckBonus > 0) {
+        if (dropBonus > 0 || yieldBonus > 0 || luckBonus > 0 || guildBonuses.dropRate > 0 || petDropBonus > 0 || petYieldBonus > 0 || petLuckBonus > 0 || economyMultiplier > 1 || dropMultiplier > 1 || fishingMultiplier > 1) {
           const parts: string[] = [];
           if (buffDropBonus > 0) parts.push(`buff drop +${Math.round(buffDropBonus * 100)}%`);
           if (guildBonuses.dropRate > 0) parts.push(`gremio drop +${Math.round(guildBonuses.dropRate * 100)}%`);
           if (petDropBonus > 0) parts.push(`mascota drop +${Math.round(petDropBonus * 100)}%`);
           if (yieldBonus > 0) parts.push(`rendimiento +${Math.round(yieldBonus * 100)}%`);
           if (luckBonus > 0) parts.push(`suerte +${Math.round(luckBonus * 100)}%`);
+          if (economyMultiplier > 1) parts.push(`evento capturas ×${economyMultiplier.toFixed(2)}`);
+          if (dropMultiplier > 1) parts.push(`evento drop ×${dropMultiplier.toFixed(2)}`);
+          if (fishingMultiplier > 1) parts.push(`evento pesca ×${fishingMultiplier.toFixed(2)}`);
           parts.push(`🎣 Lances: ${stacks}`);
           lines.push(`🔸 Multiplicadores: ${parts.join(' · ')}`);
         }

@@ -1,0 +1,303 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="utf-8" />
+  <title>Panel de Eventos – Virkz</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <style>
+    :root { font-family: 'Segoe UI', sans-serif; background: #0f172a; color: #e2e8f0; }
+    body { margin: 0; padding: 2rem; }
+    h1 { margin-top: 0; }
+    section { margin-bottom: 2rem; background: rgba(15, 23, 42, 0.6); padding: 1.5rem; border-radius: 12px; box-shadow: 0 10px 30px rgba(15, 23, 42, 0.4); }
+    label { display: block; margin-bottom: 0.5rem; font-weight: 600; }
+    input, select, textarea { width: 100%; padding: 0.75rem; border-radius: 8px; border: 1px solid rgba(148, 163, 184, 0.2); margin-bottom: 1rem; background: rgba(15, 23, 42, 0.8); color: #e2e8f0; }
+    button { background: #38bdf8; color: #0f172a; border: none; padding: 0.75rem 1.5rem; border-radius: 999px; cursor: pointer; font-weight: 600; }
+    button.secondary { background: transparent; color: #38bdf8; border: 1px solid #38bdf8; margin-left: 0.5rem; }
+    table { width: 100%; border-collapse: collapse; margin-top: 1rem; }
+    th, td { padding: 0.75rem; border-bottom: 1px solid rgba(148, 163, 184, 0.2); text-align: left; }
+    tr:hover { background: rgba(148, 163, 184, 0.08); }
+    .hidden { display: none; }
+    .actions button { margin-right: 0.5rem; }
+    #status { margin-top: 1rem; font-size: 0.9rem; color: #fbbf24; }
+  </style>
+</head>
+<body>
+  <h1>Panel de eventos globales</h1>
+  <section id="auth-section">
+    <p>Introduce el token privado para administrar el calendario.</p>
+    <input id="token-input" type="password" placeholder="EVENT_PANEL_TOKEN" />
+    <button id="token-save">Entrar</button>
+    <p id="auth-hint"></p>
+  </section>
+  <section id="content" class="hidden">
+    <div style="display:flex;justify-content:space-between;align-items:center;gap:1rem;flex-wrap:wrap;">
+      <h2 style="margin:0;">Calendario programado</h2>
+      <div>
+        <button id="sync-button">Sincronizar ahora</button>
+        <button id="logout" class="secondary">Salir</button>
+      </div>
+    </div>
+    <table id="calendar-table">
+      <thead>
+        <tr>
+          <th>#</th>
+          <th>Plantilla</th>
+          <th>Inicio</th>
+          <th>Fin</th>
+          <th>Duración (h)</th>
+          <th>RRULE</th>
+          <th>Canal</th>
+          <th>Acciones</th>
+        </tr>
+      </thead>
+      <tbody></tbody>
+    </table>
+    <p id="status"></p>
+  </section>
+  <section id="form-section" class="hidden">
+    <h2 id="form-title">Crear evento programado</h2>
+    <form id="calendar-form">
+      <label>Plantilla
+        <select id="template-select" required></select>
+      </label>
+      <label>Inicio (ISO)
+        <input type="datetime-local" id="start-input" />
+      </label>
+      <label>Fin (ISO)
+        <input type="datetime-local" id="end-input" />
+      </label>
+      <label>Duración en horas (para RRULE)
+        <input type="number" id="duration-input" min="1" step="1" />
+      </label>
+      <label>RRULE (opcional)
+        <textarea id="rrule-input" rows="3" placeholder="DTSTART:20241025T000000Z&#10;RRULE:FREQ=YEARLY;..."></textarea>
+      </label>
+      <label>Canal de anuncios
+        <input type="text" id="channel-input" placeholder="EVENT_CHANNEL_ID o ID específico" />
+      </label>
+      <div>
+        <button type="submit" id="submit-button">Guardar</button>
+        <button type="button" id="cancel-edit" class="secondary hidden">Cancelar</button>
+      </div>
+    </form>
+  </section>
+  <script type="module">
+    const tokenInput = document.getElementById("token-input");
+    const tokenSave = document.getElementById("token-save");
+    const authSection = document.getElementById("auth-section");
+    const contentSection = document.getElementById("content");
+    const formSection = document.getElementById("form-section");
+    const templateSelect = document.getElementById("template-select");
+    const calendarTableBody = document.querySelector("#calendar-table tbody");
+    const formTitle = document.getElementById("form-title");
+    const submitButton = document.getElementById("submit-button");
+    const cancelEdit = document.getElementById("cancel-edit");
+    const statusEl = document.getElementById("status");
+    const logoutButton = document.getElementById("logout");
+    const syncButton = document.getElementById("sync-button");
+    const form = document.getElementById("calendar-form");
+    const authHint = document.getElementById("auth-hint");
+
+    let editIndex = null;
+    let calendarCache = [];
+    let templatesCache = [];
+
+    function setStatus(message, isError = false) {
+      if (!statusEl) return;
+      statusEl.textContent = message;
+      statusEl.style.color = isError ? "#f87171" : "#fbbf24";
+    }
+
+    function getToken() {
+      return localStorage.getItem("panelToken") || "";
+    }
+
+    function setToken(token) {
+      if (token) {
+        localStorage.setItem("panelToken", token);
+      } else {
+        localStorage.removeItem("panelToken");
+      }
+    }
+
+    async function apiFetch(url, options = {}) {
+      const token = getToken();
+      if (!token) throw new Error("Token no establecido");
+      const init = { ...options, headers: { "Content-Type": "application/json", ...(options.headers || {}), "x-panel-key": token } };
+      const res = await fetch(url, init);
+      if (!res.ok) {
+        const data = await res.json().catch(() => ({ error: res.statusText }));
+        throw new Error(data.error || res.statusText);
+      }
+      if (res.status === 204) return null;
+      return res.json();
+    }
+
+    function isoToInputValue(value) {
+      if (!value) return "";
+      const date = new Date(value);
+      if (Number.isNaN(date.getTime())) return value;
+      const pad = (n) => String(n).padStart(2, "0");
+      return `${date.getFullYear()}-${pad(date.getMonth()+1)}-${pad(date.getDate())}T${pad(date.getHours())}:${pad(date.getMinutes())}`;
+    }
+
+    function inputToISO(value) {
+      if (!value) return "";
+      const date = new Date(value);
+      if (Number.isNaN(date.getTime())) return value;
+      return date.toISOString();
+    }
+
+    function renderTemplates() {
+      templateSelect.innerHTML = "";
+      templatesCache.forEach((tpl) => {
+        const option = document.createElement("option");
+        option.value = tpl.key;
+        option.textContent = `${tpl.name} (${tpl.key})`;
+        templateSelect.appendChild(option);
+      });
+    }
+
+    function renderCalendar() {
+      calendarTableBody.innerHTML = "";
+      calendarCache.forEach((entry, idx) => {
+        const row = document.createElement("tr");
+        const channel = entry.channels && entry.channels.announce ? entry.channels.announce : "";
+        row.innerHTML = `
+          <td>${idx}</td>
+          <td>${entry.templateKey}</td>
+          <td>${entry.startISO ? entry.startISO : '—'}</td>
+          <td>${entry.endISO ? entry.endISO : '—'}</td>
+          <td>${entry.durationHours ?? '—'}</td>
+          <td style="max-width:200px;white-space:pre-wrap;">${entry.rrule ? entry.rrule.replace(/\n/g, '<br/>') : '—'}</td>
+          <td>${channel || 'default'}</td>
+          <td class="actions">
+            <button data-action="edit" data-index="${idx}">Editar</button>
+            <button data-action="delete" data-index="${idx}" class="secondary">Eliminar</button>
+          </td>`;
+        calendarTableBody.appendChild(row);
+      });
+    }
+
+    function setFormMode(index = null) {
+      editIndex = index;
+      if (index === null) {
+        formTitle.textContent = "Crear evento programado";
+        submitButton.textContent = "Crear";
+        cancelEdit.classList.add("hidden");
+        form.reset();
+      } else {
+        formTitle.textContent = "Editar evento";
+        submitButton.textContent = "Actualizar";
+        cancelEdit.classList.remove("hidden");
+        const entry = calendarCache[index];
+        templateSelect.value = entry.templateKey;
+        document.getElementById("start-input").value = isoToInputValue(entry.startISO || "");
+        document.getElementById("end-input").value = isoToInputValue(entry.endISO || "");
+        document.getElementById("duration-input").value = entry.durationHours ?? "";
+        document.getElementById("rrule-input").value = entry.rrule ?? "";
+        document.getElementById("channel-input").value = entry.channels?.announce ?? "";
+      }
+    }
+
+    async function loadData() {
+      try {
+        templatesCache = await apiFetch("/api/templates");
+        calendarCache = await apiFetch("/api/calendar");
+        renderTemplates();
+        renderCalendar();
+        contentSection.classList.remove("hidden");
+        formSection.classList.remove("hidden");
+        authSection.classList.add("hidden");
+        setStatus("Datos cargados.");
+      } catch (err) {
+        setStatus(err.message, true);
+      }
+    }
+
+    calendarTableBody.addEventListener("click", async (event) => {
+      const target = event.target;
+      if (!(target instanceof HTMLElement)) return;
+      const action = target.dataset.action;
+      const index = Number(target.dataset.index);
+      if (Number.isNaN(index)) return;
+      if (action === "edit") {
+        setFormMode(index);
+      } else if (action === "delete") {
+        if (!confirm("¿Eliminar esta entrada del calendario?")) return;
+        try {
+          await apiFetch(`/api/calendar/${index}`, { method: "DELETE" });
+          setStatus("Evento eliminado.");
+          await refreshCalendar();
+        } catch (err) {
+          setStatus(err.message, true);
+        }
+      }
+    });
+
+    async function refreshCalendar() {
+      calendarCache = await apiFetch("/api/calendar");
+      renderCalendar();
+      setFormMode(null);
+    }
+
+    form.addEventListener("submit", async (ev) => {
+      ev.preventDefault();
+      const payload = {
+        templateKey: templateSelect.value,
+        startISO: inputToISO(document.getElementById("start-input").value),
+        endISO: inputToISO(document.getElementById("end-input").value),
+        durationHours: document.getElementById("duration-input").value,
+        rrule: document.getElementById("rrule-input").value,
+        announceChannel: document.getElementById("channel-input").value,
+      };
+      try {
+        if (editIndex === null) {
+          await apiFetch("/api/calendar", { method: "POST", body: JSON.stringify(payload) });
+          setStatus("Evento creado.");
+        } else {
+          await apiFetch(`/api/calendar/${editIndex}`, { method: "PUT", body: JSON.stringify(payload) });
+          setStatus("Evento actualizado.");
+        }
+        await refreshCalendar();
+      } catch (err) {
+        setStatus(err.message, true);
+      }
+    });
+
+    cancelEdit.addEventListener("click", () => {
+      setFormMode(null);
+    });
+
+    syncButton.addEventListener("click", async () => {
+      try {
+        await apiFetch("/api/sync", { method: "POST" });
+        setStatus("Scheduler sincronizado.");
+      } catch (err) {
+        setStatus(err.message, true);
+      }
+    });
+
+    logoutButton.addEventListener("click", () => {
+      setToken("");
+      authSection.classList.remove("hidden");
+      contentSection.classList.add("hidden");
+      formSection.classList.add("hidden");
+    });
+
+    tokenSave.addEventListener("click", () => {
+      const token = tokenInput.value.trim();
+      if (!token) {
+        authHint.textContent = "El token no puede estar vacío.";
+        return;
+      }
+      setToken(token);
+      loadData();
+    });
+
+    if (getToken()) {
+      loadData();
+    }
+  </script>
+</body>
+</html>
