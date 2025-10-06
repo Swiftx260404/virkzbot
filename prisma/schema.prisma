@@ -126,6 +126,7 @@ model User {
   marketListings  MarketListing[] @relation("MarketSeller")
   marketPurchases MarketTx[]      @relation("MarketBuyer")
   guildBankTxs    GuildBankTx[]
+  pets            UserPet[]
 }
 
 model Item {
@@ -164,6 +165,45 @@ model Item {
   // Entradas de drop -> DropEntry.item
   dropEntries DropEntry[]  @relation("DropEntryItem")
   CraftRecipe CraftRecipe?
+}
+
+model Pet {
+  id           Int      @id @default(autoincrement())
+  key          String   @unique
+  name         String
+  rarity       Rarity
+  formStage    Int      @default(1)
+  basePower    Int      @default(0)
+  passiveBonus Json?
+  activeSkill  Json?
+  evolvesToId  Int?
+  requirements Json?
+  createdAt    DateTime @default(now())
+  updatedAt    DateTime @updatedAt
+
+  evolvesTo     Pet?      @relation("PetEvolution", fields: [evolvesToId], references: [id])
+  evolvesFrom   Pet[]     @relation("PetEvolution")
+  ownedBy       UserPet[]
+}
+
+model UserPet {
+  id       Int      @id @default(autoincrement())
+  userId   String
+  petId    Int
+  level    Int      @default(1)
+  xp       Int      @default(0)
+  active   Boolean  @default(false)
+  hunger   Int      @default(0)
+  bond     Int      @default(0)
+  evolved  Boolean  @default(false)
+  nickname String?
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+  pet  Pet  @relation(fields: [petId], references: [id], onDelete: Cascade)
+
+  @@unique([userId, petId])
 }
 
 model ItemEffect {

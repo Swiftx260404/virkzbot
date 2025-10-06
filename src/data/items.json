@@ -2534,130 +2534,130 @@
     }
   },
   {
-    "key": "pet_puff",
-    "name": "Paf esponjoso",
-    "type": "MISC",
+    "key": "pet_snack_basic",
+    "name": "Snack Crunchy",
+    "type": "CONSUMABLE",
+    "rarity": "COMMON",
+    "price": 80,
+    "buyable": true,
+    "sellable": true,
+    "usable": false,
+    "toolKind": "NONE",
+    "metadata": {
+      "description": "Bocadillo sencillo para calmar el hambre de tu mascota.",
+      "petFood": {
+        "hungerRestore": 25,
+        "bondGain": 6,
+        "xpGain": 15
+      }
+    }
+  },
+  {
+    "key": "pet_snack_hearty",
+    "name": "Banquete Nutritivo",
+    "type": "CONSUMABLE",
     "rarity": "RARE",
-    "price": 860,
+    "price": 210,
     "buyable": true,
     "sellable": true,
     "usable": false,
     "toolKind": "NONE",
     "metadata": {
-      "category": "Pet",
-      "passive": {
-        "mine_drop": 0.12
-      },
-      "flavor": "Adora las vetas brillantes."
+      "description": "Ración equilibrada que refuerza el vínculo con tu compañero.",
+      "petFood": {
+        "hungerRestore": 40,
+        "bondGain": 14,
+        "xpGain": 30
+      }
     }
   },
   {
-    "key": "pet_krill",
-    "name": "Krill Lumínico",
-    "type": "MISC",
+    "key": "pet_snack_feast",
+    "name": "Festín Místico",
+    "type": "CONSUMABLE",
     "rarity": "EPIC",
-    "price": 960,
+    "price": 420,
     "buyable": true,
-    "sellable": true,
-    "usable": false,
-    "toolKind": "NONE",
-    "metadata": {
-      "category": "Pet",
-      "passive": {
-        "fish_speed": 0.18
-      },
-      "flavor": "Hace de faro submarino."
-    }
-  },
-  {
-    "key": "pet_wisp",
-    "name": "Luz Susurrante",
-    "type": "MISC",
-    "rarity": "EPIC",
-    "price": 1040,
-    "buyable": true,
-    "sellable": true,
-    "usable": false,
-    "toolKind": "NONE",
-    "metadata": {
-      "category": "Pet",
-      "passive": {
-        "luck": 0.08
-      },
-      "flavor": "Susurra pistas de tesoros."
-    }
-  },
-  {
-    "key": "pet_rockling",
-    "name": "Gólemito",
-    "type": "MISC",
-    "rarity": "UNCOMMON",
-    "price": 540,
-    "buyable": true,
-    "sellable": true,
-    "usable": false,
-    "toolKind": "NONE",
-    "metadata": {
-      "category": "Pet",
-      "passive": {
-        "durability_loss": -0.1
-      },
-      "flavor": "Cura herramientas dañadas."
-    }
-  },
-  {
-    "key": "pet_phoenix",
-    "name": "Polluelo Fénix",
-    "type": "MISC",
-    "rarity": "LEGENDARY",
-    "price": 1380,
-    "buyable": true,
-    "sellable": true,
-    "usable": false,
-    "toolKind": "NONE",
-    "metadata": {
-      "category": "Pet",
-      "passive": {
-        "revive": 0.05
-      },
-      "flavor": "Renace una vez al día."
-    }
-  },
-  {
-    "key": "pet_serpent",
-    "name": "Serpiente Coral",
-    "type": "MISC",
-    "rarity": "EPIC",
-    "price": 1200,
-    "buyable": true,
-    "sellable": true,
-    "usable": false,
-    "toolKind": "NONE",
-    "metadata": {
-      "category": "Pet",
-      "passive": {
-        "rare_fish": 0.12
-      },
-      "flavor": "Domina mareas cambiantes."
-    }
-  },
-  {
-    "key": "pet_gryphon",
-    "name": "Grifo Juvenil",
-    "type": "MISC",
-    "rarity": "MYTHIC",
-    "price": 0,
-    "buyable": false,
     "sellable": false,
     "usable": false,
     "toolKind": "NONE",
     "metadata": {
-      "category": "Pet",
-      "passive": {
-        "all_rewards": 0.08
-      },
-      "flavor": "Solo obedece a campeones.",
-      "soulbound": true
+      "description": "Comida legendaria que despierta el poder interno de la mascota.",
+      "petFood": {
+        "hungerRestore": 55,
+        "bondGain": 24,
+        "xpGain": 55
+      }
+    }
+  },
+  {
+    "key": "ember_core",
+    "name": "Núcleo Ígneo",
+    "type": "MATERIAL",
+    "rarity": "RARE",
+    "price": 320,
+    "buyable": false,
+    "sellable": true,
+    "usable": false,
+    "toolKind": "NONE",
+    "metadata": {
+      "description": "Corazón cristalizado de criaturas de fuego. Esencial para evoluciones ardientes."
+    }
+  },
+  {
+    "key": "tide_pearl",
+    "name": "Perla de Mareas",
+    "type": "MATERIAL",
+    "rarity": "RARE",
+    "price": 310,
+    "buyable": false,
+    "sellable": true,
+    "usable": false,
+    "toolKind": "NONE",
+    "metadata": {
+      "description": "Perla que late con energía acuática. Usada para despertar guardianes marinos."
+    }
+  },
+  {
+    "key": "terra_heart",
+    "name": "Corazón Terrano",
+    "type": "MATERIAL",
+    "rarity": "RARE",
+    "price": 330,
+    "buyable": false,
+    "sellable": true,
+    "usable": false,
+    "toolKind": "NONE",
+    "metadata": {
+      "description": "Gema viva formada en el corazón del bosque antiguo."
+    }
+  },
+  {
+    "key": "storm_crystal",
+    "name": "Cristal de Tormenta",
+    "type": "MATERIAL",
+    "rarity": "EPIC",
+    "price": 360,
+    "buyable": false,
+    "sellable": true,
+    "usable": false,
+    "toolKind": "NONE",
+    "metadata": {
+      "description": "Relámpago solidificado. Canaliza energía eléctrica para evoluciones aéreas."
+    }
+  },
+  {
+    "key": "shadow_essence",
+    "name": "Esencia Umbría",
+    "type": "MATERIAL",
+    "rarity": "EPIC",
+    "price": 350,
+    "buyable": false,
+    "sellable": true,
+    "usable": false,
+    "toolKind": "NONE",
+    "metadata": {
+      "description": "Fragmento condensado de sombras antiguas."
     }
   },
   {

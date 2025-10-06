@@ -1,6 +1,7 @@
 import { Collection } from 'discord.js';
 import { prisma } from '../lib/db.js';
 import { computeBonusDamage, computeCritChance, computeDodgeChance } from './progression.js';
+import { applyPassiveToCombatant, getActivePetContext } from './pets.js';
 
 export interface CombatSkill {
   id: string;
@@ -55,6 +56,7 @@ export interface BattleState {
   messageId?: string;
   channelId?: string;
   createdAt: number;
+  skills: CombatSkill[];
 }
 
 function round(num: number) {
@@ -146,7 +148,7 @@ export async function buildPlayerCombatant(userId: string): Promise<CombatantSta
   const hpMax = user.healthMax + armorPower * 5 + user.strength * 4 + user.intellect * 2;
   const hp = Math.max(1, Math.min(hpMax, user.health));
 
-  return {
+  const combatant: CombatantState = {
     name: 'Tú',
     hp,
     hpMax,
@@ -159,6 +161,13 @@ export async function buildPlayerCombatant(userId: string): Promise<CombatantSta
     critChance: computeCritChance(0.1 + (weaponPower > 0 ? 0.05 : 0), luck),
     dodgeChance: computeDodgeChance(agility),
   };
+
+  const petContext = await getActivePetContext(userId);
+  if (petContext) {
+    applyPassiveToCombatant(combatant, petContext);
+  }
+
+  return combatant;
 }
 
 export interface MonsterCombatant {
@@ -210,6 +219,7 @@ export function createBattleState(opts: {
   enemy: CombatantState;
   enemyId: number;
   rewards: { xp: number; vcoinsMin: number; vcoinsMax: number; name: string };
+  skills?: CombatSkill[];
 }): BattleState {
   const id = `${Date.now()}-${Math.floor(Math.random() * 9999)}`;
   const state: BattleState = {
@@ -223,6 +233,7 @@ export function createBattleState(opts: {
     log: ['⚔️ ¡La batalla comienza!'],
     active: true,
     createdAt: Date.now(),
+    skills: opts.skills ?? SKILL_DEFS,
   };
   battleStore.set(id, state);
   return state;
@@ -242,7 +253,7 @@ export function runPlayerSkill(state: BattleState, skillId: string) {
   if (!state.active) {
     throw new Error('La batalla ya finalizó.');
   }
-  const skill = SKILL_DEFS.find((s) => s.id === skillId);
+  const skill = state.skills.find((s) => s.id === skillId);
   if (!skill) {
     throw new Error('Habilidad desconocida.');
   }

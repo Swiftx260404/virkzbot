@@ -22,6 +22,7 @@ import {
 import { grantExperience } from '../../services/progression.js';
 import { getGuildBonusesForUser } from '../../services/guilds.js';
 import { ensureInventoryCapacity } from '../../services/inventory.js';
+import { buildPetCombatSkill, getActivePetContext, summarizePassiveBonus } from '../../services/pets.js';
 
 const DAILY_LIMIT = 5;
 
@@ -66,23 +67,26 @@ function buildBattleEmbed(state: ReturnType<typeof describeBattle> & { enemyName
     .setColor(state.log.includes('🎉') ? 0x2ecc71 : 0x3498db);
 }
 
-function buildComponents(battleId: string, state: { active: boolean; cooldowns: Record<string, number> }) {
-  if (!state.active) return [];
-  const row = new ActionRowBuilder<ButtonBuilder>();
-  for (const skill of SKILL_DEFS) {
+function buildComponents(state: ReturnType<typeof battleStore.get>) {
+  if (!state || !state.active) return [];
+  const rows: ActionRowBuilder<ButtonBuilder>[] = [];
+  const skillsRow = new ActionRowBuilder<ButtonBuilder>();
+  for (const skill of state.skills.slice(0, 5)) {
     const btn = new ButtonBuilder()
-      .setCustomId(`battle:skill:${battleId}:${skill.id}`)
+      .setCustomId(`battle:skill:${state.id}:${skill.id}`)
       .setLabel(skill.name)
       .setStyle(ButtonStyle.Primary)
-      .setDisabled((state.cooldowns[skill.id] ?? 0) > 0);
-    row.addComponents(btn);
+      .setDisabled((state.player.cooldowns[skill.id] ?? 0) > 0);
+    skillsRow.addComponents(btn);
   }
-  const escape = new ButtonBuilder()
-    .setCustomId(`battle:run:${battleId}`)
-    .setLabel('Huir')
-    .setStyle(ButtonStyle.Danger);
-  row.addComponents(escape);
-  return [row];
+  if (skillsRow.components.length) {
+    rows.push(skillsRow);
+  }
+  const escapeRow = new ActionRowBuilder<ButtonBuilder>().addComponents(
+    new ButtonBuilder().setCustomId(`battle:run:${state.id}`).setLabel('Huir').setStyle(ButtonStyle.Danger),
+  );
+  rows.push(escapeRow);
+  return rows;
 }
 
 async function grantBattleLoot(userId: string, luck: number) {
@@ -136,17 +140,26 @@ export default {
     const updatedMeta = incrementBattleCounter(user.metadata);
     await prisma.user.update({ where: { id: uid }, data: { metadata: updatedMeta } });
 
+    const petContext = await getActivePetContext(uid);
+    const petSkill = petContext ? buildPetCombatSkill(petContext) : null;
     const state = createBattleState({
       userId: uid,
       player,
       enemy: monster.state,
       enemyId: monster.monsterId,
       rewards: { xp: monster.xpReward, vcoinsMin: monster.vcoinsMin, vcoinsMax: monster.vcoinsMax, name: monster.name },
+      skills: petSkill ? [...SKILL_DEFS, petSkill] : undefined,
     });
+
+    if (petContext) {
+      const summary = summarizePassiveBonus(petContext.passive);
+      const passiveLine = summary.length ? summary.join(' · ') : 'apoya en silencio.';
+      state.log.push(`🐾 ${petContext.userPet.pet.name} se une al combate (${passiveLine}).`);
+    }
 
     const desc = describeBattle(state);
     const embed = buildBattleEmbed({ ...desc, enemyName: monster.name });
-    const components = buildComponents(state.id, { active: state.active, cooldowns: state.player.cooldowns });
+    const components = buildComponents(state);
 
     const reply = await interaction.reply({ embeds: [embed], components, fetchReply: true });
     state.messageId = reply.id;
@@ -235,7 +248,7 @@ export default {
 
     const desc = describeBattle(state);
     const embed = buildBattleEmbed({ ...desc, enemyName: state.enemy.name });
-    const components = finished ? [] : buildComponents(state.id, { active: state.active, cooldowns: state.player.cooldowns });
+    const components = finished ? [] : buildComponents(state);
 
     await interaction.update({ embeds: [embed], components });
   },

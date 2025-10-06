@@ -6,7 +6,7 @@ import path from 'node:path';
 
 async function loadSlashJson(): Promise<any[]> {
   const commands: any[] = [];
-  const cmdDirs = ['commands/core','commands/shop','commands/inventory','commands/economy','commands/rpg'];
+  const cmdDirs = ['commands/core','commands/shop','commands/inventory','commands/economy','commands/rpg','commands/pets'];
   for (const dir of cmdDirs) {
     const full = path.join(process.cwd(), 'src', dir);
     if (!fs.existsSync(full)) continue;

@@ -7,6 +7,7 @@ import type { ActiveBuff } from '../../services/buffs.js';
 import { EffectType } from '@prisma/client';
 import { getGuildBonusesForUser } from '../../services/guilds.js';
 import { ensureInventoryCapacity } from '../../services/inventory.js';
+import { getPetBonuses } from '../../services/pets.js';
 
 type DropConfig = {
   itemKey: string;
@@ -170,10 +171,16 @@ export default {
         }
         const appliesMine = (buff: ActiveBuff) => buffAppliesTo(buff, 'MINE') || buffAppliesTo(buff, 'PICKAXE');
         const buffDropBonus = sumBuffs(buffs, EffectType.BUFF_DROP_RATE, appliesMine);
-        const yieldBonus = sumBuffs(buffs, EffectType.BUFF_RESOURCE_YIELD, appliesMine);
-        const luckBonus = sumBuffs(buffs, EffectType.BUFF_LUCK, appliesMine);
+        const buffYieldBonus = sumBuffs(buffs, EffectType.BUFF_RESOURCE_YIELD, appliesMine);
+        const buffLuckBonus = sumBuffs(buffs, EffectType.BUFF_LUCK, appliesMine);
         const guildBonuses = await getGuildBonusesForUser(interaction.user.id);
-        const dropBonus = buffDropBonus + guildBonuses.dropRate;
+        const petBonuses = await getPetBonuses(interaction.user.id);
+        const petDropBonus = petBonuses?.dropRate ?? 0;
+        const petYieldBonus = petBonuses?.resourceYield ?? 0;
+        const petLuckBonus = petBonuses?.luck ?? 0;
+        const dropBonus = buffDropBonus + guildBonuses.dropRate + petDropBonus;
+        const yieldBonus = buffYieldBonus + petYieldBonus;
+        const luckBonus = buffLuckBonus + petLuckBonus;
         const tier = pick?.tier ?? 1;
         const baseStacks = Math.max(1, Math.round((tier || 1) * yieldMultiplier));
         let totalStacks = baseStacks;
@@ -231,10 +238,11 @@ export default {
         }
 
         resetSequence(sequenceKey);
-        if (dropBonus > 0 || yieldBonus > 0 || luckBonus > 0 || guildBonuses.dropRate > 0) {
+        if (dropBonus > 0 || yieldBonus > 0 || luckBonus > 0 || guildBonuses.dropRate > 0 || petDropBonus > 0 || petYieldBonus > 0 || petLuckBonus > 0) {
           const bonusParts: string[] = [];
           if (buffDropBonus > 0) bonusParts.push(`buff drop +${Math.round(buffDropBonus * 100)}%`);
           if (guildBonuses.dropRate > 0) bonusParts.push(`gremio drop +${Math.round(guildBonuses.dropRate * 100)}%`);
+          if (petDropBonus > 0) bonusParts.push(`mascota drop +${Math.round(petDropBonus * 100)}%`);
           if (yieldBonus > 0) bonusParts.push(`rendimiento +${Math.round(yieldBonus * 100)}%`);
           if (luckBonus > 0) bonusParts.push(`suerte +${Math.round(luckBonus * 100)}%`);
           lines.push(`🔸 Buffs activos: ${bonusParts.join(' · ')}`);

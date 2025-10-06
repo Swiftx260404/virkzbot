@@ -6,6 +6,7 @@ import { seedUpgrades } from './seed-data/upgrades.js';
 import { seedCrafting } from './seed-data/crafting.js';
 import { seedLocations } from './seed-data/locations.js';
 import { seedDropTables } from './seed-data/drops.js';
+import { seedPets } from './seed-data/pets.js';
 
 const prisma = new PrismaClient();
 
@@ -30,6 +31,9 @@ async function main() {
 
   console.log('🎲 Generando tablas de drop y encuentros…');
   await seedDropTables(prisma, locationIds);
+
+  console.log('🐾 Registrando mascotas…');
+  await seedPets(prisma);
 
   console.log('✅ Seed completado.');
 }
