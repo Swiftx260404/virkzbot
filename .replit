@@ -16,3 +16,7 @@ ignorePorts = false
 
 [agent]
 expertMode = true
+
+[[ports]]
+localPort = 3344
+externalPort = 80

@@ -67,7 +67,6 @@ const tables: DropTableCfg[] = [
     entries: [
       { itemKey: 'fish_leviathan_scale', weight: 6, minQty: 1, maxQty: 2 },
       { itemKey: 'bait_abyss', weight: 4, minQty: 1, maxQty: 1 },
-      { itemKey: 'pet_serpent', weight: 2, minQty: 1, maxQty: 1 },
       { itemKey: 'core_astral', weight: 1, minQty: 1, maxQty: 1 },
     ],
   },

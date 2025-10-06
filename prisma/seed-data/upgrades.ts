@@ -28,7 +28,7 @@ const upgrades: Upgrade[] = [
   { base: 'rod_oak', result: 'rod_flex', cost: 90, mats: [{ key: 'fiber_silk', qty: 2 }] },
   { base: 'rod_flex', result: 'rod_pro', cost: 150, mats: [{ key: 'fiber_moonweave', qty: 2 }] },
   { base: 'rod_pro', result: 'rod_elite', cost: 260, mats: [{ key: 'gem_sapphire', qty: 1 }, { key: 'fish_starlit_koi', qty: 2 }] },
-  { base: 'rod_elite', result: 'rod_legend', cost: 360, mats: [{ key: 'pet_serpent', qty: 1 }, { key: 'dust_arcane', qty: 1 }] },
+  { base: 'rod_elite', result: 'rod_legend', cost: 360, mats: [{ key: 'dust_arcane', qty: 1 }] },
   { base: 'rod_legend', result: 'rod_mythic', cost: 520, mats: [{ key: 'gem_void', qty: 1 }, { key: 'bait_abyss', qty: 1 }] },
 ];
 

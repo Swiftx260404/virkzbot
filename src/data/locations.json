@@ -789,14 +789,6 @@
           }
         },
         {
-          "itemKey": "pet_serpent",
-          "weight": 10,
-          "quantity": {
-            "min": 1,
-            "max": 1
-          }
-        },
-        {
           "itemKey": "essence_frost",
           "weight": 20,
           "quantity": {

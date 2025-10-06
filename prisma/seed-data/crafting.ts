@@ -30,7 +30,6 @@ const recipes: Recipe[] = [
     ingredients: [
       { key: 'rod_legend', qty: 1 },
       { key: 'fiber_shadowlace', qty: 3 },
-      { key: 'pet_serpent', qty: 1 },
       { key: 'gem_void', qty: 1 },
     ],
     metadata: { timeSec: 45, costVcoins: 900 },

@@ -102,7 +102,7 @@ export default {
         const endTs = Math.floor(evt.endDate.getTime() / 1000);
         embed.addFields({
           name: evt.name,
-          value: `${evt.description}\n${bonuses}\nTermina <t:${endTs}:R> (<t:${endTs}:F>)`,
+          value: `${evt.description}\n${bonuses}\nTermina <t:${endTs}:R> (<t:${endTs}:f>)`,
         });
       }
       embed.setFooter({ text: `Última sincronización: ${snapshot.updatedAt}` });
@@ -121,7 +121,7 @@ export default {
         const bonuses = summarizeBonuses(occ.template.bonuses as Record<string, any> | undefined);
         embed.addFields({
           name: occ.template.name,
-          value: `${occ.template.description}\n${bonuses}\nInicio: <t:${startTs}:F> · Termina: <t:${endTs}:F>`,
+          value: `${occ.template.description}\n${bonuses}\nInicio: <t:${startTs}:f> · Termina: <t:${endTs}:f>`,
         });
       }
       return interaction.reply({ embeds: [embed], ephemeral: true });
@@ -157,7 +157,7 @@ export default {
 
       if (upcoming.length) {
         const schedule = upcoming
-          .map((occ) => `• <t:${Math.floor(occ.start.getTime() / 1000)}:F> → <t:${Math.floor(occ.end.getTime() / 1000)}:F>`)
+          .map((occ) => `• <t:${Math.floor(occ.start.getTime() / 1000)}:f> → <t:${Math.floor(occ.end.getTime() / 1000)}:f>`)
           .join('\n');
         embed.addFields({ name: 'Próximas apariciones', value: schedule });
       }

@@ -110,12 +110,11 @@ export default {
         .setName('feed')
         .setDescription('Alimenta a tu mascota con snacks especiales.')
         .addStringOption((opt) => {
-          opt.setName('item').setDescription('Comida para mascota').setRequired(true);
-          for (const choice of FEED_CHOICES) {
-            opt.addChoices({ name: choice.label, value: choice.key });
-          }
-          opt.setAutocomplete(true);
-          return opt;
+          return opt
+            .setName('item')
+            .setDescription('Comida para mascota')
+            .setRequired(true)
+            .setAutocomplete(true); // ← sin addChoices
         }),
     )
     .addSubcommand((sub) => sub.setName('evolve').setDescription('Evoluciona tu mascota activa si cumple los requisitos.'))
