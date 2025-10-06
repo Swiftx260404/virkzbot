@@ -14,7 +14,10 @@
     "prisma:gen": "prisma generate",
     "db:push": "prisma db push",
     "db:seed": "tsx prisma/seed.ts",
-    "panel": "tsx src/panel/server.ts"
+    "panel": "tsx src/panel/server.ts",
+    "panel:dev": "npm --prefix panel run dev",
+    "panel:build": "npm --prefix panel run build",
+    "panel:start": "npm --prefix panel run start"
   },
   "dependencies": {
     "@prisma/client": "^5.18.0",
