@@ -1,0 +1,62 @@
+[
+  {
+    "templateKey": "economy_boost_x2",
+    "startISO": "2025-01-10T00:00:00+00:00",
+    "endISO": "2025-01-17T00:00:00+00:00",
+    "channels": { "announce": "EVENT_CHANNEL_ID" }
+  },
+  {
+    "templateKey": "golden_realm",
+    "startISO": "2025-03-14T12:00:00+00:00",
+    "durationHours": 120,
+    "channels": { "announce": "EVENT_CHANNEL_ID" }
+  },
+  {
+    "templateKey": "halloween",
+    "rrule": "DTSTART:20241025T00:00:00Z\nRRULE:FREQ=YEARLY;BYMONTH=10;BYMONTHDAY=25",
+    "durationHours": 96,
+    "channels": { "announce": "EVENT_CHANNEL_ID" }
+  },
+  {
+    "templateKey": "winter_festival",
+    "rrule": "DTSTART:20241220T00:00:00Z\nRRULE:FREQ=YEARLY;BYMONTH=12;BYMONTHDAY=20",
+    "durationHours": 168,
+    "channels": { "announce": "EVENT_CHANNEL_ID" }
+  },
+  {
+    "templateKey": "dragon_hunters",
+    "rrule": "DTSTART:20240705T00:00:00Z\nRRULE:FREQ=MONTHLY;BYDAY=FR;BYSETPOS=1",
+    "durationHours": 72,
+    "channels": { "announce": "EVENT_CHANNEL_ID" }
+  },
+  {
+    "templateKey": "stellar_sea",
+    "rrule": "DTSTART:20240601T00:00:00Z\nRRULE:FREQ=MONTHLY;BYMONTHDAY=1",
+    "durationHours": 48,
+    "channels": { "announce": "EVENT_CHANNEL_ID" }
+  },
+  {
+    "templateKey": "kraken_tide",
+    "rrule": "DTSTART:20240815T00:00:00Z\nRRULE:FREQ=MONTHLY;BYMONTHDAY=15",
+    "durationHours": 72,
+    "channels": { "announce": "EVENT_CHANNEL_ID" }
+  },
+  {
+    "templateKey": "blessed_forge",
+    "rrule": "DTSTART:20240722T00:00:00Z\nRRULE:FREQ=MONTHLY;BYDAY=MO;BYSETPOS=4",
+    "durationHours": 72,
+    "channels": { "announce": "EVENT_CHANNEL_ID" }
+  },
+  {
+    "templateKey": "chaos_week",
+    "rrule": "DTSTART:20240902T00:00:00Z\nRRULE:FREQ=MONTHLY;BYDAY=MO;BYSETPOS=1",
+    "durationHours": 168,
+    "channels": { "announce": "EVENT_CHANNEL_ID" }
+  },
+  {
+    "templateKey": "crimson_eclipse",
+    "rrule": "DTSTART:20240718T00:00:00Z\nRRULE:FREQ=MONTHLY;INTERVAL=2;BYDAY=TH;BYSETPOS=3",
+    "durationHours": 96,
+    "channels": { "announce": "EVENT_CHANNEL_ID" }
+  }
+]

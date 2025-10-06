@@ -1,0 +1,136 @@
+[
+  {
+    "key": "economy_boost_x2",
+    "name": "Semana de la Prosperidad",
+    "description": "Todos los trabajos dan el doble de V Coins. Perfecto para engordar la billetera.",
+    "bonuses": {
+      "economy": { "multiplier": 2.0, "commands": ["work", "mine", "fish"] }
+    },
+    "drops": []
+  },
+  {
+    "key": "gem_rain",
+    "name": "Lluvia de Gemas",
+    "description": "Los botines raros aparecen con más frecuencia y hay reportes de gemas brillando por todos lados.",
+    "bonuses": {
+      "drop": { "multiplier": 1.5, "tags": ["rare", "gem"] },
+      "economy": { "multiplier": 1.2, "commands": ["work"] }
+    },
+    "drops": [
+      { "itemKey": "gem_fragment", "chance": 0.2, "qtyMin": 1, "qtyMax": 2, "commands": ["work", "adventure"] }
+    ]
+  },
+  {
+    "key": "halloween",
+    "name": "Noche de Calabazas",
+    "description": "Aparecen dulces embrujados, decoraciones temáticas y el Rey Calabaza acecha las sombras.",
+    "bonuses": {
+      "drop": { "multiplier": 1.5, "tags": ["halloween"] },
+      "boss": { "spawn": "pumpkin_king" }
+    },
+    "drops": [
+      { "itemKey": "candy_pumpkin", "chance": 0.35, "qtyMin": 1, "qtyMax": 3, "commands": ["work", "mine", "fish", "battle"] },
+      { "itemKey": "pumpkin", "chance": 0.15, "qtyMin": 1, "qtyMax": 2, "commands": ["mine", "adventure"] }
+    ]
+  },
+  {
+    "key": "winter_festival",
+    "name": "Festival Invernal",
+    "description": "La nieve cubre todo, los comerciantes reparten obsequios y la experiencia fluye como chocolate caliente.",
+    "bonuses": {
+      "xp": { "multiplier": 1.4 },
+      "economy": { "multiplier": 1.25, "commands": ["work", "mine"] }
+    },
+    "drops": [
+      { "itemKey": "winter_token", "chance": 0.25, "qtyMin": 1, "qtyMax": 4, "commands": ["work", "battle", "adventure"] }
+    ]
+  },
+  {
+    "key": "stellar_sea",
+    "name": "Mar de Estrellas",
+    "description": "Los peces relucen bajo una lluvia de estrellas fugaces. Los pescadores viven su mejor momento.",
+    "bonuses": {
+      "fishing": { "multiplier": 2.0 },
+      "drop": { "multiplier": 1.3, "tags": ["fishing"] }
+    },
+    "drops": [
+      { "itemKey": "starfish_lumina", "chance": 0.3, "qtyMin": 1, "qtyMax": 2, "commands": ["fish"] }
+    ]
+  },
+  {
+    "key": "blessed_forge",
+    "name": "Forja Bendita",
+    "description": "Las brasas ancestrales reducen los costos de crafteo y mejoran la calidad de tus creaciones.",
+    "bonuses": {
+      "craft": { "costMultiplier": 0.75, "qualityMultiplier": 1.2 },
+      "drop": { "multiplier": 1.1, "tags": ["craft"] }
+    },
+    "drops": [
+      { "itemKey": "ember_of_light", "chance": 0.18, "qtyMin": 1, "qtyMax": 2, "commands": ["craft", "disassemble"] }
+    ]
+  },
+  {
+    "key": "dragon_hunters",
+    "name": "Cazadores de Dragones",
+    "description": "Los aventureros se unen para desafiar a un antiguo dragón. Grandes recompensas aguardan.",
+    "bonuses": {
+      "boss": { "spawn": "ancient_dragon" },
+      "xp": { "multiplier": 1.2 },
+      "drop": { "multiplier": 1.4, "tags": ["boss"] }
+    },
+    "drops": [
+      { "itemKey": "dragon_scale", "chance": 0.5, "qtyMin": 1, "qtyMax": 2, "commands": ["boss", "battle"] }
+    ]
+  },
+  {
+    "key": "golden_realm",
+    "name": "Reino Dorado",
+    "description": "Todo lo que tocas se convierte en V Coins. La fortuna sonríe a cada viajero.",
+    "bonuses": {
+      "economy": { "multiplier": 1.75 },
+      "drop": { "multiplier": 1.2 }
+    },
+    "drops": [
+      { "itemKey": "golden_ticket", "chance": 0.2, "qtyMin": 1, "qtyMax": 1, "commands": ["work", "mine", "fish", "battle", "adventure"] }
+    ]
+  },
+  {
+    "key": "chaos_week",
+    "name": "Semana del Caos",
+    "description": "Cada día trae una sorpresa distinta: multiplicadores locos, clima impredecible y recompensas inesperadas.",
+    "bonuses": {
+      "economy": { "multiplier": 1.3 },
+      "chaos": { "dailyRandom": true },
+      "drop": { "multiplier": 1.1 }
+    },
+    "drops": [
+      { "itemKey": "chaos_fragment", "chance": 0.28, "qtyMin": 1, "qtyMax": 3, "commands": ["work", "mine", "fish", "adventure"] }
+    ]
+  },
+  {
+    "key": "crimson_eclipse",
+    "name": "Eclipse Carmesí",
+    "description": "El cielo se tiñe de rojo y los viajes se vuelven más peligrosos, pero también mucho más lucrativos.",
+    "bonuses": {
+      "adventure": { "riskMultiplier": 1.5, "rewardMultiplier": 2.0 },
+      "drop": { "multiplier": 1.6, "tags": ["adventure"] },
+      "xp": { "multiplier": 1.3 }
+    },
+    "drops": [
+      { "itemKey": "blood_opal", "chance": 0.22, "qtyMin": 1, "qtyMax": 2, "commands": ["adventure", "battle"] }
+    ]
+  },
+  {
+    "key": "kraken_tide",
+    "name": "Mareas del Kraken",
+    "description": "El Kraken emerge de las profundidades y los océanos se agitan con tesoros prohibidos.",
+    "bonuses": {
+      "boss": { "spawn": "abyssal_kraken" },
+      "fishing": { "multiplier": 1.6 },
+      "drop": { "multiplier": 1.4, "tags": ["fishing", "boss"] }
+    },
+    "drops": [
+      { "itemKey": "kraken_ink", "chance": 0.4, "qtyMin": 1, "qtyMax": 2, "commands": ["fish", "boss"] }
+    ]
+  }
+]

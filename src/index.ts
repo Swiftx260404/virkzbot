@@ -2,6 +2,7 @@ import 'dotenv/config';
 import { Client, GatewayIntentBits, Collection, Interaction, Partials } from 'discord.js';
 import { CONFIG } from './config.js';
 import { registerAllCommands } from './register.js';
+import { startEventScheduler } from './services/eventScheduler.js';
 
 if (!CONFIG.token || !CONFIG.clientId) {
   console.error('Falta DISCORD_TOKEN o DISCORD_CLIENT_ID en .env');
@@ -22,6 +23,11 @@ export const commands = new Collection<string, any>();
 
 client.once('ready', async () => {
   console.log(`Virkz online como ${client.user?.tag}`);
+  try {
+    await startEventScheduler(client);
+  } catch (err) {
+    console.error('No se pudo iniciar el scheduler de eventos:', err);
+  }
 });
 
 // Load commands dynamically

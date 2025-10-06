@@ -5,6 +5,15 @@ import { registerSequenceSample, resetSequence } from '../../services/antiCheat.
 import { extractBuffState, sumBuffs, buffAppliesTo } from '../../services/buffs.js';
 import type { ActiveBuff } from '../../services/buffs.js';
 import { EffectType } from '@prisma/client';
+import {
+  applyEconomyModifier,
+  getDropMultiplier,
+  getEventDropsForCommand,
+  getGlobalModifierSnapshot,
+} from '../../services/globalEvents.js';
+import { ensureInventoryCapacity } from '../../services/inventory.js';
+
+const randomInt = (min: number, max: number) => Math.floor(Math.random() * (max - min + 1)) + min;
 
 export default {
   data: new SlashCommandBuilder().setName('work').setDescription('Trabaja en un minijuego corto para ganar V Coins.'),
@@ -70,13 +79,58 @@ export default {
         reward += 10;
       }
 
+      const modifiers = await getGlobalModifierSnapshot();
+      const economyResult = applyEconomyModifier(reward, 'work', modifiers);
+      reward = economyResult.value;
+
       await prisma.user.update({ where: { id: user.id }, data: { vcoins: { increment: reward } } });
+
+      const dropExtras: string[] = [];
+      const eventDrops = getEventDropsForCommand('work', modifiers);
+      if (eventDrops.length) {
+        const dropMultiplier = getDropMultiplier(modifiers);
+        const awarded = new Map<number, { itemId: number; name: string; quantity: number }>();
+        for (const drop of eventDrops) {
+          let chance = drop.chance;
+          if (dropMultiplier > 0) {
+            chance *= dropMultiplier;
+          }
+          chance = Math.min(1, Math.max(0, chance));
+          if (Math.random() > chance) continue;
+          const item = await prisma.item.findUnique({ where: { key: drop.itemKey } });
+          if (!item) continue;
+          const qty = Math.max(1, randomInt(drop.qtyMin ?? 1, drop.qtyMax ?? drop.qtyMin ?? 1));
+          const current = awarded.get(item.id) ?? { itemId: item.id, name: item.name, quantity: 0 };
+          current.quantity += qty;
+          awarded.set(item.id, current);
+        }
+        if (awarded.size) {
+          const totalQty = Array.from(awarded.values()).reduce((sum, entry) => sum + entry.quantity, 0);
+          await prisma.$transaction(async (tx) => {
+            await ensureInventoryCapacity(tx, interaction.user.id, totalQty);
+            for (const entry of awarded.values()) {
+              await tx.userItem.upsert({
+                where: { userId_itemId: { userId: interaction.user.id, itemId: entry.itemId } },
+                update: { quantity: { increment: entry.quantity } },
+                create: { userId: interaction.user.id, itemId: entry.itemId, quantity: entry.quantity }
+              });
+            }
+          });
+          for (const entry of awarded.values()) {
+            dropExtras.push(`🎁 ${entry.quantity} × ${entry.name}`);
+          }
+        }
+      }
+
       resetSequence(sequenceKey);
       const extras: string[] = [];
       if (payoutBonus > 0) extras.push(`+${Math.round(payoutBonus*100)}% pago`);
       if (luckBonus > 0) extras.push(`suerte ${(luckBonus*100).toFixed(0)}%`);
+      if (economyResult.multiplier !== 1) extras.push(`evento ×${economyResult.multiplier.toFixed(2)}`);
+      if (economyResult.flat !== 0) extras.push(`evento +${economyResult.flat.toFixed(0)}`);
       const suffix = extras.length ? `\n🔸 Buffs: ${extras.join(' · ')}` : '';
-      return interaction.update({ content: `💼 ¡Buen trabajo! Ganaste **${reward} V Coins**.${suffix}`, components: [] });
+      const dropText = dropExtras.length ? `\n${dropExtras.join('\n')}` : '';
+      return interaction.update({ content: `💼 ¡Buen trabajo! Ganaste **${reward} V Coins**.${suffix}${dropText}`, components: [] });
     }
 
     const sequenceKey = `work:${interaction.user.id}:${start}`;
