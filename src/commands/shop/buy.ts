@@ -4,6 +4,7 @@ import {
   AutocompleteInteraction,
 } from 'discord.js';
 import { prisma } from '../../lib/db.js';
+import { ensureInventoryCapacity } from '../../services/inventory.js';
 
 async function searchableBuyables(query: string) {
   // Trae candidatos por nombre o key (case-insensitive)
@@ -68,17 +69,28 @@ export default {
         ephemeral: true,
       });
 
-    await prisma.$transaction([
-      prisma.user.update({
-        where: { id: uid },
-        data: { vcoins: { decrement: totalCost } },
-      }),
-      prisma.userItem.upsert({
-        where: { userId_itemId: { userId: uid, itemId: item.id } },
-        update: { quantity: { increment: qty } },
-        create: { userId: uid, itemId: item.id, quantity: qty },
-      }),
-    ]);
+    try {
+      await prisma.$transaction(async (tx) => {
+        await ensureInventoryCapacity(tx, uid, qty);
+        await tx.user.update({
+          where: { id: uid },
+          data: { vcoins: { decrement: totalCost } },
+        });
+        await tx.userItem.upsert({
+          where: { userId_itemId: { userId: uid, itemId: item.id } },
+          update: { quantity: { increment: qty } },
+          create: { userId: uid, itemId: item.id, quantity: qty },
+        });
+      });
+    } catch (error: any) {
+      if (error?.message === 'INVENTORY_FULL') {
+        return interaction.reply({
+          content: '❌ No tienes espacio en el inventario para esa compra.',
+          ephemeral: true,
+        });
+      }
+      throw error;
+    }
 
     await interaction.reply({
       content: `✅ Compraste **${qty} × ${item.name}** por **${totalCost} V Coins**.`,

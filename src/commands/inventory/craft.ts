@@ -11,6 +11,7 @@ import {
 } from 'discord.js';
 import type { CraftRecipe, CraftIngredient, Prisma } from '@prisma/client';
 import { prisma } from '../../lib/db.js';
+import { ensureInventoryCapacity } from '../../services/inventory.js';
 
 interface RecipeWithRelations extends CraftRecipe {
   resultItem: {
@@ -310,6 +311,7 @@ export default {
           }
 
           const qty = meta.batchSize;
+          await ensureInventoryCapacity(tx, targetUser, qty);
           await tx.userItem.upsert({
             where: { userId_itemId: { userId: targetUser, itemId: recipe.resultItemId } },
             update: { quantity: { increment: qty } },
@@ -336,7 +338,9 @@ export default {
             ? 'No tienes suficientes V Coins.'
             : reason === 'NO_MATERIALS'
               ? 'Te faltan materiales para esta receta.'
-              : 'No se pudo completar el crafteo.';
+              : reason === 'INVENTORY_FULL'
+                ? 'No tienes espacio suficiente en el inventario.'
+                : 'No se pudo completar el crafteo.';
         await interaction.update({ content: message, components: [], embeds: [] });
       }
     }

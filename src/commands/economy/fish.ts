@@ -5,6 +5,8 @@ import { registerSequenceSample, resetSequence } from '../../services/antiCheat.
 import { extractBuffState, sumBuffs, buffAppliesTo } from '../../services/buffs.js';
 import type { ActiveBuff } from '../../services/buffs.js';
 import { EffectType } from '@prisma/client';
+import { getGuildBonusesForUser } from '../../services/guilds.js';
+import { ensureInventoryCapacity } from '../../services/inventory.js';
 
 type DropConfig = {
   itemKey: string;
@@ -160,9 +162,11 @@ export default {
           }
         }
         const appliesFish = (buff: ActiveBuff) => buffAppliesTo(buff, 'FISH') || buffAppliesTo(buff, 'ROD');
-        const dropBonus = sumBuffs(buffs, EffectType.BUFF_DROP_RATE, appliesFish);
+        const buffDropBonus = sumBuffs(buffs, EffectType.BUFF_DROP_RATE, appliesFish);
         const yieldBonus = sumBuffs(buffs, EffectType.BUFF_RESOURCE_YIELD, appliesFish);
         const luckBonus = sumBuffs(buffs, EffectType.BUFF_LUCK, appliesFish);
+        const guildBonuses = await getGuildBonusesForUser(interaction.user.id);
+        const dropBonus = buffDropBonus + guildBonuses.dropRate;
 
         const baseStacks = Math.max(1, Math.round(Number(meta.baseStacks ?? 1) || 1));
         let stacks = baseStacks;
@@ -176,8 +180,8 @@ export default {
           if (Math.random() < luckBonus - Math.floor(luckBonus)) stacks += 1;
         }
 
-        const ops: any[] = [];
         const lines: string[] = [];
+        const rewardMap = new Map<number, { itemId: number; name: string; quantity: number }>();
 
         for (let i = 0; i < stacks; i++) {
           const choice = drops.length ? pickDrop(drops) : { itemKey: 'fish_riverling', min: 1, max: 2 };
@@ -191,20 +195,28 @@ export default {
           if (yieldMultiplier > 1) {
             qty = Math.max(choice.min, Math.round(qty * yieldMultiplier));
           }
-          ops.push(prisma.userItem.upsert({
-            where: { userId_itemId: { userId: interaction.user.id, itemId: item.id } },
-            update: { quantity: { increment: qty } },
-            create: { userId: interaction.user.id, itemId: item.id, quantity: qty }
-          }));
+          const current = rewardMap.get(item.id) ?? { itemId: item.id, name: item.name, quantity: 0 };
+          current.quantity += qty;
+          rewardMap.set(item.id, current);
           lines.push(`+${qty} × ${item.name}`);
         }
 
-        if (!ops.length) {
+        if (!rewardMap.size) {
           resetSequence(sequenceKey);
           return interaction.update({ content: 'Nada mordió el anzuelo...', components: [] });
         }
 
-        await prisma.$transaction(ops);
+        const totalAwarded = Array.from(rewardMap.values()).reduce((sum, entry) => sum + entry.quantity, 0);
+        await prisma.$transaction(async (tx) => {
+          await ensureInventoryCapacity(tx, interaction.user.id, totalAwarded);
+          for (const entry of rewardMap.values()) {
+            await tx.userItem.upsert({
+              where: { userId_itemId: { userId: interaction.user.id, itemId: entry.itemId } },
+              update: { quantity: { increment: entry.quantity } },
+              create: { userId: interaction.user.id, itemId: entry.itemId, quantity: entry.quantity }
+            });
+          }
+        });
         if (loc && meta?.xpRange) {
           const minXp = Number(meta.xpRange.min ?? 0);
           const maxXp = Number(meta.xpRange.max ?? minXp);
@@ -217,9 +229,10 @@ export default {
           }
         }
         resetSequence(sequenceKey);
-        if (dropBonus > 0 || yieldBonus > 0 || luckBonus > 0) {
+        if (dropBonus > 0 || yieldBonus > 0 || luckBonus > 0 || guildBonuses.dropRate > 0) {
           const parts: string[] = [];
-          if (dropBonus > 0) parts.push(`drop +${Math.round(dropBonus * 100)}%`);
+          if (buffDropBonus > 0) parts.push(`buff drop +${Math.round(buffDropBonus * 100)}%`);
+          if (guildBonuses.dropRate > 0) parts.push(`gremio drop +${Math.round(guildBonuses.dropRate * 100)}%`);
           if (yieldBonus > 0) parts.push(`rendimiento +${Math.round(yieldBonus * 100)}%`);
           if (luckBonus > 0) parts.push(`suerte +${Math.round(luckBonus * 100)}%`);
           lines.push(`🔸 Buffs activos: ${parts.join(' · ')}`);

@@ -28,6 +28,7 @@ import {
   touchTradeSession
 } from '../../services/tradeSessions.js';
 import { useScopedCooldown } from '../../services/cooldowns.js';
+import { ensureInventoryCapacity } from '../../services/inventory.js';
 
 const OFFER_MODAL_PREFIX = 'trade:offer:';
 const OFFER_INPUT_ID = 'trade:items';
@@ -311,10 +312,13 @@ async function handleTradeButton(interaction: ButtonInteraction) {
 
     try {
       await finalizeTrade(interaction, updated);
-    } catch (error) {
+    } catch (error: any) {
       console.error('[trade] Error finalizando intercambio', error);
       clearTradeSession(updated.id);
-      await interaction.update({ content: '❌ No se pudo completar el intercambio. Revisa inventarios e inténtalo nuevamente.', embeds: [], components: [] });
+      const message = error?.message === 'INVENTORY_FULL'
+        ? '❌ Uno de los participantes no tiene espacio en el inventario.'
+        : '❌ No se pudo completar el intercambio. Revisa inventarios e inténtalo nuevamente.';
+      await interaction.update({ content: message, embeds: [], components: [] });
     }
   }
 }
@@ -368,6 +372,16 @@ async function handleTradeModal(interaction: ModalSubmitInteraction) {
 
 async function finalizeTrade(interaction: ButtonInteraction, session: TradeSession) {
   const participants = getSessionParticipants(session);
+  const incomingTotals = new Map<string, number>();
+
+  for (const userId of participants) {
+    const receiver = getOtherParticipant(session, userId);
+    if (!receiver) continue;
+    const offer = session.offers[userId]?.items ?? [];
+    const current = incomingTotals.get(receiver) ?? 0;
+    const quantity = offer.reduce((sum, item) => sum + item.quantity, 0);
+    incomingTotals.set(receiver, current + quantity);
+  }
 
   await prisma.$transaction(async (tx) => {
     for (const userId of participants) {
@@ -379,6 +393,12 @@ async function finalizeTrade(interaction: ButtonInteraction, session: TradeSessi
         if (!inventory || inventory.quantity < item.quantity) {
           throw new Error(`Inventario insuficiente para ${item.name}.`);
         }
+      }
+    }
+
+    for (const [receiver, quantity] of incomingTotals.entries()) {
+      if (quantity > 0) {
+        await ensureInventoryCapacity(tx, receiver, quantity);
       }
     }
 

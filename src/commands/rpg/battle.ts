@@ -20,6 +20,8 @@ import {
   cleanupBattle,
 } from '../../services/combat.js';
 import { grantExperience } from '../../services/progression.js';
+import { getGuildBonusesForUser } from '../../services/guilds.js';
+import { ensureInventoryCapacity } from '../../services/inventory.js';
 
 const DAILY_LIMIT = 5;
 
@@ -84,17 +86,22 @@ function buildComponents(battleId: string, state: { active: boolean; cooldowns: 
 }
 
 async function grantBattleLoot(userId: string, luck: number) {
-  const roll = Math.random();
   const luckBonus = Math.min(0.4, luck * 0.02);
-  if (roll > 0.2 + luckBonus) return null;
+  const baseChance = 0.2 + luckBonus;
+  const guildBonuses = await getGuildBonusesForUser(userId);
+  const chance = Math.min(0.95, baseChance * (1 + guildBonuses.dropRate));
+  if (Math.random() > chance) return null;
 
   const candidates = await prisma.item.findMany({ where: { type: 'MATERIAL' }, take: 50 });
   if (!candidates.length) return null;
   const item = candidates[Math.floor(Math.random() * candidates.length)];
-  await prisma.userItem.upsert({
-    where: { userId_itemId: { userId, itemId: item.id } },
-    create: { userId, itemId: item.id, quantity: 1 },
-    update: { quantity: { increment: 1 } },
+  await prisma.$transaction(async (tx) => {
+    await ensureInventoryCapacity(tx, userId, 1);
+    await tx.userItem.upsert({
+      where: { userId_itemId: { userId, itemId: item.id } },
+      create: { userId, itemId: item.id, quantity: 1 },
+      update: { quantity: { increment: 1 } },
+    });
   });
   return item.name;
 }
