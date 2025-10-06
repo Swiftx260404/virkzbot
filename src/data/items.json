@@ -11,7 +11,7 @@
     "toolKind": "PICKAXE",
     "tier": 1,
     "power": 1,
-    "durability": 45,
+    "durability": 5,
     "metadata": {
       "description": "Un mango sencillo tallado a mano."
     }
@@ -28,7 +28,7 @@
     "toolKind": "PICKAXE",
     "tier": 2,
     "power": 2,
-    "durability": 65,
+    "durability": 6,
     "metadata": {
       "description": "Las puntas de piedra son reemplazables."
     }
@@ -45,7 +45,7 @@
     "toolKind": "PICKAXE",
     "tier": 2,
     "power": 3,
-    "durability": 80,
+    "durability": 7,
     "metadata": {
       "description": "Ideal para vetas tier 2 con brillo anaranjado."
     }
@@ -62,7 +62,7 @@
     "toolKind": "PICKAXE",
     "tier": 3,
     "power": 4,
-    "durability": 110,
+    "durability": 8,
     "metadata": {
       "description": "El peso justo para jornadas largas."
     }
@@ -79,7 +79,7 @@
     "toolKind": "PICKAXE",
     "tier": 4,
     "power": 5,
-    "durability": 150,
+    "durability": 10,
     "metadata": {
       "description": "Templado en aceite de magma."
     }
@@ -96,7 +96,7 @@
     "toolKind": "PICKAXE",
     "tier": 5,
     "power": 6,
-    "durability": 210,
+    "durability": 12,
     "metadata": {
       "description": "Los filos de diamante cortan como luz pura."
     }
@@ -113,7 +113,7 @@
     "toolKind": "PICKAXE",
     "tier": 6,
     "power": 7,
-    "durability": 260,
+    "durability": 15,
     "metadata": {
       "description": "Vibra con energía ancestral.",
       "aura": 0.05
@@ -125,13 +125,13 @@
     "type": "TOOL",
     "rarity": "MYTHIC",
     "price": 0,
-    "buyable": true,
+    "buyable": false,
     "sellable": false,
     "usable": false,
     "toolKind": "PICKAXE",
     "tier": 7,
     "power": 9,
-    "durability": 320,
+    "durability": 15,
     "metadata": {
       "description": "Artefacto rescatado de ruinas olvidadas.",
       "soulbound": true
@@ -142,14 +142,14 @@
     "name": "Pico Astral",
     "type": "TOOL",
     "rarity": "MYTHIC",
-    "price": 4200,
-    "buyable": true,
-    "sellable": true,
+    "price": 0,
+    "buyable": false,
+    "sellable": false,
     "usable": false,
     "toolKind": "PICKAXE",
     "tier": 7,
     "power": 10,
-    "durability": 400,
+    "durability": 15,
     "metadata": {
       "description": "Canaliza constelaciones en cada golpe.",
       "critChance": 0.1
@@ -167,7 +167,7 @@
     "toolKind": "ROD",
     "tier": 1,
     "power": 1,
-    "durability": 45,
+    "durability": 5,
     "metadata": {
       "description": "Caña para pescadores novatos."
     }
@@ -184,7 +184,7 @@
     "toolKind": "ROD",
     "tier": 2,
     "power": 2,
-    "durability": 70,
+    "durability": 6,
     "metadata": {
       "description": "Madera tratada resistente a la humedad."
     }
@@ -201,7 +201,7 @@
     "toolKind": "ROD",
     "tier": 3,
     "power": 3,
-    "durability": 95,
+    "durability": 7,
     "metadata": {
       "description": "Fibra reforzada para peces nerviosos."
     }
@@ -218,7 +218,7 @@
     "toolKind": "ROD",
     "tier": 3,
     "power": 3,
-    "durability": 110,
+    "durability": 8,
     "metadata": {
       "description": "Carrete preciso con rodamientos arcanos."
     }
@@ -235,7 +235,7 @@
     "toolKind": "ROD",
     "tier": 4,
     "power": 4,
-    "durability": 160,
+    "durability": 10,
     "metadata": {
       "description": "Encordado de hilo lunar."
     }
@@ -252,7 +252,7 @@
     "toolKind": "ROD",
     "tier": 5,
     "power": 5,
-    "durability": 210,
+    "durability": 12,
     "metadata": {
       "description": "El anzuelo brilla con luz marina."
     }
@@ -269,7 +269,7 @@
     "toolKind": "ROD",
     "tier": 6,
     "power": 6,
-    "durability": 260,
+    "durability": 15,
     "metadata": {
       "description": "Creada con escamas astrales.",
       "soulbound": true
